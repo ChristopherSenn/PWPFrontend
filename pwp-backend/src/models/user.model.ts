@@ -1,5 +1,20 @@
 import mongoose, { Schema, Model, Document } from 'mongoose';
 
+interface IUser {
+  username: string;
+  email: string;
+  password: string;
+  enabled: string;
+  id?: string;
+  token?: string;
+}
+
+/* interface IResponse {
+  status: number;
+  message: string;
+  data?: any;
+} */
+
 type UserDocument = Document & {
   username: string;
   email: string;
@@ -40,9 +55,6 @@ const usersSchema = new Schema(
   }
 );
 
-const User: Model<UserDocument> = mongoose.model<UserDocument>(
-  'User',
-  usersSchema
-);
+const User: Model<UserDocument> = mongoose.model<UserDocument>('User', usersSchema);
 
-export { User, UserInput, UserDocument };
+export { User, UserInput, UserDocument, IUser };

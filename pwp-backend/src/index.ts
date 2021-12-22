@@ -1,14 +1,16 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
+import bodyParser from 'body-parser';
 import cors from 'cors';
 import morgan from 'morgan';
 
-// import { roleRoute } from './routes/role.route';
+import { RegisterRoutes } from './routes';
 
+import * as swaggerJson from './swagger.json';
+import * as swaggerUI from 'swagger-ui-express';
 import { connectToDatabase } from './db/databaseConnection';
-import { userRoute } from './routes/user.route';
+import { errorHandler } from './middleware/errorHandler';
 
-const HOST = process.env.HOST || 'http://localhost';
-const PORT = parseInt(process.env.PORT || '4500');
+export const app = express();
 
 const allowedOrigins = ['http://localhost:3000'];
 
@@ -16,18 +18,25 @@ const corsOptions: cors.CorsOptions = {
   origin: allowedOrigins,
 };
 
-const app = express();
+const port = process.env.PORT || 4500;
 
 app.use(cors(corsOptions));
-app.use(morgan('tiny'));
+app.use(morgan('tiny')); // Request logging
 
-app.use('/', userRoute());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
-app.get('/', (req: Request, res: Response) => {
-  return res.json({ message: 'Hello World' });
-});
+// Autoregister routes from controller, setup Swagger UI
+RegisterRoutes(app);
+app.use(['/openapi', '/docs', '/swagger'], swaggerUI.serve, swaggerUI.setup(swaggerJson));
 
-app.listen(PORT, async () => {
+// Start Server
+app.listen(port, async () => {
+  console.log('Connecting to database...');
   await connectToDatabase();
-  console.log(`Application started on URL ${HOST}:${PORT} !`);
+  console.log('Connected to database!');
+  console.log(`Example app listening at http://localhost:${port}`);
 });
+
+// Register error handler
+app.use(errorHandler);

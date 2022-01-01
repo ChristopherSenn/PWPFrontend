@@ -1,9 +1,3 @@
-export interface IResponse {
-  status: number;
-  message: string;
-  data?: any;
-}
-
 export class StatusError extends Error {
   status: number;
   data?: string;
@@ -15,4 +9,8 @@ export class StatusError extends Error {
     this.status = status;
     this.data = data;
   }
+}
+
+export interface IError {
+  message: string;
 }

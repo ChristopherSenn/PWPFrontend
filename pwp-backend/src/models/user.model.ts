@@ -9,12 +9,6 @@ interface IUser {
   token?: string;
 }
 
-/* interface IResponse {
-  status: number;
-  message: string;
-  data?: any;
-} */
-
 type UserDocument = Document & {
   username: string;
   email: string;

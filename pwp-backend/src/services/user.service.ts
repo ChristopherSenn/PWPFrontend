@@ -1,6 +1,6 @@
 import bcryptjs from 'bcryptjs';
 import { IUser, User, UserInput, UserDocument } from '../models/user.model';
-import { StatusError } from '../models/response.model';
+import { StatusError } from '../models/error.model';
 import signJWT from '../functions/signJWT';
 
 export type UserCreationParams = Pick<IUser, 'email' | 'username' | 'password'>;
@@ -8,7 +8,6 @@ export type UserLoginParams = Pick<IUser, 'username' | 'password'>;
 
 export class UserService {
   public async get(): Promise<IUser[]> {
-    console.log('hi');
     const users: UserDocument[] = await User.find().populate('enabled').exec();
 
     const parsedUsers: IUser[] = users.map((user) => {
@@ -59,7 +58,7 @@ export class UserService {
     });
   }
 
-  public async create(userCreationParams: UserCreationParams): Promise<IUser> {
+  public async register(userCreationParams: UserCreationParams): Promise<IUser> {
     const { email, username, password } = userCreationParams;
     if (password.length < 8) {
       throw new StatusError('Password must be at least 8 digits long!', 401);

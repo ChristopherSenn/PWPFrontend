@@ -1,5 +1,5 @@
-import { Router } from 'express';
-import { getAllUsers } from '..//controllers/user.controller';
+/* import { Router } from 'express';
+import { getUsers } from '../controllers/user.controller';
 
 const userRoute = () => {
   const router = Router();
@@ -9,4 +9,4 @@ const userRoute = () => {
   return router;
 };
 
-export { userRoute };
+export { userRoute }; */

@@ -14,6 +14,7 @@ import {
 } from 'tsoa';
 import { IUser } from '../models/user.model';
 import { UserCreationParams, UserLoginParams, UserService } from '../services/user.service';
+import { IError } from '../models/error.model';
 
 @Route('users')
 @Tags('Users')
@@ -33,7 +34,7 @@ export class UserController extends Controller {
     password: 'hashed password',
     enabled: 'true',
   })
-  @Response(401, 'Unauthorized', {
+  @Response<IError>(401, 'Unauthorized', {
     message: 'No token provided',
   })
   public async getUsers(): Promise<IUser[]> {
@@ -41,10 +42,19 @@ export class UserController extends Controller {
     return response;
   }
 
-  @SuccessResponse('201', 'Created')
   @Post('register')
+  @SuccessResponse('201', 'Created')
+  @Example<IUser>({
+    id: 'msa90jalkjm390ßasj3apok4',
+    username: 'John Doe',
+    email: 'example@mail.com',
+    password: 'hashed password',
+    enabled: 'true',
+    token: 'JWT Token',
+  })
+  @Response<IError>(401, 'Unauthorized')
   public async register(@Body() requestBody: UserCreationParams): Promise<IUser> {
-    const user: IUser = await new UserService().create(requestBody);
+    const user: IUser = await new UserService().register(requestBody);
 
     this.setStatus(201);
     return user;
@@ -60,7 +70,9 @@ export class UserController extends Controller {
     enabled: 'true',
     token: 'JWT Token',
   })
-  @Response(401, 'Unauthorized')
+  @Response<IError>(401, 'Unauthorized', {
+    message: 'Wrong username or password...',
+  })
   public async login(@Body() requestBody: UserLoginParams): Promise<IUser> {
     const response: IUser = await new UserService().login(requestBody);
     this.setStatus(200);

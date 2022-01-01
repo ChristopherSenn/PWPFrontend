@@ -1,6 +1,7 @@
 # Setup
   - Get Access to .env file somehow and place it in the pwp-backend root folder
   - npm install
+  - npm install tsoa -g
   - npm run build
 
 # Start the server

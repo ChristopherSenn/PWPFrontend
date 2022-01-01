@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { StatusError } from '../models/response.model';
+import { StatusError } from '../models/error.model';
 
 /**
  * This middleware checks, if any error has been thrown or any promise has been rejected.

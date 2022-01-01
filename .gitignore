@@ -25,3 +25,7 @@
 *npm-debug.log*
 *yarn-debug.log*
 *yarn-error.log*
+
+# backend
+/pwp-backend/src/swagger.json
+/pwp-backend/src/routes.ts

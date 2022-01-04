@@ -18,6 +18,7 @@ const signJWT = (user: IUser, callback: (error: Error | null, token: string | nu
     jwt.sign(
       {
         username: user.username, // Use username as input
+        scopes: user.roles,
       },
       process.env.JWT_SECRET || '', // Secret from dotenv
       {

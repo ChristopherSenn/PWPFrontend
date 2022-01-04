@@ -5,6 +5,7 @@ interface IUser {
   email: string;
   password: string;
   enabled: string;
+  roles: Array<'customer' | 'manufacturer' | 'admin'>;
   id?: string;
   token?: string;
 }
@@ -14,6 +15,7 @@ type UserDocument = Document & {
   email: string;
   password: string;
   enabled: string;
+  roles: Array<'customer' | 'manufacturer' | 'admin'>;
 };
 
 type UserInput = {
@@ -21,6 +23,7 @@ type UserInput = {
   email: UserDocument['email'];
   password: UserDocument['password'];
   enabled: UserDocument['enabled'];
+  roles: UserDocument['roles'];
 };
 
 const usersSchema = new Schema(
@@ -41,6 +44,12 @@ const usersSchema = new Schema(
     enabled: {
       type: Schema.Types.Boolean,
       default: true,
+    },
+    roles: {
+      type: [Schema.Types.String],
+      enum: ['customer', 'manufacturer', 'admin'],
+      default: ['customer'],
+      required: true,
     },
   },
   {

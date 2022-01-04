@@ -25,7 +25,7 @@ export class UserController extends Controller {
     return new UserService().get()[0];
   }
 
-  @Security('jwt')
+  @Security('jwt', ['customer', 'admin'])
   @Get()
   @Example<IUser>({
     id: 'msa90jalkjm390ßasj3apok4',
@@ -33,6 +33,7 @@ export class UserController extends Controller {
     email: 'example@mail.com',
     password: 'hashed password',
     enabled: 'true',
+    roles: ['customer'],
   })
   @Response<IError>(401, 'Unauthorized', {
     message: 'No token provided',
@@ -50,9 +51,11 @@ export class UserController extends Controller {
     email: 'example@mail.com',
     password: 'hashed password',
     enabled: 'true',
+    roles: ['customer'],
     token: 'JWT Token',
   })
   @Response<IError>(401, 'Unauthorized')
+  @Response<IError>(400, 'Validation Error')
   public async register(@Body() requestBody: UserCreationParams): Promise<IUser> {
     const user: IUser = await new UserService().register(requestBody);
 
@@ -68,6 +71,7 @@ export class UserController extends Controller {
     email: 'example@mail.com',
     password: 'hashed password',
     enabled: 'true',
+    roles: ['customer'],
     token: 'JWT Token',
   })
   @Response<IError>(401, 'Unauthorized', {

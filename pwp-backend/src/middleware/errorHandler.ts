@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { ValidateError } from 'tsoa';
 import { StatusError } from '../models/error.model';
 
 /**
@@ -14,6 +15,10 @@ export function errorHandler(err: unknown, req: Request, res: Response, next: Ne
   if (err instanceof StatusError) {
     return res.status(err.status).json({
       message: err.message,
+    });
+  } else if (err instanceof ValidateError) {
+    return res.status(400).json({
+      message: 'Validation Error! Please submit a fitting role',
     });
   } else if (err instanceof Error) {
     return res.status(401).json({

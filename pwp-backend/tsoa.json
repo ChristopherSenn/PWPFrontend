@@ -8,7 +8,7 @@
         "type": "apiKey",
         "name": "authorization",
         "in": "header"
-    }
+      }
     },
     "outputDirectory": "src",
     "specVersion": 3

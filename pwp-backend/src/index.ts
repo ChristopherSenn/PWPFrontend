@@ -28,7 +28,7 @@ app.use(bodyParser.json());
 
 // Autoregister routes from controller, setup Swagger UI
 RegisterRoutes(app);
-app.use(['/openapi', '/docs', '/swagger'], swaggerUI.serve, swaggerUI.setup(swaggerJson));
+app.use(['/docs'], swaggerUI.serve, swaggerUI.setup(swaggerJson));
 
 // Start Server
 app.listen(port, async () => {

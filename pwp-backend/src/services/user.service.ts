@@ -3,7 +3,7 @@ import { IUser, User, UserInput, UserDocument } from '../models/user.model';
 import { StatusError } from '../models/error.model';
 import signJWT from '../functions/signJWT';
 
-export type UserCreationParams = Pick<IUser, 'email' | 'username' | 'password'>;
+export type UserCreationParams = Pick<IUser, 'email' | 'username' | 'password' | 'roles'>;
 export type UserLoginParams = Pick<IUser, 'username' | 'password'>;
 
 export class UserService {
@@ -17,6 +17,7 @@ export class UserService {
         email: user.email,
         password: user.password,
         enabled: user.enabled,
+        roles: user.roles,
       };
     });
 
@@ -48,6 +49,7 @@ export class UserService {
                 email: users[0].email,
                 password: users[0].password,
                 enabled: users[0].enabled,
+                roles: users[0].roles,
               });
             }
           });
@@ -59,7 +61,7 @@ export class UserService {
   }
 
   public async register(userCreationParams: UserCreationParams): Promise<IUser> {
-    const { email, username, password } = userCreationParams;
+    const { email, username, password, roles } = userCreationParams;
     if (password.length < 8) {
       throw new StatusError('Password must be at least 8 digits long!', 401);
     }
@@ -75,6 +77,7 @@ export class UserService {
           email,
           password: hash,
           enabled: 'true',
+          roles: roles || 'customer',
         };
 
         const userSchema = new User(userInput);
@@ -91,6 +94,7 @@ export class UserService {
                 email: newUser.email,
                 password: newUser.password,
                 enabled: newUser.enabled,
+                roles: newUser.roles,
               });
             }
           });

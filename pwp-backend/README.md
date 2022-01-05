@@ -1,4 +1,5 @@
 # Setup
+  - Make sure your Node Version is at least 16.x.x
   - Get Access to .env file somehow and place it in the pwp-backend root folder
   - npm install
   - npm install tsoa -g

@@ -36,6 +36,7 @@ app.listen(port, async () => {
   await connectToDatabase();
   console.log('Connected to database!');
   console.log(`Example app listening at http://localhost:${port}`);
+  console.log(`API Documentation at http://localhost:${port}/docs`);
 });
 
 // Register error handler

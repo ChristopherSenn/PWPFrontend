@@ -1,15 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
-import { Modal, Button } from 'react-materialize';
-import 'materialize-css';
 
-const trigger = <Button>Open Modal</Button>;
+import 'materialize-css';
+import {
+  BrowserRouter,
+  Routes,
+  Route
+} from "react-router-dom";
+//pages
+import Login from './components/Auth/Login'
+import Register from './components/Auth/Register'
+
 
 function App() {
   return (
-    <Modal header="Modal Header" trigger={trigger}>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-  </Modal>
+    <BrowserRouter>
+        <Routes>
+          <Route path="/users/login" element={<Login />} />
+          <Route path="/users/register" element={<Register />} />
+        </Routes>
+    </BrowserRouter>
   );
 }
 

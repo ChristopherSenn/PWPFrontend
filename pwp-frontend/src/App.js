@@ -1,4 +1,3 @@
-
 import 'materialize-css';
 import {
   BrowserRouter,
@@ -10,8 +9,8 @@ import Login from './components/authentification/Login'
 import Register from './components/authentification/Register'
 import Dashboard from './components/main/Dashboard';
 
-
 function App() {
+
   return (
     <BrowserRouter>
         <Routes>

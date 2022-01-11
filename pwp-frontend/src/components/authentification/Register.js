@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -19,11 +20,10 @@ export default function Register() {
         email: "",
         username: "",
         password: "",
-        roles: "Customer"
     });
     const navigate = useNavigate()
 
-    const { email, username, password, roles } = formData;
+    const { email, username, password} = formData;
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -32,9 +32,12 @@ export default function Register() {
     const onSubmit = async (e) => {
         e.preventDefault();
         //toDo register function 
-        //   register({ username, email, password, roles });
-        console.log(email, username, password, roles);
-        navigate("/dashboard")
+        axios.post('http://localhost:4500/users/register', formData)
+            .then(response => 
+                {console.log(response)})
+            .catch(err => {console.log(err)})
+       
+            navigate("/dashboard")
     };
    
 

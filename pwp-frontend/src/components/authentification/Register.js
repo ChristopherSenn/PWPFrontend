@@ -4,10 +4,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
@@ -23,7 +19,7 @@ export default function Register() {
         email: "",
         username: "",
         password: "",
-        roles: []
+        roles: "Customer"
     });
     const navigate = useNavigate()
 
@@ -91,22 +87,6 @@ export default function Register() {
                             value={password}
                             onChange={(e) => onChange(e)}
                         />
-                        <FormControl sx={{ minWidth: 120 }}>
-                            <InputLabel id="roles" required>Role </InputLabel>
-                            <Select
-                                required
-                                id="selectRole"
-                                label="Role"
-                                name="roles"
-                                value={roles}
-                                onChange={(e) => onChange(e)}
-
-                            >
-                                <MenuItem value="Customer">Customer</MenuItem>
-                                <MenuItem value="Manufacturer">Manufacturer</MenuItem>
-                                <MenuItem value="Admin">Admin</MenuItem>
-                            </Select>
-                        </FormControl>
                         <Button
                             type="submit"
                             fullWidth

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,6 +14,9 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 const theme = createTheme();
 
 export default function Login() {
+
+    const navigate = useNavigate()
+
     const [formData, setFormData] = useState({
         username: "",
         password: "",
@@ -27,12 +31,10 @@ export default function Login() {
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        // if (password !== repeatPassword) {
-        //   setAlert("Passwords do not match", "danger");
-        // } else {
-        //   register({ name, email, password });
-        // }
+        //toDo login function 
+        //   login({ username, password });
         console.log(username, password)
+        navigate("/dashboard")
 
     };
 

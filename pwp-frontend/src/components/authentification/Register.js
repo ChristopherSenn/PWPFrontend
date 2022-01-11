@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -24,6 +25,7 @@ export default function Register() {
         password: "",
         roles: []
     });
+    const navigate = useNavigate()
 
     const { email, username, password, roles } = formData;
 
@@ -33,14 +35,12 @@ export default function Register() {
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        // if (password !== repeatPassword) {
-        //   setAlert("Passwords do not match", "danger");
-        // } else {
-        //   register({ name, email, password });
-        // }
-        console.log(email, username, password, roles)
-
+        //toDo register function 
+        //   register({ username, email, password, roles });
+        console.log(email, username, password, roles);
+        navigate("/dashboard")
     };
+   
 
     return (
         <ThemeProvider theme={theme}>
@@ -60,6 +60,16 @@ export default function Register() {
                     </Typography>
                     <Box component="form" onSubmit={(e) => onSubmit(e)} sx={{ mt: 1 }}>
                         <TextField
+                            required
+                            type="text"
+                            id="text"
+                            label="User Name"
+                            fullWidth
+                            name="username"
+                            value={username}
+                            onChange={(e) => onChange(e)}
+                        />
+                        <TextField
                             margin="normal"
                             required
                             fullWidth
@@ -69,16 +79,6 @@ export default function Register() {
                             value={email}
                             onChange={(e) => onChange(e)}
 
-                        />
-                        <TextField
-                            required
-                            type="text"
-                            id="text"
-                            label="User Name"
-                            fullWidth
-                            name="username"
-                            value={username}
-                            onChange={(e) => onChange(e)}
                         />
                         <TextField
                             margin="normal"

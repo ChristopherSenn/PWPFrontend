@@ -6,8 +6,9 @@ import {
   Route
 } from "react-router-dom";
 //pages
-import Login from './components/Auth/Login'
-import Register from './components/Auth/Register'
+import Login from './components/authentification/Login'
+import Register from './components/authentification/Register'
+import Dashboard from './components/main/Dashboard';
 
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         <Routes>
           <Route path="/users/login" element={<Login />} />
           <Route path="/users/register" element={<Register />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
     </BrowserRouter>
   );

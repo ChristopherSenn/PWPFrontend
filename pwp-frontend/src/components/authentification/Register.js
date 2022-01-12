@@ -20,6 +20,7 @@ export default function Register() {
         email: "",
         username: "",
         password: "",
+        roles:"customer"
     });
     const navigate = useNavigate()
 
@@ -34,7 +35,9 @@ export default function Register() {
         //toDo register function 
         axios.post('http://localhost:4500/users/register', formData)
             .then(response => 
-                {console.log(response)})
+                {   console.log(response.data.token)
+                    localStorage.setItem('token', response.data.token)
+                })
             .catch(err => {console.log(err)})
        
             navigate("/dashboard")

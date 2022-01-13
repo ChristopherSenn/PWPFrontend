@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../../actions/userActions";
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -10,6 +12,8 @@ import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Loading from '../../actions/loading';
+import ErrorMessage from '../../actions/errorMessage';
 
 const theme = createTheme();
 
@@ -22,8 +26,11 @@ export default function Login() {
         password: "",
 
     });
-
     const { username, password, } = formData;
+    const dispatch = useDispatch();
+    const userLogin = useSelector((state) => state.userLogin);
+    const { loading, error } = userLogin;
+  
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -31,11 +38,10 @@ export default function Login() {
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        //toDo login function 
-        //   login({ username, password });
-        console.log(username, password)
-        navigate("/dashboard")
-
+        dispatch(login(username, password));
+        if(userLogin){
+            navigate("/dashboard")
+        }
     };
 
     return (
@@ -54,6 +60,8 @@ export default function Login() {
                     <Typography component="h1" variant="h5">
                         Login
                     </Typography>
+                    {error && <ErrorMessage>{error}</ErrorMessage>},
+                    {loading && <Loading/>}
                     <Box component="form" onSubmit={(e) => onSubmit(e)} sx={{ mt: 1 }}>
                         <TextField
                             required

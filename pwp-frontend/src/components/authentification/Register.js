@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { register } from "../../actions/userActions";
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,7 +12,8 @@ import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import ErrorMessage from '../../actions/errorMessage';
+import Loading from '../../actions/loading'
 const theme = createTheme();
 
 export default function Register() {
@@ -20,27 +22,30 @@ export default function Register() {
         email: "",
         username: "",
         password: "",
-        roles:"customer"
+        roles: "customer"
     });
     const navigate = useNavigate()
-
+    const [message, setMessage] = useState(null)
     const { email, username, password} = formData;
 
+    const dispatch = useDispatch();
+
+    const userRegister = useSelector((state) => state.userRegister);
+    const { loading, error } = userRegister;
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        //toDo register function 
-        axios.post('http://localhost:4500/users/register', formData)
-            .then(response => 
-                {   console.log(response.data.token)
-                    localStorage.setItem('token', response.data.token)
-                })
-            .catch(err => {console.log(err)})
-       
-            navigate("/dashboard")
+        if(password.length < 8){
+                 setMessage('Password must be at least 8 digits long!')
+            
+            }else {
+                dispatch(register(username, email, password, "customer"));
+                navigate("/dashboard")
+        }
+
     };
    
 
@@ -60,6 +65,9 @@ export default function Register() {
                     <Typography component="h1" variant="h5">
                         Sign up
                     </Typography>
+                    {error && <ErrorMessage>{error}</ErrorMessage>}
+                    {message && <ErrorMessage>{message}</ErrorMessage>}
+                    {loading && <Loading/>}
                     <Box component="form" onSubmit={(e) => onSubmit(e)} sx={{ mt: 1 }}>
                         <TextField
                             required

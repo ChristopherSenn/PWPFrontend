@@ -60,7 +60,7 @@ export default function Login() {
                     <Typography component="h1" variant="h5">
                         Login
                     </Typography>
-                    {error && <ErrorMessage>{error}</ErrorMessage>},
+                    {error && <ErrorMessage>{error}</ErrorMessage>}
                     {loading && <Loading/>}
                     <Box component="form" onSubmit={(e) => onSubmit(e)} sx={{ mt: 1 }}>
                         <TextField

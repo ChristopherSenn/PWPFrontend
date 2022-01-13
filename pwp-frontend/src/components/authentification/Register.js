@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { register } from "../../actions/userActions";
@@ -31,7 +31,14 @@ export default function Register() {
     const dispatch = useDispatch();
 
     const userRegister = useSelector((state) => state.userRegister);
-    const { loading, error } = userRegister;
+    const { loading, error, userInfo } = userRegister;
+
+    useEffect(() => {
+        if (userInfo) {
+          navigate('/dashboard');
+        }
+      });
+
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
@@ -43,7 +50,6 @@ export default function Register() {
             
             }else {
                 dispatch(register(username, email, password, "customer"));
-                navigate("/dashboard")
         }
 
     };

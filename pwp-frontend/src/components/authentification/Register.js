@@ -17,7 +17,7 @@ import Loading from '../../actions/loading'
 const theme = createTheme();
 
 export default function Register() {
-
+    
     const [formData, setFormData] = useState({
         email: "",
         username: "",

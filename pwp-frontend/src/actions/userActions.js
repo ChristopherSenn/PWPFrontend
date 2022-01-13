@@ -38,11 +38,7 @@ import {
       });
     }
   };
-  
-  export const logout = () => async (dispatch) => {
-    localStorage.removeItem("userInfo");
-    dispatch({ type: USER_LOGOUT });
-  };
+
   
   export const register = (username, email, password, roles) => async (dispatch) => {
     try {
@@ -74,4 +70,9 @@ import {
             : error.message,
       });
     }
+  };
+
+  export const logout = () => async (dispatch) => {
+    localStorage.removeItem("userInfo");
+    dispatch({ type: USER_LOGOUT });
   };

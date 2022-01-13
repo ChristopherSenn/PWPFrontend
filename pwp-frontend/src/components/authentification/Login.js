@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../actions/userActions";
@@ -29,8 +29,13 @@ export default function Login() {
     const { username, password, } = formData;
     const dispatch = useDispatch();
     const userLogin = useSelector((state) => state.userLogin);
-    const { loading, error } = userLogin;
-  
+    const { loading, error, userInfo} = userLogin;
+
+    useEffect(() => {
+        if (userInfo) {
+          navigate('/dashboard');
+        }
+      });
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -39,10 +44,9 @@ export default function Login() {
     const onSubmit = async (e) => {
         e.preventDefault();
         dispatch(login(username, password));
-        if(userLogin){
-            navigate("/dashboard")
-        }
+        
     };
+    
 
     return (
         <ThemeProvider theme={theme}>

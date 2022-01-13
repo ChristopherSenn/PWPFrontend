@@ -1,9 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {useSelector } from "react-redux";
-
+import {useSelector, useDispatch } from "react-redux";
+import { Link as RouterLink } from "react-router-dom";
+import Button from '@mui/material/Button'; 
+import Grid from '@mui/material/Grid';
+import { logout } from "../../actions/userActions";
 
 export default function Dashboard() {
-
+  const dispatch = useDispatch();
   const [userName, setUserName] = useState("");
 
   const userLogin = useSelector((state) => state.userLogin);
@@ -15,8 +18,21 @@ export default function Dashboard() {
     }
   }, [userInfo])
 
+  const logoutHandler = () => {
+    dispatch(logout());
+  };
 
   return(
-    <h2>Welcome to Dashboard, {userName}</h2>
+    <div> 
+        <h2>Welcome to Dashboard, {userName}</h2>
+            <Grid container>
+                <Grid item xs>
+                    <Button  variant="contained" component={RouterLink} to="/users/login" onClick={logoutHandler}>
+                        Log out
+                    </Button>
+                </Grid>
+            </Grid>
+     
+    </div>
   );
 }

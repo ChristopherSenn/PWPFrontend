@@ -13,7 +13,7 @@ import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Loading from '../../actions/loading';
-import ErrorMessage from '../../actions/errorMessage';
+import {ErrorMessage} from '../../actions/messages';
 
 const theme = createTheme();
 
@@ -30,9 +30,10 @@ export default function Login() {
     const dispatch = useDispatch();
     const userLogin = useSelector((state) => state.userLogin);
     const { loading, error, userInfo} = userLogin;
+    const [submittButton, setSubmittButton] =useState(null)
 
     useEffect(() => {
-        if (userInfo) {
+        if (userInfo && submittButton ) {
           navigate('/dashboard');
         }
       });
@@ -44,6 +45,7 @@ export default function Login() {
     const onSubmit = async (e) => {
         e.preventDefault();
         dispatch(login(username, password));
+        setSubmittButton(true)
         
     };
     

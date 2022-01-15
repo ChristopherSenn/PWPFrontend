@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
+import React, { useState} from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { register } from "../../actions/userActions";
 import Avatar from '@mui/material/Avatar';
@@ -12,7 +11,7 @@ import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import ErrorMessage from '../../actions/errorMessage';
+import {ErrorMessage, SuccesMessage} from '../../actions/messages';
 import Loading from '../../actions/loading'
 const theme = createTheme();
 
@@ -24,20 +23,18 @@ export default function Register() {
         password: "",
         roles: "customer"
     });
-    const navigate = useNavigate()
-    const [message, setMessage] = useState(null)
+    const [messageError, setMessageError] = useState(null)
+    const [messageSucces, setMessageSuccess] = useState(null)
     const { email, username, password} = formData;
 
     const dispatch = useDispatch();
-
+    
     const userRegister = useSelector((state) => state.userRegister);
-    const { loading, error, userInfo } = userRegister;
+    //errors from response(backend); 
+    // loading for progress line
+    const { loading, error} = userRegister;
 
-    useEffect(() => {
-        if (userInfo) {
-          navigate('/dashboard');
-        }
-      });
+  
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -46,13 +43,28 @@ export default function Register() {
     const onSubmit = async (e) => {
         e.preventDefault();
         if(password.length < 8){
-                 setMessage('Password must be at least 8 digits long!')
+            setMessageError('Password must be at least 8 digits long!')
             
             }else {
                 dispatch(register(username, email, password, "customer"));
+                setMessageSuccess("Registration Successful.")
         }
 
     };
+    const setAlertMessage = () =>{
+        if(error){
+            return <ErrorMessage>{error}</ErrorMessage>
+        }else if (messageError){
+            return <ErrorMessage>{messageError}</ErrorMessage>
+        }else if (messageSucces){
+            return  <SuccesMessage>
+            {messageSucces}
+            <Link href="/users/login" variant="body2">
+                Please click here to Login
+            </Link>
+        </SuccesMessage>
+        }
+    }
    
 
     return (
@@ -71,9 +83,8 @@ export default function Register() {
                     <Typography component="h1" variant="h5">
                         Sign up
                     </Typography>
-                    {error && <ErrorMessage>{error}</ErrorMessage>}
-                    {message && <ErrorMessage>{message}</ErrorMessage>}
                     {loading && <Loading/>}
+                    {setAlertMessage()}
                     <Box component="form" onSubmit={(e) => onSubmit(e)} sx={{ mt: 1 }}>
                         <TextField
                             required

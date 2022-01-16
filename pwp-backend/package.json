@@ -6,7 +6,9 @@
   "scripts": {
     "clean": "rm -rf build/",
     "build": "tsoa spec-and-routes && tsc",
-    "dev": "concurrently \"nodemon\" \"nodemon -x tsoa spec-and-routes\"",
+    "client": "cd ../pwp-frontend && npm start ",
+    "server": "concurrently \"nodemon\" \"nodemon -x tsoa spec-and-routes\"",
+    "dev": "concurrently \"npm run server\" \"npm run client\" ",
     "start": "nodemon --watch \"*.ts\" --exec \"ts-node\" ./src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

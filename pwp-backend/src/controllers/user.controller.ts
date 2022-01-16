@@ -25,7 +25,7 @@ export class UserController extends Controller {
     return new UserService().get()[0];
   }
 
-  @Security('jwt', ['customer', 'admin'])
+  @Security('jwt', ['customer'])
   @Get()
   @Example<IUser>({
     id: 'msa90jalkjm390ßasj3apok4',

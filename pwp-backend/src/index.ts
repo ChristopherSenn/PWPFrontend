@@ -9,6 +9,7 @@ import * as swaggerJson from './swagger.json';
 import * as swaggerUI from 'swagger-ui-express';
 import { connectToDatabase } from './db/databaseConnection';
 import { errorHandler } from './middleware/errorHandler';
+import { connectMqttClient } from './mqtt/mqtt';
 
 export const app = express();
 
@@ -37,6 +38,9 @@ app.listen(port, async () => {
   console.log('Connected to database!');
   console.log(`Example app listening at http://localhost:${port}`);
   console.log(`API Documentation at http://localhost:${port}/docs`);
+
+  console.log('Connecting MQTT Client...');
+  connectMqttClient();
 });
 
 // Register error handler

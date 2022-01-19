@@ -8,6 +8,7 @@ export class MqttService {
         // Store new acces mode to db
         console.log(`New access mode ${message.message} for device ${message.deviceId} in hub ${message.hubId}`);
     }
+    // Theoretisch kann man hier einfach find device by id - update topic - with message machen
     return {
       status: 200,
       message: 'OK',

@@ -8,6 +8,8 @@ interface IDevice {
     events: string;
     state: string;
     hubId : string;
+    id?: string;
+    token?: string;
   }
 
   type DeviceDocument = Document & {

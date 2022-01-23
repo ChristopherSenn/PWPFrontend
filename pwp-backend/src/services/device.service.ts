@@ -1,8 +1,7 @@
 import { StatusError } from '../models/error.model';
 import { Device, DeviceInput, DeviceDocument, IDevice } from '../models/device.model';
 export type DeviceDeleteParams = Pick<IDevice, 'deviceName'| 'hubId' >;
-export type FindDeviceParams = Pick<IDevice, 'hubId'>;
-export type FindParams = Pick<IDevice, 'deviceName'>;
+
 
 export class DeviceService {
 
@@ -48,9 +47,9 @@ public async deleteDevice(requestBody: DeviceDeleteParams): Promise<IDevice> {
       }
 
 
-public async getDevice(requestBody: FindDeviceParams): Promise<IDevice> {
+public async getDevice(): Promise<IDevice> {
     return new Promise<IDevice>((resolve, reject) => {
-        Device.findOne({ hubId: requestBody.hubId  }, (err, result) => {
+        Device.findOne({}, (err, result) => {
           if (err) {
             reject(new StatusError('Something went wrong', 404));
           } else {
@@ -72,9 +71,9 @@ public async getDevice(requestBody: FindDeviceParams): Promise<IDevice> {
       });
     }
  
-public async getAction(requestBody: FindParams): Promise<IDevice> {
+public async getAction(): Promise<IDevice> {
         return new Promise<IDevice>((resolve, reject) => {
-            Device.findOne({ deviceName: requestBody.deviceName  }, (err, result) => {
+            Device.findOne({}, (err, result) => {
               if (err) {
                 reject(new StatusError('Something went wrong', 404));
               } else {
@@ -96,9 +95,9 @@ public async getAction(requestBody: FindParams): Promise<IDevice> {
           });
     
         }    
-public async getState(requestBody: FindParams): Promise<IDevice> {
+public async getState(): Promise<IDevice> {
             return new Promise<IDevice>((resolve, reject) => {
-                Device.findOne({ deviceName: requestBody.deviceName  }, (err, result) => {
+                Device.findOne({}, (err, result) => {
                   if (err) {
                     reject(new StatusError('Something went wrong', 404));
                   } else {
@@ -120,9 +119,9 @@ public async getState(requestBody: FindParams): Promise<IDevice> {
               });
         
             }        
-public async getEvent(requestBody: FindParams): Promise<IDevice> {
+public async getEvent(): Promise<IDevice> {
                 return new Promise<IDevice>((resolve, reject) => {
-                    Device.findOne({ deviceName: requestBody.deviceName  }, (err, result) => {
+                    Device.findOne({}, (err, result) => {
                       if (err) {
                         reject(new StatusError('Something went wrong', 404));
                       } else {

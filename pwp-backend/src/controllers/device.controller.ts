@@ -1,14 +1,14 @@
-import { Body, Controller, Get, Post, Route, Security, Tags, Example, Response, Delete, Request } from 'tsoa';
+import { Body, Controller, Get, Post, Route, Security, Tags, Example, Response, Delete, Request, Query } from 'tsoa';
 import { IError } from '../models/error.model';
 import { IDevice } from '../models/device.model';
-import { DeviceService, DeviceDeleteParams, FindDeviceParams, FindParams } from '../services/device.service';
+import { DeviceService, DeviceDeleteParams } from '../services/device.service';
 
 @Route('devices')
 @Tags('Devices')
 
 export class DeviceController extends Controller {
 //Security('jwt', ['customer'])
-
+@Security('jwt', ['customer'])
 @Example<IDevice>({
         thingDescription: "My first Thing Description",
         deviceName: "MyDevice",
@@ -16,6 +16,9 @@ export class DeviceController extends Controller {
         events: "do sth",
         state: "on",
         hubId: "1234",
+    })
+@Response<IError>(401, 'Unauthorized', {
+    message: 'No token provided',
     })
 //TODO: TOKEN UND ID
 //TODO: Security
@@ -34,27 +37,29 @@ export class DeviceController extends Controller {
   }
 
  
-@Post('getDeviceByHub')
-  public async getDevice(@Body() requestBody: FindDeviceParams): Promise<IDevice>  {
-    const response = await new DeviceService().getDevice(requestBody);
+@Get('getDeviceByHub')
+  public async getDevice(@Query() hubId?: string): Promise<IDevice>  {
+    const response = await new DeviceService().getDevice();
     return response;
   }  
+
+//TODO: spezifische Filterung
 //TODO: sinnvoller das ganze Objekt an Frontend zu senden und die filtern sich raus, was sie möchten?
-@Post('getActionByDevice')
-  public async getAction(@Body() requestBody: FindParams)  {
-    const response = await new DeviceService().getAction(requestBody);
+@Get('getActionByDevice')
+  public async getAction(@Query()  deviceName?: string)  {
+    const response = await new DeviceService().getAction();
     return response.action;
   }  
 
-@Post('getStateByDevice')
-  public async getState(@Body() requestBody: FindParams)  {
-    const response = await new DeviceService().getState(requestBody);
+@Get('getStateByDevice')
+  public async getState(@Query()  deviceName?: string )  {
+    const response = await new DeviceService().getState();
     return response.state;
   }
   
-@Post('getEventByDevice')
-  public async getEvent(@Body() requestBody: FindParams) {
-    const response = await new DeviceService().getEvent(requestBody);
+@Get('getEventByDevice')
+  public async getEvent(@Query()  deviceName?: string) {
+    const response = await new DeviceService().getEvent();
     return response.events;
   } 
 

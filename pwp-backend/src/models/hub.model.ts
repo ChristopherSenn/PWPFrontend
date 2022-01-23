@@ -32,7 +32,7 @@ const hubSchema = new Schema(
       required: true,
     },
     hubId: {
-      type: Schema.Types.ObjectId,
+      type: Schema.Types.String,
       required: true,
     },
     ownerId: {

@@ -1,8 +1,8 @@
 import { StatusError } from '../models/error.model';
-import { IHub, HubDocument, Hub, HubInput } from '../models/hub.model';
+import { IHub, HubDocument, Hub, HubInput, HubCredentials } from '../models/hub.model';
 export type HubDeleteParams = Pick<IHub, 'hubId'>;
-export type AddOrRemoveUserParams = Pick<IHub, 'hubId' | 'memberIds'>;
-export type AddOrRemoveDeviceParams = Pick<IHub, 'hubId' | 'deviceIds' | 'ownerId'>;
+export type AddOrRemoveUserParams = { hubId: string; memberIds: string[]; userId: string };
+export type AddOrRemoveDeviceParams = { hubId: string; deviceIds: string[]; userId: string };
 
 export class HubService {
   public async getHubs(): Promise<IHub[]> {
@@ -25,7 +25,9 @@ export class HubService {
   public async getHubsByUserId(userId: string): Promise<IHub[]> {
     const hubs: HubDocument[] = await Hub.find().exec();
 
-    const parsedHubs: IHub[] = hubs.map((hub) => {
+    const matchedhubs = hubs.filter((hub) => hub.memberIds.includes(userId));
+
+    const parsedHubs: IHub[] = matchedhubs.map((hub) => {
       return {
         hubName: hub.hubName,
         hubId: hub.hubId,
@@ -93,79 +95,110 @@ export class HubService {
   }
 
   public async addUser(requestBody: AddOrRemoveUserParams): Promise<IHub> {
-    const { hubId, memberIds } = requestBody;
+    const { hubId, memberIds, userId } = requestBody;
 
     const hub: HubDocument | null = await Hub.findById(hubId).exec();
     if (hub) {
-      const toaddUser: string[] = memberIds.filter((memberId) => !hub.memberIds.includes(memberId));
-      return new Promise<IHub>((resolve, reject) => {
-        Hub.findOneAndUpdate({ _id: hubId }, { $push: { memberIds: toaddUser } }, { new: true }, (err, res) => {
-          if (err) {
-            reject(new StatusError(err.message, 404));
-          } else {
-            if (res !== null) {
-              const parsedHub: IHub = {
-                hubName: res.hubName,
-                hubId: res.hubId,
-                ownerId: res.ownerId,
-                memberIds: res.memberIds,
-                deviceIds: res.deviceIds,
-              };
-              resolve(parsedHub);
+      if (userId === hub.ownerId.toString()) {
+        const toaddUser: string[] = memberIds.filter((memberId) => !hub.memberIds.includes(memberId));
+        return new Promise<IHub>((resolve, reject) => {
+          Hub.findOneAndUpdate({ _id: hubId }, { $push: { memberIds: toaddUser } }, { new: true }, (err, res) => {
+            if (err) {
+              reject(new StatusError(err.message, 404));
             } else {
-              reject(new StatusError('Hub not found', 404));
+              if (res !== null) {
+                const parsedHub: IHub = {
+                  hubName: res.hubName,
+                  hubId: res.hubId,
+                  ownerId: res.ownerId,
+                  memberIds: res.memberIds,
+                  deviceIds: res.deviceIds,
+                };
+                resolve(parsedHub);
+              } else {
+                reject(new StatusError('Hub not found', 404));
+              }
             }
-          }
+          });
         });
-      });
+      } else {
+        throw new StatusError('Only the owner can add new user to this hub', 404);
+      }
     } else {
       throw new StatusError('Hub not found', 404);
     }
   }
 
-  // TODO: write correctly
   public async removeUser(requestBody: AddOrRemoveUserParams): Promise<IHub> {
-    const { hubId, memberIds } = requestBody;
+    const { hubId, memberIds, userId } = requestBody;
 
     const hub: HubDocument | null = await Hub.findById(hubId).exec();
     if (hub) {
       if (memberIds.includes(hub.ownerId.toString())) {
-        throw new StatusError('You can not remove the Owner of this Hub', 404);
+        throw new StatusError('You can not remove the owner of this Hub', 404);
       }
-
-      const toremoveUser: string[] = memberIds.filter((memberId) => hub.memberIds.includes(memberId));
-      console.log(`Removing ${toremoveUser}`);
-      return new Promise<IHub>((resolve, reject) => {
-        Hub.findByIdAndUpdate({ _id: hubId }, { $pullAll: { memberIds: toremoveUser } }, { new: true }, (err, res) => {
-          if (err) {
-            reject(new StatusError(err.message, 404));
-          } else {
-            if (res !== null) {
-              const parsedHub: IHub = {
-                hubName: res.hubName,
-                hubId: res.hubId,
-                ownerId: res.ownerId,
-                memberIds: res.memberIds,
-                deviceIds: res.deviceIds,
-              };
-              resolve(parsedHub);
-            } else {
-              reject(new StatusError('Hub not found', 404));
+      if (userId === hub.ownerId.toString()) {
+        const toremoveUser: string[] = memberIds.filter((memberId) => hub.memberIds.includes(memberId));
+        return new Promise<IHub>((resolve, reject) => {
+          Hub.findByIdAndUpdate(
+            { _id: hubId },
+            { $pullAll: { memberIds: toremoveUser } },
+            { new: true },
+            (err, res) => {
+              if (err) {
+                reject(new StatusError(err.message, 404));
+              } else {
+                if (res !== null) {
+                  const parsedHub: IHub = {
+                    hubName: res.hubName,
+                    hubId: res.hubId,
+                    ownerId: res.ownerId,
+                    memberIds: res.memberIds,
+                    deviceIds: res.deviceIds,
+                  };
+                  resolve(parsedHub);
+                } else {
+                  reject(new StatusError('Hub not found', 404));
+                }
+              }
             }
-          }
+          );
         });
-      });
+      } else if (memberIds.includes(userId) && userId !== hub.ownerId) {
+        return new Promise<IHub>((resolve, reject) => {
+          Hub.findByIdAndUpdate({ _id: hubId }, { $pullAll: { memberIds: [userId] } }, { new: true }, (err, res) => {
+            if (err) {
+              reject(new StatusError(err.message, 404));
+            } else {
+              if (res !== null) {
+                const parsedHub: IHub = {
+                  hubName: res.hubName,
+                  hubId: res.hubId,
+                  ownerId: res.ownerId,
+                  memberIds: res.memberIds,
+                  deviceIds: res.deviceIds,
+                };
+                resolve(parsedHub);
+              } else {
+                reject(new StatusError('Hub not found', 404));
+              }
+            }
+          });
+        });
+      } else {
+        throw new StatusError('You are neither a member nor the owner of this hub. You can not remove user', 404);
+      }
     } else {
       throw new StatusError('Hub not found', 404);
     }
   }
 
   public async addDevice(requestBody: AddOrRemoveDeviceParams): Promise<IHub> {
-    const { hubId, deviceIds, ownerId } = requestBody;
+    const { hubId, deviceIds, userId } = requestBody;
 
     const hub: HubDocument | null = await Hub.findById(hubId).exec();
     if (hub) {
-      if (ownerId.toString() === hub.ownerId.toString()) {
+      if (userId === hub.ownerId.toString()) {
         const toaddDevice: string[] = deviceIds.filter((deviceId) => !hub.deviceIds.includes(deviceId));
         return new Promise<IHub>((resolve, reject) => {
           Hub.findOneAndUpdate({ _id: hubId }, { $push: { memberIds: toaddDevice } }, { new: true }, (err, res) => {
@@ -188,7 +221,7 @@ export class HubService {
           });
         });
       } else {
-        throw new StatusError('Only the owner of this hub can add devces', 404);
+        throw new StatusError('Only the owner of this hub can add devices', 404);
       }
     } else {
       throw new StatusError('Hub not found', 404);
@@ -196,11 +229,11 @@ export class HubService {
   }
 
   public async removeDevice(requestBody: AddOrRemoveDeviceParams): Promise<IHub> {
-    const { hubId, deviceIds, ownerId } = requestBody;
+    const { hubId, deviceIds, userId } = requestBody;
 
     const hub: HubDocument | null = await Hub.findById(hubId).exec();
     if (hub) {
-      if (ownerId.toString() === hub.ownerId.toString()) {
+      if (userId === hub.ownerId.toString()) {
         const toRemoveDevice: string[] = deviceIds.filter((deviceId) => hub.deviceIds.includes(deviceId));
         return new Promise<IHub>((resolve, reject) => {
           Hub.findByIdAndUpdate(
@@ -235,21 +268,17 @@ export class HubService {
     }
   }
 
-  // TODO: write correctly
-  public async showIDandToken(requestBody: IHub): Promise<IHub> {
-    const { hubName, hubId, ownerId, memberIds, deviceIds } = requestBody;
+  // TODO: write correctly - add token!
+  public async showIDandToken(hubId: string): Promise<HubCredentials> {
+    const hub: HubDocument | null = await Hub.findById(hubId).exec();
 
-    const hubInput: HubInput = {
-      hubName,
-      hubId,
-      ownerId,
-      memberIds,
-      deviceIds,
-    };
-
-    const hubSchema = new Hub(hubInput);
-    const newHub: HubDocument = await hubSchema.save();
-    const parsedHub: IHub = newHub;
-    return parsedHub;
+    if (hub) {
+      return {
+        hubId: hub.hubId,
+        token: '1234',
+      };
+    } else {
+      throw new StatusError('Hub not found', 404);
+    }
   }
 }

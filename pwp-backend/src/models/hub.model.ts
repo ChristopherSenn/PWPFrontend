@@ -25,6 +25,11 @@ type HubInput = {
   deviceIds: HubDocument['deviceIds'];
 };
 
+type HubCredentials = {
+  hubId: string;
+  token: string;
+};
+
 const hubSchema = new Schema(
   {
     hubName: {
@@ -54,4 +59,4 @@ const hubSchema = new Schema(
 
 const Hub: Model<HubDocument> = mongoose.model<HubDocument>('Hub', hubSchema);
 
-export { Hub, HubInput, HubDocument, IHub };
+export { Hub, HubInput, HubDocument, IHub, HubCredentials };

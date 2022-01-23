@@ -1,4 +1,4 @@
-import { IHub } from '../models/hub.model';
+import { HubCredentials, IHub } from '../models/hub.model';
 import { AddOrRemoveDeviceParams, AddOrRemoveUserParams, HubDeleteParams, HubService } from '../services/hub.service';
 import { IError } from '../models/error.model';
 import {
@@ -14,6 +14,7 @@ import {
   Example,
   Response,
   SuccessResponse,
+  Query,
 } from 'tsoa';
 
 @Route('hubs')
@@ -36,7 +37,8 @@ export class HubController extends Controller {
     return response;
   }
 
-  public async getHubsByUserId(userId: string): Promise<IHub[]> {
+  @Get('getHubsByUserId')
+  public async getHubsByUserId(@Query() userId: string): Promise<IHub[]> {
     const response: IHub[] = await new HubService().getHubsByUserId(userId);
     return response;
   }
@@ -107,9 +109,9 @@ export class HubController extends Controller {
     return response;
   }
 
-  @Post('showIDandToken')
-  public async showIDandToken(@Body() requestBody: IHub): Promise<IHub> {
-    const response: IHub = await new HubService().showIDandToken(requestBody);
+  @Get('showIDandToken')
+  public async showIDandToken(@Query() hubId: string): Promise<HubCredentials> {
+    const response: HubCredentials = await new HubService().showIDandToken(hubId);
     return response;
   }
 }

@@ -8,20 +8,28 @@ import { DeviceService, DeviceDeleteParams } from '../services/device.service';
 
 export class DeviceController extends Controller {
 //Security('jwt', ['customer'])
-@Security('jwt', ['customer'])
-@Example<IDevice>({
+
+/* @Example<IDevice>({
         thingDescription: "My first Thing Description",
-        deviceName: "MyDevice",
-        action: "toggle",
-        events: "do sth",
-        state: "on",
+        deviceId: "1234",
         hubId: "1234",
-    })
-@Response<IError>(401, 'Unauthorized', {
+        deviceName: "MyDevice",
+        action:  [{
+          name: "stir",
+          href: "mqtt://pwp21.medien.ifi.lmu.de:8883/mixer-1/status",
+          inputs: ["float"],
+              }],
+        properties: [{
+          name: "stir",
+          href: "mqtt://pwp21.medien.ifi.lmu.de:8883/mixer-1/status",
+          inputs: ["float"],
+          value: true
+        }],   
+    }) */
+/* @Response<IError>(401, 'Unauthorized', {
     message: 'No token provided',
-    })
-//TODO: TOKEN UND ID
-//TODO: Security
+    }) */
+
 //TODO: Parsen der TD, damit action usw nicht eingegeben werden muss sondern aus der TD gezogen wird
 @Post('createDevice')
   public async createDevice(@Body() requestBody: IDevice): Promise<IDevice> {
@@ -43,24 +51,11 @@ export class DeviceController extends Controller {
     return response;
   }  
 
-//TODO: spezifische Filterung
-//TODO: sinnvoller das ganze Objekt an Frontend zu senden und die filtern sich raus, was sie möchten?
-@Get('getActionByDevice')
+//TODO: spezifische Filterung findOne -> sucht bisher alle
+@Get('getDetailsByDevice')
   public async getAction(@Query()  deviceName?: string)  {
-    const response = await new DeviceService().getAction();
+    const response = await new DeviceService().getDetails();
     return response.action;
   }  
-
-@Get('getStateByDevice')
-  public async getState(@Query()  deviceName?: string )  {
-    const response = await new DeviceService().getState();
-    return response.state;
-  }
-  
-@Get('getEventByDevice')
-  public async getEvent(@Query()  deviceName?: string) {
-    const response = await new DeviceService().getEvent();
-    return response.events;
-  } 
 
 }

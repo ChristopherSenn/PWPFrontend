@@ -3,31 +3,48 @@ import mongoose, { Schema, Model, Document } from 'mongoose';
 
 interface IDevice {
     thingDescription: string;
-    deviceName: string;
-    action: string;
-    events: string;
-    state: string;
+    deviceId: string;
     hubId : string;
-    id?: string;
-    token?: string;
+    deviceName: string;
+    action: Array<{
+      name: string;
+      href: string;
+      inputs: string;
+    }>;
+    properties: Array<{
+      name: string;
+      href: string;
+      inputs: string;
+      value: boolean;
+    }>;
   }
 
   type DeviceDocument = Document & {
     thingDescription: string;
+    deviceId: string;
+    hubId : string;
     deviceName: string;
-    action: string;
-    events: string;
-    state: string;
-    hubId: string;
+    action: Array<{
+      name: string;
+      href: string;
+      inputs: string;
+    }>;
+    properties: Array<{
+      name: string;
+      href: string;
+      inputs: string;
+      value: boolean;
+    }>;
   };
 
   type DeviceInput = {
     thingDescription: DeviceDocument['thingDescription'];
+    deviceId: DeviceDocument['deviceId'];
+    hubId: DeviceDocument['hubId'];
     deviceName: DeviceDocument['deviceName'];
     action: DeviceDocument['action'];
-    events: DeviceDocument['events'];
-    state: DeviceDocument['state'];
-    hubId: DeviceDocument['hubId'];
+    properties: DeviceDocument['properties'];
+    
   };
 
   const deviceSchema = new Schema(
@@ -36,26 +53,58 @@ interface IDevice {
         type: Schema.Types.String,
         required: true,
       },
+    
+      deviceId: {
+        type: Schema.Types.String,
+        required: true
+      
+    },
+    hubId: {
+      type: Schema.Types.String,
+      required: true
+  
+    },
       deviceName:{
         type: Schema.Types.String,
         required: true
       },
-      action: {
+      action: [{
         type: Schema.Types.String,
-        required: true
-      },
-      events: {
+        required: true,
+          name: {
+            type: Schema.Types.String,
+            required: true,
+          },
+         href: {
+           type: Schema.Types.String,
+           required: true
+          },
+          inputs: {
+            type: Schema.Types.Array,
+            required: true
+          },
+        
+      }],
+      properties: [{
         type: Schema.Types.String,
-        required: true
-      },
-      state: {
-        type: Schema.Types.String,
-        required: true
-      } ,
-      hubId: {
-        type: Schema.Types.String,
-        required: true
-      } 
+        required: true,
+          name: {
+            type: Schema.Types.String,
+            required: true,
+          },
+          href: {
+            type: Schema.Types.String,
+            required: true,
+          },
+          inputs: {
+            type: Schema.Types.String,
+            required: true,
+          },
+          value: {
+            type: Schema.Types.Boolean,
+            required: true,
+          },
+      }],
     },
     {
       collection: 'devices',

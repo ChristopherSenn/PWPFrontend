@@ -1,31 +1,32 @@
-import { Body, Controller, Get, Post, Route, Security, Tags, Example, Response, Delete, Request, Query } from 'tsoa';
+import { Body, Controller, Get, Post, Route, Security, Tags, Example, Response, Delete, Request, Query  } from 'tsoa';
 import { IError } from '../models/error.model';
-import { IDevice } from '../models/device.model';
+import { Device, IDevice } from '../models/device.model';
 import { DeviceService, DeviceDeleteParams } from '../services/device.service';
 
 @Route('devices')
 @Tags('Devices')
 
 export class DeviceController extends Controller {
-//Security('jwt', ['customer'])
+//@Security('jwt', ['customer'])
 
-/* @Example<IDevice>({
-        thingDescription: "My first Thing Description",
+@Example<IDevice>({
+        thingDescription: "Hier kommt die TD hin",
         deviceId: "1234",
         hubId: "1234",
         deviceName: "MyDevice",
-        action:  [{
+        actions:  [{
           name: "stir",
           href: "mqtt://pwp21.medien.ifi.lmu.de:8883/mixer-1/status",
-          inputs: ["float"],
+          inputs: "float",
               }],
-        properties: [{
+        events: [{
           name: "stir",
           href: "mqtt://pwp21.medien.ifi.lmu.de:8883/mixer-1/status",
-          inputs: ["float"],
+          type: "float",
           value: true
         }],   
-    }) */
+    })
+
 /* @Response<IError>(401, 'Unauthorized', {
     message: 'No token provided',
     }) */
@@ -47,15 +48,14 @@ export class DeviceController extends Controller {
  
 @Get('getDeviceByHub')
   public async getDevice(@Query() hubId?: string): Promise<IDevice>  {
-    const response = await new DeviceService().getDevice();
+    const response = await new DeviceService().getDevice(hubId);
     return response;
   }  
 
-//TODO: spezifische Filterung findOne -> sucht bisher alle
-@Get('getDetailsByDevice')
-  public async getAction(@Query()  deviceName?: string)  {
-    const response = await new DeviceService().getDetails();
-    return response.action;
+@Get('getDeviceDetails')
+  public async getDeviceDetails( @Query()  deviceName?: string): Promise<IDevice>  {
+    const response = await new DeviceService().getDetails(deviceName);
+    return response;
   }  
 
 }

@@ -3,18 +3,22 @@ import { Device, DeviceInput, DeviceDocument, IDevice } from '../models/device.m
 export type DeviceDeleteParams = Pick<IDevice, 'deviceName'| 'hubId' >;
 
 
+
 export class DeviceService {
 
 
     public async createDevice(requestBody: IDevice): Promise<IDevice> {
-        const  {thingDescription, deviceId, hubId, deviceName, action, properties}  = requestBody;
+        const  {thingDescription, hubId, deviceName, actions, events, deviceId}  = requestBody;
+        //TODO: parse JSON 
+        /* const object= JSON.parse(thingDescription);
+        console.log(object); */
         const deviceInput: DeviceInput = {
             thingDescription,
             deviceId,
             hubId,
             deviceName,
-            action,
-            properties
+            actions,
+            events
         };
         const deviceSchema = new Device(deviceInput);
         const newDevice: DeviceDocument = await deviceSchema.save();
@@ -34,8 +38,8 @@ public async deleteDevice(requestBody: DeviceDeleteParams): Promise<IDevice> {
                     deviceId: result.deviceId,
                     hubId: result.hubId,
                     deviceName: result.deviceName,
-                    action: result.action,
-                    properties: result.properties
+                    actions: result.actions,
+                    events: result.events
                 };
                 resolve(deviceTodelete);
               } else {
@@ -47,9 +51,9 @@ public async deleteDevice(requestBody: DeviceDeleteParams): Promise<IDevice> {
       }
 
 
-public async getDevice(): Promise<IDevice> {
+public async getDevice(hubId): Promise<IDevice> {
     return new Promise<IDevice>((resolve, reject) => {
-        Device.findOne({}, (err, result) => {
+        Device.findOne({hubId: hubId}, (err, result) => {
           if (err) {
             reject(new StatusError('Something went wrong', 404));
           } else {
@@ -59,8 +63,8 @@ public async getDevice(): Promise<IDevice> {
                 deviceId: result.deviceId,
                 hubId: result.hubId,
                 deviceName: result.deviceName,
-                action: result.action,
-                properties: result.properties
+                actions: result.actions,
+                events: result.events
                 };
               resolve(deviceTofind);
             } else {
@@ -71,9 +75,9 @@ public async getDevice(): Promise<IDevice> {
       });
     }
  
-public async getDetails(): Promise<IDevice> {
+public async getDetails(deviceName): Promise<IDevice> {
         return new Promise<IDevice>((resolve, reject) => {
-            Device.findOne({ }, (err, result) => {
+            Device.findOne({ deviceName: deviceName }, (err, result) => {
               if (err) {
                 reject(new StatusError('Something went wrong', 404));
               } else {
@@ -83,8 +87,8 @@ public async getDetails(): Promise<IDevice> {
                     deviceId: result.deviceId,
                     hubId: result.hubId,
                     deviceName: result.deviceName,
-                    action: result.action,
-                    properties: result.properties
+                    actions: result.actions,
+                    events: result.evnts
                     };
                   resolve(actionTofind);
                 } else {

@@ -6,15 +6,15 @@ interface IDevice {
     deviceId: string;
     hubId : string;
     deviceName: string;
-    action: Array<{
+    actions: Array<{
       name: string;
       href: string;
       inputs: string;
     }>;
-    properties: Array<{
+    events: Array<{
       name: string;
       href: string;
-      inputs: string;
+      type: string;
       value: boolean;
     }>;
   }
@@ -24,15 +24,15 @@ interface IDevice {
     deviceId: string;
     hubId : string;
     deviceName: string;
-    action: Array<{
+    actions: Array<{
       name: string;
       href: string;
       inputs: string;
     }>;
-    properties: Array<{
+    events: Array<{
       name: string;
       href: string;
-      inputs: string;
+      type: string;
       value: boolean;
     }>;
   };
@@ -42,8 +42,8 @@ interface IDevice {
     deviceId: DeviceDocument['deviceId'];
     hubId: DeviceDocument['hubId'];
     deviceName: DeviceDocument['deviceName'];
-    action: DeviceDocument['action'];
-    properties: DeviceDocument['properties'];
+    actions: DeviceDocument['actions'];
+    events: DeviceDocument['events'];
     
   };
 
@@ -68,9 +68,7 @@ interface IDevice {
         type: Schema.Types.String,
         required: true
       },
-      action: [{
-        type: Schema.Types.String,
-        required: true,
+      actions: [{
           name: {
             type: Schema.Types.String,
             required: true,
@@ -79,15 +77,14 @@ interface IDevice {
            type: Schema.Types.String,
            required: true
           },
-          inputs: {
+          type: {
             type: Schema.Types.Array,
-            required: true
+            required: true,
           },
         
       }],
-      properties: [{
-        type: Schema.Types.String,
-        required: true,
+      events: [{
+        
           name: {
             type: Schema.Types.String,
             required: true,

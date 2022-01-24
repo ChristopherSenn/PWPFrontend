@@ -1,14 +1,16 @@
 import 'materialize-css';
+import React from 'react';
 import {
   BrowserRouter,
   Routes,
   Route
 } from "react-router-dom";
 //pages
-import Login from './components/authentification/Login'
-import Register from './components/authentification/Register'
+import Login from './components/authentification/Login';
+import Register from './components/authentification/Register';
 import Dashboard from './components/main/Dashboard';
-import LandingPage from './components/main/landingPage'
+import LandingPage from './components/main/landingPage';
+import DeviceList from './components/main/DeviceList';
 function App() {
 
   return (
@@ -18,6 +20,7 @@ function App() {
           <Route path="/users/login" element={<Login />} />
           <Route path="/users/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/deviceList" element={<DeviceList />} />
         </Routes>
     </BrowserRouter>
   );

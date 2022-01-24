@@ -29,3 +29,4 @@
 # backend
 /pwp-backend/src/swagger.json
 /pwp-backend/src/routes.ts
+/pwp_frontend/package-lock.json

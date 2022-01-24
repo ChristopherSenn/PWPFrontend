@@ -1,0 +1,56 @@
+[
+
+    {
+        "deviceName": "Coffee Machine_1",
+        "status": {
+          "connection": "disabled",
+          "functioning": "true"
+        },
+        "actions": [
+            {
+                "on": "true"
+            },
+            {
+                "stirr": "false",
+                "duration": "5"
+            }
+        ]
+    },
+
+    {
+        "deviceName": "Coffee Machine_2",
+        "status": {
+          "connection": "success",
+          "functioning": "true"
+        },
+        "actions": [
+            {
+                "on": "true"
+            },
+            {
+                "stirr": "false",
+                "duration": "5"
+            }
+        ]
+    },
+
+    {
+        "deviceName": "Coffee Machine_3",
+        "status": {
+          "connection": "disabled",
+          "functioning": "true"
+        },
+        "actions": [
+            {
+                "on": "true"
+            },
+            {
+                "stirr": "false",
+                "duration": "5"
+            }
+        ]
+    }
+
+]
+
+

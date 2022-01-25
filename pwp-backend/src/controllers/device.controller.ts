@@ -14,13 +14,13 @@ export class DeviceController extends Controller {
     message: 'No token provided',
     }) */
 
-
+//Request to create a save a New Device into DB By HubId and Thing Desctiption
 @Post('createDevice')
   public async createDevice(@Body() requestBody: DeviceCreateParams): Promise<IDevice> {
     const response: IDevice = await new DeviceService().createDevice(requestBody);
     return response;
   } 
-//delete device with hubid, token, deviceid
+//Delete device with HubId and DeviceId
 @Delete('deleteDevice')
   public async deleteDevice(@Body() requestBody: DeviceDeleteParams): Promise<IDevice> {
     const response = await new DeviceService().deleteDevice(requestBody);
@@ -28,12 +28,14 @@ export class DeviceController extends Controller {
     return response;
   }
 
+//Request to get Device By HubId
 @Get('getDeviceByHub')
   public async getDevice(@Query() hubId?: string): Promise<IDevice>  {
     const response = await new DeviceService().getDevice(hubId);
     return response;
   }  
 
+//Request to get the Device with all Properties By DeviceName
 @Get('getDeviceDetails')
   public async getDeviceDetails( @Query()  deviceName?: string): Promise<IDevice>  {
     const response = await new DeviceService().getDetails(deviceName);

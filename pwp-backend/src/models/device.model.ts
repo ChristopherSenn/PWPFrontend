@@ -1,8 +1,9 @@
 import mongoose, { Schema, Model, Document } from 'mongoose';
+import { JsonObject } from 'swagger-ui-express';
 
 
 interface IDevice {
-    thingDescription: string;
+    thingDescription: any;
     deviceId: string;
     hubId : string;
     deviceName: string;
@@ -20,7 +21,7 @@ interface IDevice {
   }
 
   type DeviceDocument = Document & {
-    thingDescription: string;
+    thingDescription: any;
     deviceId: string;
     hubId : string;
     deviceName: string;
@@ -71,15 +72,15 @@ interface IDevice {
       actions: [{
           name: {
             type: Schema.Types.String,
-            required: true,
+            
           },
          href: {
            type: Schema.Types.String,
-           required: true
+           
           },
           type: {
             type: Schema.Types.Array,
-            required: true,
+            
           },
         
       }],
@@ -87,19 +88,18 @@ interface IDevice {
         
           name: {
             type: Schema.Types.String,
-            required: true,
           },
           href: {
             type: Schema.Types.String,
-            required: true,
+           
           },
           inputs: {
             type: Schema.Types.String,
-            required: true,
+           
           },
           value: {
             type: Schema.Types.Boolean,
-            required: true,
+            
           },
       }],
     },

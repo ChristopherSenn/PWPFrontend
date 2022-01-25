@@ -1,25 +1,29 @@
 import { StatusError } from '../models/error.model';
 import { Device, DeviceInput, DeviceDocument, IDevice } from '../models/device.model';
 export type DeviceDeleteParams = Pick<IDevice, 'deviceName'| 'hubId' >;
-
-
+export type DeviceCreateParams = { thingDescription: any; hubId: string };
 
 export class DeviceService {
 
+    public async createDevice(requestBody: DeviceCreateParams): Promise<IDevice> {
+       console.log(requestBody);
+        const deviceId= requestBody.thingDescription.id!;
+        const deviceName= requestBody.thingDescription.title!;
+        const actions= requestBody.thingDescription.actions!;
+        const events= requestBody.thingDescription.events!;
+        const hubId = requestBody.hubId;
 
-    public async createDevice(requestBody: IDevice): Promise<IDevice> {
-        const  {thingDescription, hubId, deviceName, actions, events, deviceId}  = requestBody;
-        //TODO: parse JSON 
-        /* const object= JSON.parse(thingDescription);
-        console.log(object); */
+        const thingDescription= JSON.stringify(requestBody.thingDescription)!;
+       
         const deviceInput: DeviceInput = {
             thingDescription,
-            deviceId,
             hubId,
+            deviceId,
             deviceName,
             actions,
             events
         };
+       
         const deviceSchema = new Device(deviceInput);
         const newDevice: DeviceDocument = await deviceSchema.save();
         const parsedDevices: IDevice = newDevice;

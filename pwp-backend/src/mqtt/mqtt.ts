@@ -1,22 +1,28 @@
 import mqtt from 'mqtt';
 import { MqttService } from '../services/mqtt.service';
 import { IMqttMessage } from '../models/mqtt.model';
+import fs from 'fs';
+import path from 'path';
 
 let client: mqtt.MqttClient;
 
 const topicBase = 'pwp/#';
 
+const clientKeyPath = path.join(__dirname, './', 'certificates', 'client.key');
+const clientPemPath = path.join(__dirname, './', 'certificates', 'client.pem');
+
 const connectionOptions: mqtt.IClientOptions = {
+  port: 8883,
   clientId: 'PWP_PUBLIC_BACKEND_CLIENT',
   clean: true,
+  key: fs.readFileSync(clientKeyPath, 'utf8'),
+  cert: fs.readFileSync(clientPemPath, 'utf8'),
   connectTimeout: 4000,
-  username: 'PWP_TMP_USERNAME',
-  password: 'PWP_TMP_PASSWORD',
   reconnectPeriod: 1000,
 };
 
 function connectMqttClient() {
-  client = mqtt.connect('mqtt://broker.emqx.io', connectionOptions);
+  client = mqtt.connect('mqtt://pwp21.medien.ifi.lmu.de:1883', connectionOptions);
 
   client.on('connect', () => {
     client.subscribe(topicBase);

@@ -1,4 +1,4 @@
-import { StatusError } from '../models/error.model';
+import { StatusError } from '../models/status.model';
 import { IHub, HubDocument, Hub, HubInput, HubCredentials } from '../models/hub.model';
 export type HubDeleteParams = Pick<IHub, 'hubId'>;
 export type AddOrRemoveUserParams = { hubId: string; memberIds: string[]; userId: string };

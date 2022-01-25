@@ -1,6 +1,6 @@
 import { HubCredentials, IHub } from '../models/hub.model';
 import { AddOrRemoveDeviceParams, AddOrRemoveUserParams, HubDeleteParams, HubService } from '../services/hub.service';
-import { IError } from '../models/error.model';
+import { IError } from '../models/status.model';
 import {
   Body,
   Controller,

@@ -14,7 +14,7 @@ import {
 } from 'tsoa';
 import { IUser } from '../models/user.model';
 import { UserCreationParams, UserLoginParams, UserService } from '../services/user.service';
-import { IError } from '../models/error.model';
+import { IError } from '../models/status.model';
 
 @Route('users')
 @Tags('Users')

@@ -10,13 +10,13 @@ interface IDevice {
     actions: Array<{
       name: string;
       href: string;
-      inputs: string;
+      actionType: string;
+      inputType: string;
     }>;
     events: Array<{
       name: string;
       href: string;
-      type: string;
-      value: boolean;
+      dataType: string;
     }>;
   }
 
@@ -28,13 +28,13 @@ interface IDevice {
     actions: Array<{
       name: string;
       href: string;
-      inputs: string;
+      actionType: string;
+      inputType: string;
     }>;
     events: Array<{
       name: string;
       href: string;
-      type: string;
-      value: boolean;
+      dataType: string;
     }>;
   };
 
@@ -72,15 +72,19 @@ interface IDevice {
       actions: [{
           name: {
             type: Schema.Types.String,
-            
+            required: true
           },
          href: {
            type: Schema.Types.String,
-           
+           required: true
           },
-          type: {
-            type: Schema.Types.Array,
-            
+          actionType: {
+            type: Schema.Types.String,
+            required: true
+          },
+          inputType: {
+            type: Schema.Types.String,
+            required: true
           },
         
       }],
@@ -88,18 +92,15 @@ interface IDevice {
         
           name: {
             type: Schema.Types.String,
+            required: true
           },
           href: {
             type: Schema.Types.String,
-           
+            required: true
           },
-          inputs: {
+          dataType: {
             type: Schema.Types.String,
-           
-          },
-          value: {
-            type: Schema.Types.Boolean,
-            
+            required: true
           },
       }],
     },

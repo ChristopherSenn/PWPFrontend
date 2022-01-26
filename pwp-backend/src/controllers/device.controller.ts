@@ -13,6 +13,75 @@ export class DeviceController extends Controller {
 //Request to create a save a New Device into DB By HubId and Thing Desctiption
 @Post('createDevice')
 @SuccessResponse('201', 'Device Created')
+@Example<IDevice>({
+  hubId: '1234',
+  thingDescription: {
+    "@context": [
+        "https://www.w3.org/2019/wot/td/v1",
+        {
+            "pwpref": "link zu unserem Server",
+            "mqv": "http://www.example.org/mqtt-binding#"
+        }
+    ],
+    "id": "uuid-prototype-1.0.1-mixer",
+    "title": "MyMixerThing",
+    "@type": "pwpref:Mixer",
+    "securityDefinitions": {
+        "basic_sc": {
+            "scheme": "basic",
+            "in": "header"
+        }
+    },
+    "modes": [
+        "MODE_OFFLINE",
+        "MODE_AP_ONLY",
+        "MODE_HUB_LOCAL",
+        "MODE_HUB_INTERNET"
+    ],
+    "security": [
+        "basic_sc"
+    ],
+    "properties": {
+        "status": {
+            "@type": "pwpref:ModeState",
+            "type": "boolean",
+            "observable": true,
+            "forms": [
+                {
+                    "href": "mqtt://pwp21.medien.ifi.lmu.de:8883/mixer-1/status",
+                    "op": "observeProperty",
+                    "mqv:controlPacketValue": "SUBSCRIBE"
+                }
+            ]
+        }
+    },
+    "actions": {
+        "name": "stir",
+        "href": "mqtt://pwp21.medien.ifi.lmu.de:8883/mixer-1/status",
+        "actionType": "TimeCommand",
+        "inputType": "float"
+    },
+    "events":{
+        "name": "status",
+        "href": "mqtt://pwp21.medien.ifi.lmu.de:8883/mixer-1/status",
+        "dataType": "string",
+    }
+},
+  deviceName: 'MyMixerThing',
+  deviceId: 'uuid-prototype-1.0.1-mixer',
+  actions: [{
+    name: 'stir',
+    href: 'mqtt://pwp21.medien.ifi.lmu.de:8883/mixer-1/status',
+    actionType: 'TimeCommand',
+    inputType: 'float'
+}],
+  events: [{
+    name: "status",
+    href: "mqtt://pwp21.medien.ifi.lmu.de:8883/mixer-1/status",
+    dataType: "string",
+  }]
+  
+})
 @Response<IError>(400, 'Bad Request', {
   message: 'HubId or Thing Description in wrong Format',
 })

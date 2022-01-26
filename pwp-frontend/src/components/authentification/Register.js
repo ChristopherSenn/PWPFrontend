@@ -23,7 +23,6 @@ export default function Register() {
         password: "",
         roles: "customer"
     });
-    const [messageError, setMessageError] = useState(null)
     const [messageSucces, setMessageSuccess] = useState(null)
     const { email, username, password} = formData;
 
@@ -42,10 +41,7 @@ export default function Register() {
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        if(password.length < 8){
-            setMessageError('Password must be at least 8 digits long!')
-            
-            }else {
+        if(!loading){
                 dispatch(register(username, email, password, "customer"));
                 setMessageSuccess("Registration Successful.")
         }
@@ -54,8 +50,6 @@ export default function Register() {
     const setAlertMessage = () =>{
         if(error){
             return <ErrorMessage>{error}</ErrorMessage>
-        }else if (messageError){
-            return <ErrorMessage>{messageError}</ErrorMessage>
         }else if (messageSucces){
             return  <SuccesMessage>
             {messageSucces}

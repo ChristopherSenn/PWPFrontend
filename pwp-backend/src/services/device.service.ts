@@ -1,54 +1,77 @@
-import { StatusError } from '../models/error.model';
+import { StatusError } from '../models/status.model';
 import { Device, DeviceInput, DeviceDocument, IDevice } from '../models/device.model';
-export type DeviceDeleteParams = Pick<IDevice, 'deviceName' | 'hubId'>;
-export type DeviceCreateParams = { thingDescription: any; hubId: string };
+import { Hub, HubDocument } from '../models/hub.model';
+export type DeviceCreateParams = { thingDescription: any; hubIds: Array<string> };
+export type AddOrRemoveDeviceParams = { hubId: string; deviceId: string; userId: string };
 
 export class DeviceService {
-
-  //createDevice Function gets thingDescription as JSON and hubId as String
+  // createDevice Function gets thingDescription as JSON and hubId as String
   public async createDevice(requestBody: DeviceCreateParams): Promise<IDevice> {
-    //Write all properties into variables
+    // Write all properties into variables
     const deviceId = requestBody.thingDescription.id!;
     const deviceName = requestBody.thingDescription.title!;
-    const actions = requestBody.thingDescription.actions!;
-    const events = requestBody.thingDescription.events!;
-    const hubId = requestBody.hubId;
+    const hubIds = requestBody.hubIds;
 
-    //turn thingDescription into a String to store it in Database
+    const actions: any[] = [];
+    let keys = Object.keys(requestBody.thingDescription.actions);
+    keys.forEach((key) => {
+      const action = {
+        name: key,
+        href: requestBody.thingDescription.actions[key].forms[0].href,
+        actionType: requestBody.thingDescription.actions[key]['@type'],
+        inputType: requestBody.thingDescription.actions[key].input.type,
+      };
+      actions.push(action);
+    });
+    console.log(actions);
+    keys = Object.keys(requestBody.thingDescription.events);
+    const events: any[] = [];
+    keys.forEach((key) => {
+      const event = {
+        name: key,
+        href: requestBody.thingDescription.events[key].forms[0].href,
+        dataType: requestBody.thingDescription.events[key].data.type,
+      };
+      events.push(event);
+    });
+
+    // turn thingDescription into a String to store it in Database
     const thingDescription = JSON.stringify(requestBody.thingDescription)!;
 
-    //Store Device with all properties in Database
+    // Store Device with all properties in Database
     const deviceInput: DeviceInput = {
       thingDescription,
-      hubId,
+      hubIds,
       deviceId,
       deviceName,
-      actions,
-      events
+      actions: actions,
+      events: events,
     };
-    //Create a new Device with the deviceSchema based on IDevice
+    // Create a new Device with the deviceSchema based on IDevice
     const deviceSchema = new Device(deviceInput);
     const newDevice: DeviceDocument = await deviceSchema.save();
     const parsedDevices: IDevice = newDevice;
     return parsedDevices;
   }
-  //Delte a Device by DeviceName and HubId
-  public async deleteDevice(requestBody: DeviceDeleteParams): Promise<IDevice> {
+
+  // Delte a Device by DeviceName and HubId
+  public async deleteDevice(deviceId: string): Promise<IDevice> {
     return new Promise<IDevice>((resolve, reject) => {
-      //Find Device with specific DeviceName and HubId in Database and Delete it 
-      Device.findOneAndDelete({ deviceName: requestBody.deviceName, hubId: requestBody.hubId }, (err, result) => {
+      // Find Device with specific DeviceName and HubId in Database and Delete it
+      Device.findByIdAndDelete(deviceId, (err, result) => {
         if (err) {
           reject(new StatusError('Something went wrong', 404));
         } else {
           if (result !== null) {
-            //Device to Delete with all properties
+            // Device to Delete with all properties
             const deviceTodelete: IDevice = {
+              id: result._id,
               thingDescription: result.thingDescription,
               deviceId: result.deviceId,
-              hubId: result.hubId,
+              hubIds: result.hubIds,
               deviceName: result.deviceName,
               actions: result.actions,
-              events: result.events
+              events: result.events,
             };
             resolve(deviceTodelete);
           } else {
@@ -59,47 +82,51 @@ export class DeviceService {
     });
   }
 
-//Get All Properties of a specific Device by HubId
-  public async getDevice(hubId): Promise<IDevice> {
-    return new Promise<IDevice>((resolve, reject) => {
-      //Find Device with specific HubId
-      Device.findOne({ hubId: hubId }, (err, result) => {
+  // Get All Properties of a specific Device by HubId
+  public async getDevice(hubId: string): Promise<IDevice[]> {
+    return new Promise<IDevice[]>((resolve, reject) => {
+      // Find Device with specific HubId
+      Device.find({ hubIds: hubId }, (err, result) => {
         if (err) {
           reject(new StatusError('Something went wrong', 404));
         } else {
-          if (result !== null) {
-            const deviceTofind: IDevice = {
-              thingDescription: result.thingDescription,
-              deviceId: result.deviceId,
-              hubId: result.hubId,
-              deviceName: result.deviceName,
-              actions: result.actions,
-              events: result.events
+          const devices: IDevice[] = [];
+          result.forEach((d) => {
+            const device: IDevice = {
+              id: d._id,
+              thingDescription: d.thingDescription,
+              deviceId: d.deviceId,
+              hubIds: d.hubIds,
+              deviceName: d.deviceName,
+              actions: d.actions,
+              events: d.events,
             };
-            resolve(deviceTofind);
-          } else {
-            reject(new StatusError('Device not found', 404));
-          }
+            devices.push(device);
+          });
+
+          resolve(devices);
         }
       });
     });
   }
-//Get a Device by specific Name to filter after actions, events etc. 
-  public async getDetails(deviceName): Promise<IDevice> {
+
+  // Get a Device by specific Name to filter after actions, events etc.
+  public async getDetails(deviceId): Promise<IDevice> {
     return new Promise<IDevice>((resolve, reject) => {
-      //Find specific Device by Name in Database
-      Device.findOne({ deviceName: deviceName }, (err, result) => {
+      // Find specific Device by Name in Database
+      Device.findById(deviceId, (err, result) => {
         if (err) {
           reject(new StatusError('Something went wrong', 404));
         } else {
           if (result !== null) {
             const actionTofind: IDevice = {
+              id: result._id,
               thingDescription: result.thingDescription,
               deviceId: result.deviceId,
-              hubId: result.hubId,
+              hubIds: result.hubIds,
               deviceName: result.deviceName,
               actions: result.actions,
-              events: result.evnts
+              events: result.events,
             };
             resolve(actionTofind);
           } else {
@@ -108,7 +135,90 @@ export class DeviceService {
         }
       });
     });
-
   }
 
+  public async addDevice(requestBody: AddOrRemoveDeviceParams): Promise<IDevice> {
+    const { hubId, deviceId, userId } = requestBody;
+
+    const device: DeviceDocument | null = await Device.findById(deviceId).exec();
+    if (device) {
+      const hub: HubDocument | null = await Hub.findOne({ _id: hubId, ownerId: userId }).exec();
+      if (hub) {
+        // -> the one doing the request is actually the owner of the hub
+        console.log(device.hubIds);
+        const hubIds = device.hubIds.map((d) => d.toString());
+        if (hubIds.includes(hubId)) {
+          throw new StatusError('Device already added to this hub!', 404);
+        } else {
+          return new Promise<IDevice>((resolve, reject) => {
+            Device.findByIdAndUpdate(deviceId, { $push: { hubIds: hubId } }, { new: true }, (err, result) => {
+              if (err) {
+                reject(new StatusError(err.message, 404));
+              } else {
+                if (result) {
+                  const parsedDevice: IDevice = {
+                    id: result._id,
+                    thingDescription: result.thingDescription,
+                    deviceId: result.deviceId,
+                    hubIds: result.hubIds,
+                    deviceName: result.deviceName,
+                    actions: result.actions,
+                    events: result.events,
+                  };
+                  resolve(parsedDevice);
+                }
+                reject(new StatusError('Device not found', 404));
+              }
+            });
+          });
+        }
+      } else {
+        throw new StatusError('Only the owner of a hub can add devices', 401);
+      }
+    } else {
+      throw new StatusError('Device not found', 404);
+    }
+  }
+
+  public async removeDevice(requestBody: AddOrRemoveDeviceParams): Promise<IDevice> {
+    const { hubId, deviceId, userId } = requestBody;
+
+    const device: DeviceDocument | null = await Device.findById(deviceId).exec();
+    if (device) {
+      const hub: HubDocument | null = await Hub.findOne({ _id: hubId, ownerId: userId }).exec();
+      if (hub) {
+        // -> the one doing the request is actually the owner of the hub
+        const hubIds = device.hubIds.map((d) => d.toString());
+        if (!hubIds.includes(hubId)) {
+          throw new StatusError('Device not in this hub!', 404);
+        } else {
+          return new Promise<IDevice>((resolve, reject) => {
+            Device.findByIdAndUpdate(deviceId, { $pull: { hubIds: hubId } }, { new: true }, (err, result) => {
+              if (err) {
+                reject(new StatusError(err.message, 404));
+              } else {
+                if (result) {
+                  const parsedDevice: IDevice = {
+                    id: result._id,
+                    thingDescription: result.thingDescription,
+                    deviceId: result.deviceId,
+                    hubIds: result.hubIds,
+                    deviceName: result.deviceName,
+                    actions: result.actions,
+                    events: result.events,
+                  };
+                  resolve(parsedDevice);
+                }
+                reject(new StatusError('Device not found', 404));
+              }
+            });
+          });
+        }
+      } else {
+        throw new StatusError('Only the owner of a hub can add devices', 401);
+      }
+    } else {
+      throw new StatusError('Device not found', 404);
+    }
+  }
 }

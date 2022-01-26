@@ -1,5 +1,5 @@
 import { HubCredentials, IHub } from '../models/hub.model';
-import { AddOrRemoveDeviceParams, AddOrRemoveUserParams, HubDeleteParams, HubService } from '../services/hub.service';
+import { AddOrRemoveUserParams, HubCreationParams, HubDeleteParams, HubService } from '../services/hub.service';
 import { IError } from '../models/status.model';
 import {
   Body,
@@ -27,7 +27,6 @@ export class HubController extends Controller {
     hubName: 'MyHub',
     ownerId: 'gta90jwerkjm390srdsj3azt9',
     memberIds: ['gta90jwerkjm390srdsj3azt9', 'msa90jalkjm390ßasj3apok4'],
-    deviceIds: ['gta90jwerkjm390srdsj3azt9', 'msa90jalkjm390ßasj3apok4'],
   })
   @Response<IError>(401, 'Unauthorized', {
     message: 'No token provided',
@@ -50,7 +49,6 @@ export class HubController extends Controller {
     hubName: 'MyHub',
     ownerId: 'gta90jwerkjm390srdsj3azt9',
     memberIds: ['gta90jwerkjm390srdsj3azt9', 'msa90jalkjm390ßasj3apok4'],
-    deviceIds: ['gta90jwerkjm390srdsj3azt9', 'msa90jalkjm390ßasj3apok4'],
   })
   @Response<IError>(401, 'Unauthorized', {
     message: 'No token provided',
@@ -58,19 +56,18 @@ export class HubController extends Controller {
   @Response<IError>(404, 'Bad Request', {
     message: 'Hub could not be created',
   })
-  public async createHub(@Body() requestBody: IHub): Promise<IHub> {
+  public async createHub(@Body() requestBody: HubCreationParams): Promise<IHub> {
     const response: IHub = await new HubService().createHub(requestBody);
     return response;
   }
 
   @Delete('deleteHub')
-  @Security('jwt', ['customer'])
+  // @Security('jwt', ['customer'])
   @Example<IHub>({
     hubId: 'msa90jalkjm390ßasj3apok4',
     hubName: 'MyHub',
     ownerId: 'gta90jwerkjm390srdsj3azt9',
     memberIds: ['gta90jwerkjm390srdsj3azt9', 'msa90jalkjm390ßasj3apok4'],
-    deviceIds: ['gta90jwerkjm390srdsj3azt9', 'msa90jalkjm390ßasj3apok4'],
   })
   @Response<IError>(401, 'Unauthorized', {
     message: 'No token provided',
@@ -94,18 +91,6 @@ export class HubController extends Controller {
   @Patch('removeUser')
   public async removeUser(@Body() requestBody: AddOrRemoveUserParams): Promise<IHub> {
     const response: IHub = await new HubService().removeUser(requestBody);
-    return response;
-  }
-
-  @Patch('addDevice')
-  public async addDevice(@Body() requestBody: AddOrRemoveDeviceParams): Promise<IHub> {
-    const response: IHub = await new HubService().addDevice(requestBody);
-    return response;
-  }
-
-  @Patch('removeDevice')
-  public async removeDevice(@Body() requestBody: AddOrRemoveDeviceParams): Promise<IHub> {
-    const response: IHub = await new HubService().removeDevice(requestBody);
     return response;
   }
 

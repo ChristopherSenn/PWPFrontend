@@ -5,6 +5,7 @@ interface IHub {
   hubId?: string;
   ownerId: string;
   memberIds: Array<string>;
+  cert: string;
   token?: string;
 }
 
@@ -12,12 +13,14 @@ type HubDocument = Document & {
   hubName: string;
   ownerId: string;
   memberIds: Array<string>;
+  cert: string;
 };
 
 type HubInput = {
   hubName: HubDocument['hubName'];
   ownerId: HubDocument['ownerId'];
   memberIds: HubDocument['memberIds'];
+  cert: HubDocument['cert'];
 };
 
 type HubCredentials = {
@@ -28,6 +31,10 @@ type HubCredentials = {
 const hubSchema = new Schema(
   {
     hubName: {
+      type: Schema.Types.String,
+      required: true,
+    },
+    cert: {
       type: Schema.Types.String,
       required: true,
     },

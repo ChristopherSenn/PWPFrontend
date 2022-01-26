@@ -17,4 +17,9 @@ export class TestController extends Controller {
     const response: ITest = await new TestService().createTest(requestBody);
     return response;
   }
+
+  @Get('aaa')
+  public test() {
+    return {};
+  }
 }

@@ -16,6 +16,7 @@ interface IDevice {
     name: string;
     href: string;
     dataType: string;
+    dataValue: string;
   }>;
 }
 
@@ -34,6 +35,7 @@ type DeviceDocument = Document & {
     name: string;
     href: string;
     dataType: string;
+    dataValue: string;
   }>;
 };
 
@@ -98,6 +100,10 @@ const deviceSchema = new Schema(
           required: true,
         },
         dataType: {
+          type: Schema.Types.String,
+          required: true,
+        },
+        dataValue: {
           type: Schema.Types.String,
           required: true,
         },

@@ -2,6 +2,8 @@ import { StatusError } from '../models/status.model';
 import { IHub, HubDocument, Hub, HubInput, HubCredentials } from '../models/hub.model';
 import { Device } from '../models/device.model';
 import { Types } from 'mongoose';
+import createCertificate from '../functions/createCertificate';
+
 export type HubDeleteParams = Pick<IHub, 'hubId'>;
 export type HubCreationParams = Pick<IHub, 'hubName' | 'ownerId' | 'memberIds'>;
 export type AddOrRemoveUserParams = { hubId: string; memberIds: string[]; userId: string };
@@ -16,6 +18,7 @@ export class HubService {
         hubId: hub._id,
         ownerId: hub.ownerId,
         memberIds: hub.memberIds,
+        cert: hub.cert,
       };
     });
 
@@ -34,6 +37,7 @@ export class HubService {
         hubId: hub._id,
         ownerId: hub.ownerId,
         memberIds: hub.memberIds,
+        cert: hub.cert,
       };
     });
 
@@ -50,11 +54,13 @@ export class HubService {
     if (!memberIds.includes(ownerId)) {
       memberIds.push(ownerId);
     }
+    const cert: string = createCertificate();
 
     const hubInput: HubInput = {
       hubName,
       ownerId,
       memberIds,
+      cert,
     };
 
     const hubSchema = new Hub(hubInput);
@@ -64,6 +70,7 @@ export class HubService {
       hubId: newHub._id,
       ownerId: newHub.ownerId,
       memberIds: newHub.memberIds,
+      cert: newHub.cert,
     };
     return parsedHub;
   }
@@ -80,6 +87,7 @@ export class HubService {
               hubId: res.hubId,
               ownerId: res.ownerId,
               memberIds: res.memberIds,
+              cert: res.cert,
             };
 
             const hubId = new Types.ObjectId(requestBody.hubId);
@@ -120,6 +128,7 @@ export class HubService {
                   hubId: res._id,
                   ownerId: res.ownerId,
                   memberIds: res.memberIds,
+                  cert: res.cert,
                 };
                 resolve(parsedHub);
               } else {
@@ -161,6 +170,7 @@ export class HubService {
                     hubId: res._id,
                     ownerId: res.ownerId,
                     memberIds: res.memberIds,
+                    cert: res.cert,
                   };
                   resolve(parsedHub);
                 } else {
@@ -182,6 +192,7 @@ export class HubService {
                   hubId: res._id,
                   ownerId: res.ownerId,
                   memberIds: res.memberIds,
+                  cert: res.cert,
                 };
                 resolve(parsedHub);
               } else {

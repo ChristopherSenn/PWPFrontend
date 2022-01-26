@@ -1,4 +1,4 @@
-import { StatusError } from '../models/error.model';
+import { StatusError } from '../models/status.model';
 import { ITest, TestDocument, Test, TestInput } from '../models/test.model';
 
 export class TestService {

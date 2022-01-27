@@ -6,7 +6,6 @@ interface IHub {
   ownerId: string;
   memberIds: Array<string>;
   cert: string;
-  token?: string;
 }
 
 type HubDocument = Document & {
@@ -21,11 +20,6 @@ type HubInput = {
   ownerId: HubDocument['ownerId'];
   memberIds: HubDocument['memberIds'];
   cert: HubDocument['cert'];
-};
-
-type HubCredentials = {
-  hubId: string;
-  token: string;
 };
 
 const hubSchema = new Schema(
@@ -54,4 +48,4 @@ const hubSchema = new Schema(
 
 const Hub: Model<HubDocument> = mongoose.model<HubDocument>('Hub', hubSchema);
 
-export { Hub, HubInput, HubDocument, IHub, HubCredentials };
+export { Hub, HubInput, HubDocument, IHub };

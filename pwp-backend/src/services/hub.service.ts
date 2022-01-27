@@ -1,5 +1,5 @@
 import { StatusError } from '../models/status.model';
-import { IHub, HubDocument, Hub, HubInput, HubCredentials } from '../models/hub.model';
+import { IHub, HubDocument, Hub, HubInput } from '../models/hub.model';
 import { Device } from '../models/device.model';
 import { Types } from 'mongoose';
 import createCertificate from '../functions/createCertificate';
@@ -210,14 +210,11 @@ export class HubService {
   }
 
   // TODO: write correctly - add token!
-  public async showIDandToken(hubId: string): Promise<HubCredentials> {
+  public async showIDandToken(hubId: string): Promise<string> {
     const hub: HubDocument | null = await Hub.findById(hubId).exec();
 
     if (hub) {
-      return {
-        hubId: hub._id,
-        token: '1234',
-      };
+      return hub.cert;
     } else {
       throw new StatusError('Hub not found', 404);
     }

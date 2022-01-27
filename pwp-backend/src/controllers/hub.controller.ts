@@ -1,4 +1,4 @@
-import { HubCredentials, IHub } from '../models/hub.model';
+import { IHub } from '../models/hub.model';
 import { AddOrRemoveUserParams, HubCreationParams, HubDeleteParams, HubService } from '../services/hub.service';
 import { IError } from '../models/status.model';
 import {
@@ -98,8 +98,8 @@ export class HubController extends Controller {
   }
 
   @Get('showIDandToken')
-  public async showIDandToken(@Query() hubId: string): Promise<HubCredentials> {
-    const response: HubCredentials = await new HubService().showIDandToken(hubId);
+  public async showIDandToken(@Query() hubId: string): Promise<string> {
+    const response: string = await new HubService().showIDandToken(hubId);
     return response;
   }
 }

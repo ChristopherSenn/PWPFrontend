@@ -1,6 +1,7 @@
 import { StatusError } from '../models/status.model';
 import { Device, DeviceInput, DeviceDocument, IDevice } from '../models/device.model';
 import { Hub, HubDocument } from '../models/hub.model';
+import { IMqttMessage } from 'src/models/mqtt.model';
 export type DeviceCreateParams = { thingDescription: any; hubIds: Array<string> };
 export type AddOrRemoveDeviceParams = { hubId: string; deviceId: string; userId: string };
 
@@ -23,7 +24,7 @@ export class DeviceService {
       };
       actions.push(action);
     });
-    console.log(actions);
+
     keys = Object.keys(requestBody.thingDescription.events);
     const events: any[] = [];
     keys.forEach((key) => {
@@ -31,6 +32,7 @@ export class DeviceService {
         name: key,
         href: requestBody.thingDescription.events[key].forms[0].href,
         dataType: requestBody.thingDescription.events[key].data.type,
+        dataValue: ' ',
       };
       events.push(event);
     });
@@ -220,5 +222,39 @@ export class DeviceService {
     } else {
       throw new StatusError('Device not found', 404);
     }
+  }
+
+  public async updateEventValue(requestBody: IMqttMessage): Promise<IDevice> {
+    const { deviceId, topic, message } = requestBody;
+    return new Promise<IDevice>((resolve, reject) => {
+      Device.findOne({ deviceId: deviceId }, (err, result) => {
+        if (err) {
+          reject(new StatusError(err.message, 404));
+        } else {
+          const eventPos = result.events.findIndex((event) => event.name === topic);
+          if (eventPos === -1) {
+            reject(new StatusError('Event doesnt exist.', 404));
+          } else {
+            const newEvents = result.events;
+            newEvents[eventPos].dataValue = message;
+            Device.findOneAndUpdate({ deviceId: deviceId }, { events: newEvents }).then((result) => {
+              if (!result) {
+                reject(new StatusError('Database Error.', 404));
+              } else {
+                resolve({
+                  id: result._id,
+                  thingDescription: result.thingDescription,
+                  deviceId: result.deviceId,
+                  hubIds: result.hubIds,
+                  deviceName: result.deviceName,
+                  actions: result.actions,
+                  events: result.events,
+                });
+              }
+            });
+          }
+        }
+      });
+    });
   }
 }

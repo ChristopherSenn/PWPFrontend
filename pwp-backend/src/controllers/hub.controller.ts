@@ -1,4 +1,4 @@
-import { HubCredentials, IHub } from '../models/hub.model';
+import { IHub } from '../models/hub.model';
 import { AddOrRemoveUserParams, HubCreationParams, HubDeleteParams, HubService } from '../services/hub.service';
 import { IError } from '../models/status.model';
 import {
@@ -27,6 +27,7 @@ export class HubController extends Controller {
     hubName: 'MyHub',
     ownerId: 'gta90jwerkjm390srdsj3azt9',
     memberIds: ['gta90jwerkjm390srdsj3azt9', 'msa90jalkjm390ßasj3apok4'],
+    cert: 'Client certificate',
   })
   @Response<IError>(401, 'Unauthorized', {
     message: 'No token provided',
@@ -49,6 +50,7 @@ export class HubController extends Controller {
     hubName: 'MyHub',
     ownerId: 'gta90jwerkjm390srdsj3azt9',
     memberIds: ['gta90jwerkjm390srdsj3azt9', 'msa90jalkjm390ßasj3apok4'],
+    cert: 'Client certificate',
   })
   @Response<IError>(401, 'Unauthorized', {
     message: 'No token provided',
@@ -68,6 +70,7 @@ export class HubController extends Controller {
     hubName: 'MyHub',
     ownerId: 'gta90jwerkjm390srdsj3azt9',
     memberIds: ['gta90jwerkjm390srdsj3azt9', 'msa90jalkjm390ßasj3apok4'],
+    cert: 'Client certificate',
   })
   @Response<IError>(401, 'Unauthorized', {
     message: 'No token provided',
@@ -95,8 +98,8 @@ export class HubController extends Controller {
   }
 
   @Get('showIDandToken')
-  public async showIDandToken(@Query() hubId: string): Promise<HubCredentials> {
-    const response: HubCredentials = await new HubService().showIDandToken(hubId);
+  public async showIDandToken(@Query() hubId: string): Promise<string> {
+    const response: string = await new HubService().showIDandToken(hubId);
     return response;
   }
 }

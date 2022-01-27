@@ -15,6 +15,7 @@ import {
 import { IError } from '../models/status.model';
 import { IDevice } from '../models/device.model';
 import { DeviceService, DeviceCreateParams, AddOrRemoveDeviceParams } from '../services/device.service';
+import { IMqttMessage } from '../models/mqtt.model';
 
 @Route('devices')
 @Tags('Devices')
@@ -86,6 +87,7 @@ export class DeviceController extends Controller {
         name: 'status',
         href: 'mqtt://pwp21.medien.ifi.lmu.de:8883/mixer-1/status',
         dataType: 'string',
+        dataValue: 'Lorem Ipsum',
       },
     ],
   })
@@ -140,6 +142,12 @@ export class DeviceController extends Controller {
   @Patch('removeDeviceFromHub')
   public async removeDevice(@Body() requestBody: AddOrRemoveDeviceParams): Promise<IDevice> {
     const response: IDevice = await new DeviceService().removeDevice(requestBody);
+    return response;
+  }
+
+  @Patch('updateEventValue')
+  public async updateEventValue(@Body() requestBody: IMqttMessage): Promise<IDevice> {
+    const response: IDevice = await new DeviceService().updateEventValue(requestBody);
     return response;
   }
 }

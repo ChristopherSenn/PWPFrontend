@@ -14,3 +14,8 @@ export class StatusError extends Error {
 export interface IError {
   message: string;
 }
+
+export interface IStatus {
+  status: number;
+  message: string;
+}

@@ -1,6 +1,6 @@
 import bcryptjs from 'bcryptjs';
 import { IUser, User, UserInput, UserDocument } from '../models/user.model';
-import { StatusError } from '../models/error.model';
+import { StatusError } from '../models/status.model';
 import signJWT from '../functions/signJWT';
 
 export type UserCreationParams = Pick<IUser, 'email' | 'username' | 'password' | 'roles'>;

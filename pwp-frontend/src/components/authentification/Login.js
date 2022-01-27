@@ -110,6 +110,16 @@ export default function Login() {
                                 </Link>
                             </Grid>
                         </Grid>
+                        <Button
+                            href="/features"
+                        >
+                            Go to Features page
+                        </Button>
+                        <Button
+                            href="/deviceOverview"
+                        >
+                            Go to Device Overview
+                        </Button>
                     </Box>
 
                 </Box>

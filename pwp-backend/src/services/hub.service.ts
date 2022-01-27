@@ -84,7 +84,7 @@ export class HubService {
           if (res !== null) {
             const parsedHub: IHub = {
               hubName: res.hubName,
-              hubId: res.hubId,
+              hubId: res._id,
               ownerId: res.ownerId,
               memberIds: res.memberIds,
               cert: res.cert,
@@ -210,7 +210,7 @@ export class HubService {
   }
 
   // TODO: write correctly - add token!
-  public async showIDandToken(hubId: string): Promise<string> {
+  public async getCert(hubId: string): Promise<string> {
     const hub: HubDocument | null = await Hub.findById(hubId).exec();
 
     if (hub) {

@@ -97,9 +97,9 @@ export class HubController extends Controller {
     return response;
   }
 
-  @Get('showIDandToken')
-  public async showIDandToken(@Query() hubId: string): Promise<string> {
-    const response: string = await new HubService().showIDandToken(hubId);
+  @Get('cert')
+  public async getCert(@Query() hubId: string): Promise<string> {
+    const response: string = await new HubService().getCert(hubId);
     return response;
   }
 }

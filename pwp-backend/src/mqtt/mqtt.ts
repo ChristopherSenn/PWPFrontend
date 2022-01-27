@@ -13,7 +13,7 @@ const clientPemPath = path.join(__dirname, './', 'certificates', 'client.pem');
 
 const connectionOptions: mqtt.IClientOptions = {
   port: 8883,
-  clientId: 'PWP_PUBLIC_BACKEND_CLIENTa',
+  clientId: 'PWP_PUBLIC_BACKEND_CLIENT ' + Math.random().toString(16).substr(2, 8),
   clean: true,
   key: fs.readFileSync(clientKeyPath, 'utf8'),
   cert: fs.readFileSync(clientPemPath, 'utf8'),

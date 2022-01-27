@@ -8,6 +8,7 @@ import {
 import Login from './components/authentification/Login'
 import Register from './components/authentification/Register'
 import Dashboard from './components/main/Dashboard';
+import SecurityExplanation from './components/main/securityExplanation';
 import LandingPage from './components/main/landingPage'
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
           <Route path="/users/login" element={<Login />} />
           <Route path="/users/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/securityExplanation" element={<SecurityExplanation />} />
         </Routes>
     </BrowserRouter>
   );

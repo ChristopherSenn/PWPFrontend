@@ -1,26 +1,68 @@
 import React, {useEffect, useState} from 'react';
+//import { useNavigate } from "react-router-dom";
 import {useSelector, useDispatch } from "react-redux";
-import {useNavigate, Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Popover from '@mui/material/Popover';
-import { logout } from "../../actions/userActions";
+import { getAllUsers, logout} from "../../actions/userActions";
+import { getAllHubs} from "../../actions/hubsActions";
 import SecurityExplanation from "./securityExplanation.js"
-
+import Stack from '@mui/material/Stack';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import LogoutIcon from '@mui/icons-material/Logout';
+import IconButton from '@mui/material/IconButton';
 export default function Dashboard() {
+
+  //const navigate = useNavigate()
   const dispatch = useDispatch();
+  // get user name
   const [userName, setUserName] = useState("");
-
+  const [userHubs, setUserHubs] = useState("");
+  // get all information about logged user (single)
   const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
+  const { isAuth, user} = userLogin;
 
-  const navigate = useNavigate();
+  // list of all users, that have an account
+  //const usersList = useSelector((state) => state.users);
+  const hubsList = useSelector((state) => state.hubs);
+  // loading is false, if hubs are stored
+  // hubs : all hubs from localstorage
+  const {loading, hubs} = hubsList
+  // if(isAuth){
+  //   for(const hub of hubs){
+  //     console.log(hub.hubName)
+  //   }
+  // }
+
+    // create hubs: buttons 
+    const showHubs = () => {
+      const hubsButtons = [] // array for saving hubs
+      console.log("userid:", user.id)
+      if(isAuth){
+        for(const hub of hubs){
+          if(hub.ownerId === user.id){
+            hubsButtons.push(
+              <Button key={hub.hubId} onClick={() => console.log("works")}>
+              {hubs.hubName}
+            </Button>
+
+            )}
+        }
+      }
+      return hubsButtons;
+    }
+    // const fromHubToDevices = (){
+
+    // }
 
   useEffect(()=>{
-    if(userInfo){
-      setUserName(userInfo.username)
+  dispatch(getAllHubs())
+    if(user && isAuth){
+      setUserName(user.username)
     }
-  }, [userInfo])
+  }, [user])
 
   const logoutHandler = () => {
     dispatch(logout());
@@ -43,12 +85,12 @@ export default function Dashboard() {
     <div>
         <h2>Welcome to Dashboard, {userName}</h2>
             <Grid container>
-                <Grid item xs>
-                    <Button  variant="contained" component={RouterLink} to="/users/login" onClick={logoutHandler}>
-                        Log out
-                    </Button>
-                    
-                    <Button aria-describedby={securityExplanationPopup} variant="contained" onClick={securityExplanationClick}>
+            <List component={Stack} direction="row" sx={{float: 'left'}}>
+                 <ListItem key= 'hubsButtons' sx={{paddingRight: 3}}>
+                   {showHubs()}
+                 </ListItem>
+               </List>
+                    {/* <Button aria-describedby={securityExplanationPopup} variant="contained" onClick={securityExplanationClick}>
                       info
                     </Button>
                     <Popover
@@ -62,8 +104,18 @@ export default function Dashboard() {
                       }}
                     >
                       <SecurityExplanation/>
-                    </Popover>
-                </Grid>
+                    </Popover> */}
+ 
+                <div className='logoutButton'>
+                <Button  
+                        sx={{backgroundColor: 'red', color: 'white', "&:hover": {backgroundColor: '#999999'}}}
+                        variant="contained" 
+                        component={RouterLink} 
+                        to="/users/login" 
+                        onClick={logoutHandler}
+                        startIcon={<LogoutIcon />}>
+                    </Button>
+                </div>
             </Grid>
 
     </div>

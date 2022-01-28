@@ -12,15 +12,15 @@ import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Loading from '../../actions/loading';
-import {ErrorMessage} from '../../actions/messages';
+import Loading from '../../utilis/loading';
+import {ErrorMessage} from '../../utilis/messages';
 
 const theme = createTheme();
 
 export default function Login() {
 
     const navigate = useNavigate()
-
+    // formData saves the inputs of users
     const [formData, setFormData] = useState({
         username: "",
         password: "",
@@ -28,16 +28,20 @@ export default function Login() {
     });
     const { username, password, } = formData;
     const dispatch = useDispatch();
+    // userLogin = information of user that are currenty loggedin
     const userLogin = useSelector((state) => state.userLogin);
-    const { loading, error, userInfo} = userLogin;
+    const { loadingBar, error, isAuth} = userLogin;
+    // state for submittButton (if the button was clicked)
     const [submittButton, setSubmittButton] =useState(null)
 
     useEffect(() => {
-        if (userInfo && submittButton ) {
+        // if there exists a user and submittButton was clicked, then redirect to dashboard page
+        if (isAuth && submittButton ) {
           navigate('/dashboard');
         }
       });
-
+    
+    // update state with userinputs
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
@@ -46,7 +50,6 @@ export default function Login() {
         e.preventDefault();
         dispatch(login(username, password));
         setSubmittButton(true)
-        
     };
     
 
@@ -67,7 +70,7 @@ export default function Login() {
                         Login
                     </Typography>
                     {error && <ErrorMessage>{error}</ErrorMessage>}
-                    {loading && <Loading/>}
+                    {loadingBar && <Loading/>}
                     <Box component="form" onSubmit={(e) => onSubmit(e)} sx={{ mt: 1 }}>
                         <TextField
                             required

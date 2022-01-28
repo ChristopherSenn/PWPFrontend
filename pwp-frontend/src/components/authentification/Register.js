@@ -11,29 +11,29 @@ import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {ErrorMessage, SuccesMessage} from '../../actions/messages';
-import Loading from '../../actions/loading'
+import {ErrorMessage, SuccesMessage} from '../../utilis/messages';
+import Loading from '../../utilis/loading';
 const theme = createTheme();
 
 export default function Register() {
-    
+     // formData saves the inputs of users
     const [formData, setFormData] = useState({
         email: "",
         username: "",
         password: "",
         roles: "customer"
     });
+    // state for succesfully messages
     const [messageSucces, setMessageSuccess] = useState(null)
     const { email, username, password} = formData;
 
     const dispatch = useDispatch();
-    
+    //state with the registered user
     const userRegister = useSelector((state) => state.userRegister);
-    //errors from response(backend); 
-    // loading for progress line
+    
+    //error saved the erorr messages; 
+    // loading:bool is an is for progressBar 
     const { loading, error} = userRegister;
-
-  
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })

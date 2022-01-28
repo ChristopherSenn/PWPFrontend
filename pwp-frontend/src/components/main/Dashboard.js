@@ -7,7 +7,7 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Popover from '@mui/material/Popover';
 import { getAllUsers, logout} from "../../actions/userActions";
-import { getAllHubs} from "../../actions/hubsActions";
+import { getAllHubs, getAllHubsWithoutSettingState} from "../../actions/hubsActions";
 import SecurityExplanation from "./securityExplanation.js"
 import Stack from '@mui/material/Stack';
 import List from '@mui/material/List';
@@ -15,6 +15,7 @@ import ListItem from '@mui/material/ListItem';
 import LogoutIcon from '@mui/icons-material/Logout';
 import IconButton from '@mui/material/IconButton';
 import Paper from '@mui/material/Paper';
+
 import { experimentalStyled as styled } from '@mui/material/styles';
 
 
@@ -41,44 +42,34 @@ export default function Dashboard() {
 
   // list of all users, that have an account
   //const usersList = useSelector((state) => state.users);
-  const hubsList = useSelector((state) => state.hubs);
+  const hubs = useSelector((state) => state.hubs);
   // hubs : all hubs from localstorage
-  const { hubs, loading } = hubsList
- 
-  const hubsButtons = [] // array for saving hubs
-
-  // create hubs: buttons 
+  
+  // TO DO Hubs in denen man Mitglied ist user.userId === hub.memberId
+  // Wenn Hub angeklickt wird, muss hubId zurückgegeben werden --> speichern in global state      
   const showHubs = () => {
-    console.log("userid:", user.id)
-    if(isAuth){
-      for(const hub of hubs){
-        console.log(hub.ownerId)
-        // TO DO Hubs in denen man Mitglied ist user.userId === hub.memberId
-        // Wenn Hub angeklickt wird, muss hubId zurückgegeben werden --> speichern in global state
+
+    getAllHubsWithoutSettingState().then(hubs => {
+      for(const hub of hubs.data){
         if(hub.ownerId === user.id){
-          hubsButtons.push({hubId: hub.hubId, hubName: hub.hubName}) 
+          setUserHubs([...userHubs, {hubId: hub.hubId, hubName: hub.hubName}]) 
         }
       }
-    } 
+    });
   }
 
   useEffect(()=>{
     if(user && isAuth){ //stellt sicher, dass geladen
       setUserName(user.username);
       showHubs();
-    if(!loading){ // wenn hub fertig geladen ist
-      setUserHubs(hubsButtons)
     }
-     
-      
-    }
-  }, [user, userHubs])
+  }, [])
 
   const logoutHandler = () => {
     dispatch(logout());
   };
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const securityExplanationClick = (event) => {
     setAnchorEl(event.currentTarget);

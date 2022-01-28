@@ -11,7 +11,7 @@ import {
 } from "../actions/types";
 
 let user = JSON.parse(localStorage.getItem('userInfo'));
-const initialState = user ? { isAuth: true, user } : {};
+const initialState = user ? { isAuth: true, user } : {isAuth:false};
 // reducers for all users
 export const usersReducer = (state =initialState, action) => {
   switch (action.type) {
@@ -31,10 +31,10 @@ export const userLoginReducer = (state = initialState, action) => {
     case USER_LOGIN_SUCCESS:
       return { loadingBar: false,isAuth: true, user: action.payload };
     case USER_LOGIN_FAIL:
-      return { loadingBar: false, error: action.payload };
+      return { loadingBar: false,isAuth:false, error: action.payload };
     case AUTH_ERROR:
     case USER_LOGOUT:
-      return {};
+      return {isAuth:false};
     default:
       return state;
   }

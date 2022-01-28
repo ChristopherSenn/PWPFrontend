@@ -36,12 +36,10 @@ export default function Login() {
     const [submittButton, setSubmittButton] =useState(null)
 
     useEffect(() => {
-        // if there exists a user and submittButton was clicked, then redirect to dashboard page
         if (isAuth && submittButton ) {
           navigate('/dashboard');
         }
-      });
-    
+      }, [isAuth]);
     // update state with userinputs
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -51,7 +49,6 @@ export default function Login() {
         e.preventDefault();
         dispatch(login(username, password));
         setSubmittButton(true);
-        dispatch(getAllHubs());
     };
     
 

@@ -25,7 +25,7 @@ const Item = styled(Paper)(({ theme }) => ({
 export default function Dashboard() {
 
   //const navigate = useNavigate()
-  const dispatchRedux = useDispatch();
+  const dispatch = useDispatch();
   // get user name
   const [userName, setUserName] = useState("");
   //get users own hubs
@@ -35,6 +35,7 @@ export default function Dashboard() {
   // get all information about logged user (single)
   const userLogin = useSelector((state) => state.userLogin);
   const { isAuth, user } = userLogin;
+  console.log(userLogin)
 
 
 
@@ -73,14 +74,14 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (user && isAuth) { //stellt sicher, dass geladen
-      setUserName(user.username);
+      setUserName(user.username)
       showHubs()
       showMemebersHubs()
     }
-  }, [])
+  }, [user])
 
   const logoutHandler = () => {
-    dispatchRedux(logout());
+    dispatch(logout());
   };
 
 

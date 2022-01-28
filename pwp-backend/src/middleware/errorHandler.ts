@@ -18,7 +18,7 @@ export function errorHandler(err: unknown, req: Request, res: Response, next: Ne
     });
   } else if (err instanceof ValidateError) {
     return res.status(400).json({
-      message: 'Validation Error! Please submit a fitting role',
+      message: err.message,
     });
   } else if (err instanceof Error) {
     return res.status(401).json({

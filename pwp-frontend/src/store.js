@@ -6,15 +6,12 @@ import {
   userRegisterReducer,
   usersReducer,
 } from "./reducers/userReducers";
-import {
-  hubsReducer
-} from "./reducers/hubsReducer";
+
 // conbine all reducers
 const reducer = combineReducers({
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
   users: usersReducer,
-  hubs : hubsReducer
 
 });
 

@@ -4,7 +4,7 @@ import {
   Routes,
   Route
 } from "react-router-dom";
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 //pages
 import Login from './components/authentification/Login'
 import Register from './components/authentification/Register'
@@ -12,9 +12,7 @@ import Dashboard from './components/main/Dashboard';
 import SecurityExplanation from './components/main/securityExplanation';
 import LandingPage from './components/main/landingPage'
 
-
 function App() {
-
 
   return (
     <BrowserRouter>

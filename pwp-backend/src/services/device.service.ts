@@ -230,7 +230,7 @@ export class DeviceService {
    * @returns The updated device object
    */
   public async updateEventValue(requestBody: IMqttMessage): Promise<IDevice> {
-    const { deviceId, topic, message } = requestBody; // Store the properties in body in easier to access variables
+    const { deviceId, category, topic, message } = requestBody; // Store the properties in body in easier to access variables
 
     return new Promise<IDevice>((resolve, reject) => {
       // Find the correct device
@@ -239,16 +239,16 @@ export class DeviceService {
         if (err) {
           reject(new StatusError(err.message, 404));
         } else {
-          const eventPos = result.events.findIndex((event) => event.name === topic); // Find the position of the requested event in the events array
+          const eventPos = result[category].findIndex((c) => c.name === topic); // Find the position of the requested event in the events array
           // If the position is -1 the event was not found. In this case, reject the promise
           if (eventPos === -1) {
             reject(new StatusError('Event doesnt exist.', 404));
           } else {
             // If the event is found, update the right value in a local representation
-            const newEvents = result.events;
-            newEvents[eventPos].dataValue = message;
+            const newUpdate = result[category];
+            newUpdate[eventPos].dataValue = message;
             // Then store the updated array in the db
-            Device.findOneAndUpdate({ deviceId: deviceId }, { events: newEvents }).then((result) => {
+            Device.findOneAndUpdate({ deviceId: deviceId }, { [category]: newUpdate }).then((result) => {
               // In case something goes wrong, reject the promise
               if (!result) {
                 reject(new StatusError('Database Error.', 404));

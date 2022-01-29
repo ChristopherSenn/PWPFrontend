@@ -2,7 +2,7 @@ import mqtt from 'mqtt';
 import fs from 'fs';
 import path from 'path';
 
-import { IMqttMessage } from '../models/mqtt.model';
+import { CategoryTypes, IMqttMessage } from '../models/mqtt.model';
 import { DeviceService } from '../services/device.service';
 
 let client: mqtt.MqttClient; // Mqtt Client
@@ -36,8 +36,8 @@ function connectMqttClient() {
 
   // Whenever the client receives a message
   client.on('message', async (topic, text) => {
-    // Check if the topic of the message has the correct format (<hubId>/wot_clients/<deviceId>/<properties/events>/<property or event name>)
-    if ((topic.match(/\//g) || []).length !== 1) {
+    // Check if the topic of the message has the correct format (<hubId>/wot_clients/<deviceId>/<properties or events>/<property or event name>)
+    if ((topic.match(/\//g) || []).length !== 4) {
       // If not log an error message and do nothing
       console.log(topic + '   ' + text.toString());
       console.log('Wrong mqtt topic format in mqtt.ts!');
@@ -46,13 +46,28 @@ function connectMqttClient() {
     // Else start to process the message
     const topicSplit: string[] = topic.split('/'); // Split by /
 
+    // Check is category is valid and assign it accordungly
+    let passedCategory: CategoryTypes = CategoryTypes.Undefined;
+    if (topicSplit[3] === CategoryTypes.Events) {
+      passedCategory = CategoryTypes.Events;
+    } /* else if (topicSplit[3] === CategoryTypes.Properties) {
+      passedCategory = CategoryTypes.Properties;
+    } */
+
+    // Catch invalid category input
+    if (passedCategory === CategoryTypes.Undefined) {
+      console.log('Undefined Topic category: ' + topicSplit[3]);
+      return;
+    }
+
     // Create IMqttMessage object based on the topic and the message.
     const message: IMqttMessage = {
-      deviceId: topicSplit[0],
-      topic: topicSplit[1],
+      hubId: topicSplit[0],
+      deviceId: topicSplit[2],
+      category: passedCategory,
+      topic: topicSplit[4],
       message: text.toString(),
     };
-
     // Update the correct property in the database
     await new DeviceService().updateEventValue(message);
   });

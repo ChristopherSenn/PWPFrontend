@@ -10,47 +10,39 @@ import { getAllHubsWithoutSettingState } from "../../actions/hubsActions";
 import LogoutIcon from '@mui/icons-material/Logout';
 import Paper from '@mui/material/Paper';
 import { experimentalStyled as styled } from '@mui/material/styles';
-
-
-
-const Item = styled(Paper)(({ theme }) => ({
-  ...theme.typography.body2,
-  padding: theme.spacing(2),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-  cursor: 'pointer',
-}));
+import Divider from '@mui/material/Divider';
 
 
 export default function Dashboard() {
 
-  //const navigate = useNavigate()
   const dispatch = useDispatch();
   // get user name
   const [userName, setUserName] = useState("");
   //get users own hubs
-  const [userHubs, setUserHubs] = useState([]);
+  const [ownerHubs, setOwnerHubs] = useState([]);
   //get hubs, where user is a only a member
   const [userMemberHubs, setUserMemberHubs] = useState([])
   // get all information about logged user (single)
   const userLogin = useSelector((state) => state.userLogin);
   const { isAuth, user } = userLogin;
-  console.log(userLogin)
 
 
 
   // TO DO 
   // Wenn Hub angeklickt wird, muss hubId zurückgegeben werden --> speichern in global state  
 
-
+  let ownerHubsArray = [];
   //users own hubs
   const showHubs = () => {
 
     getAllHubsWithoutSettingState().then(hubs => {
       for (const hub of hubs.data) {
         if (hub.ownerId === user.id) {
-          setUserHubs([...userHubs, { hubId: hub.hubId, hubName: hub.hubName }])
+          // Klappt nicht: Warum auch immer?! 
+          // setOwnerHubs([...ownerHubs,[{ hubId: hub.hubId, hubName: hub.hubName }]])
+          ownerHubsArray.push({ hubId: hub.hubId, hubName: hub.hubName });
         }
+        setOwnerHubs(ownerHubsArray)
       }
     });
   }
@@ -62,11 +54,10 @@ export default function Dashboard() {
         for (const hub of hubs.data) {
           for (const memberId of hub.memberIds) {
             if (memberId === user.id && hub.ownerId !== user.id) {
+              // Klappt ?! 
               setUserMemberHubs([...userMemberHubs, { hubId: hub.hubId, hubName: hub.hubName }])
             }
-
           }
-
         }
       }
     })
@@ -84,35 +75,98 @@ export default function Dashboard() {
     dispatch(logout());
   };
 
+ 
+
+  // Styling of items in which each hub is displayed
+  const Item = styled(Paper)(({ theme }) => ({
+    ...theme.typography.body2,
+    padding: theme.spacing(2),
+    textAlign: 'center',
+    cursor: 'pointer',
+  }));
 
   return (
     <div>
       <h2>Welcome to Dashboard, {userName}</h2>
-      <Grid container>
-        <Box sx={{ flexGrow: 1 }}>
-          <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-            {userHubs.map((hub, index) => (
-              <Grid item xs={2} sm={4} md={4} key={index}>
+      <Button variant="contained" component={RouterLink} to="/add-hub">Add hub</Button>
 
-                <Item onClick={(e) => alert('Device page opens')}>
-                  <span>{hub.hubName}</span>
-                </Item>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
+      <Box
+            sx={{
+                marginTop: 8,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+            }}
+        ></Box>
+        <span>
+            Hubs you own:
+        </span>
+        <Box
+            sx={{
+                marginTop: 3,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+            }}
+        ></Box> 
+
+      <Box sx={{ flexGrow: 1 }}>
+        <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+          {ownerHubs.map((hub, index) => (
+            <Grid item xs={2} sm={4} md={4} key={index}>
+
+              <Item onClick={(e) => alert('Device page opens')} sx={{backgroundColor: '#ddfada'}}>
+                <span>{hub.hubName}</span>
+              </Item>
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+      
+      <Box
+            sx={{
+                marginTop: 3,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+            }}
+        ></Box>
+
+        <Divider />
+
+        <Box
+            sx={{
+                marginTop: 8,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+            }}
+        ></Box>
+        <span>
+            Hubs you are a member of:
+        </span>
+        <Box
+            sx={{
+                marginTop: 3,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+            }}
+        ></Box>
+
         <Box sx={{ flexGrow: 1 }}>
           <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
             {userMemberHubs.map((hub, index) => (
               <Grid item xs={2} sm={4} md={4} key={hub.hubId}>
 
-                <Item onClick={(e) => alert('Device page opens')}>
+                <Item onClick={(e) => alert('Device page opens')} sx={{backgroundColor: 'lightgrey'}}>
                   <span>{hub.hubName}</span>
                 </Item>
               </Grid>
             ))}
           </Grid>
         </Box>
+
         <div className='logoutButton' style={{
           position: "fixed",
           left: "94%",
@@ -127,7 +181,6 @@ export default function Dashboard() {
             startIcon={<LogoutIcon />}>
           </Button>
         </div>
-      </Grid>
 
     </div>
   );

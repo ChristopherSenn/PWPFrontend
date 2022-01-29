@@ -10,7 +10,8 @@ import Login from './components/authentification/Login'
 import Register from './components/authentification/Register'
 import Dashboard from './components/main/Dashboard';
 import SecurityExplanation from './components/main/securityExplanation';
-import LandingPage from './components/main/landingPage'
+import LandingPage from './components/main/landingPage';
+import AddHub from './components/main/AddHub';
 
 function App() {
 
@@ -22,6 +23,7 @@ function App() {
           <Route path="/users/register" element={<Register />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/securityExplanation" element={<SecurityExplanation />} />
+          <Route path="/add-hub" element={<AddHub />} />
         </Routes>
     </BrowserRouter>
   );

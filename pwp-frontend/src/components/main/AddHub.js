@@ -11,10 +11,9 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import Container from '@mui/material/Container';
 import axios from "axios";
-import { authHeader } from '../../utilis/setToken'
 import { useSelector } from "react-redux";
 import Typography from '@mui/material/Typography';
-
+import { loadUsers } from '../../actions/userActions';
 export default function AddHub() {
 
   // Man müsste eig nur noch die user-Liste ziehen und anstatt der Dummy-Liste an die Select-Box weiterreichen und dann eben mit dem Form die createHub füttern
@@ -26,9 +25,6 @@ export default function AddHub() {
   const [allUsers, setAllUsers] = useState([]);
   const navigate = useNavigate();
 
-  const requestOptions = {
-    headers: authHeader()
-  };
   const listOfUsers = []
 
   useEffect(() => {
@@ -36,15 +32,13 @@ export default function AddHub() {
   }, []);
 
   const getAllUsers = async () => {
-    try {
-      const res = await axios.get('http://localhost:4500/users', requestOptions);
-      for (let item of res.data) {
+    loadUsers().then(users =>{
+      for (const item of users.data){
         listOfUsers.push(item.id)
-      }
+      } 
       setAllUsers(listOfUsers)
-    } catch (error) {
-      console.log(error.request)
-    }
+    })
+ 
 
   }
 

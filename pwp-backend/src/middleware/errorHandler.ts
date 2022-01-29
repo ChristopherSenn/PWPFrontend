@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { ValidateError } from 'tsoa';
-import { StatusError } from '../models/error.model';
+import { StatusError } from '../models/status.model';
 
 /**
  * This middleware checks, if any error has been thrown or any promise has been rejected.

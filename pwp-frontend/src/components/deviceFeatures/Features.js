@@ -9,12 +9,13 @@ import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Stack from '@mui/material/Stack';
-import { Alert } from 'react-native';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import Popover from '@mui/material/Popover';
+import SecurityExplanation from '../main/securityExplanation';
 
 
 
@@ -129,12 +130,40 @@ class DeviceStatus extends React.Component{
 }
 
 class SecurityMode extends React.Component{
+    constructor (props){
+        super(props);
+        this.state = {
+            anchorEl: null,
+        };
+    }
+
+    securityExplanationClick = (event) => {
+        this.setState({anchorEl: event.currentTarget});
+    };
+
+    handleClose = () => {
+        this.setState({anchorEl: null});
+    };
 
     render() {
+        const securityExplanationPopupOpen = Boolean(this.state.anchorEl);
+        const securityExplanationPopup = securityExplanationPopupOpen ? 'simple-popover' : undefined;
         return(
             <div className='SecurityMode'>
                 <h3>Currently used Security Mode:</h3>
-                <Button startIcon={<FontAwesomeIcon icon={faInfo} />} sx={{color: 'white', backgroundColor: '#787878', "&:hover": {backgroundColor: '#999999'}}}>Local Network </Button>  
+                <Button startIcon={<FontAwesomeIcon icon={faInfo} />} sx={{color: 'white', backgroundColor: '#787878', "&:hover": {backgroundColor: '#999999'}}} aria-describedby={securityExplanationPopup} variant="contained" onClick={this.securityExplanationClick}>Local Network </Button> 
+                <Popover
+                      id={securityExplanationPopup}
+                      open={securityExplanationPopupOpen}
+                      anchorEl={this.state.anchorEl}
+                      onClose={this.handleClose}
+                      anchorOrigin={{
+                        vertical: 'center',
+                        horizontal: 'left',
+                      }}
+                    >
+                      <SecurityExplanation/>
+                    </Popover> 
             </div>
         )
     }
@@ -142,11 +171,24 @@ class SecurityMode extends React.Component{
 
 
 class DeviceName extends React.Component {
+    constructor (props){
+        super(props);
+        this.state = {
+            deviceName: 'Your Device',
+        };
+    }
+
+    componentDidMount(){
+        console.log("ist aufgerufen")
+        this.setState({deviceName: "Mixer"});
+    }
+
+
     
     render (){
         return(
             <div className='DeviceName'>
-                <h1>Mixer</h1>
+                <h1>{this.state.deviceName}</h1>
             </div>
         )
     }

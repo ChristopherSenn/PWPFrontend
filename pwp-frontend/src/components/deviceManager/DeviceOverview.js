@@ -21,20 +21,60 @@ class AddDevice extends React.Component{
 
 }
 
-class Devices extends React.Component{
+class DeviceButtons extends React.Component{
+    constructor (props){
+        super(props);
+        this.state = {
+            deviceName: "Your Device",
+            deviceId: "The deviceId"
+        };
+    }
+
+    componentDidMount() {
+        this.setState({deviceName: this.props.deviceName});
+        this.setState({deviceId: this.props.deviceId})
+    }
+
+    clickTest
+
     render(){
+        console.log(this.state.deviceName);
+        console.log(this.state.deviceId);
+        return(
+            <div className = "DeviceButtons">
+                <Button sx={{color: 'white', backgroundColor: '#787878', width: 150, height: 70, "&:hover": {backgroundColor: '#999999'}}}>
+                      {this.state.deviceName}
+                </Button> 
+            </div>
+        )
+    }
+
+
+}
+
+
+class Devices extends React.Component{
+
+    render(){
+        const deviceName1 = "Hallo"
+        const deviceId1 = "123"
+
+        const deviceName2 = "Hi"
+        const deviceId2 = "987"
         return(
             <div className='Devices'>
                <List component={Stack} direction="row" sx={{float: 'left'}}>
                  <ListItem key= 'hello' sx={{paddingRight: 3}}>
-                   <Button sx={{color: 'white', backgroundColor: '#787878', width: 150, height: 70, "&:hover": {backgroundColor: '#999999'}}}>
-                      hello
-                   </Button>  
+                   <DeviceButtons
+                     deviceName = {deviceName1}
+                     deviceId = {deviceId1}
+                    ></DeviceButtons>
                  </ListItem>
                  <ListItem key= 'hi' sx={{paddingRight: 3}}>
-                   <Button sx={{color: 'white', backgroundColor: '#787878', width: 150, height: 70, "&:hover": {backgroundColor: '#999999'}}}>
-                      hi
-                   </Button>  
+                 <DeviceButtons
+                     deviceName = {deviceName2}
+                     deviceId = {deviceId2}
+                    ></DeviceButtons> 
                  </ListItem>
                  <ListItem key= 'hey' sx={{paddingRight: 3}}>
                    <Button sx={{color: 'white', backgroundColor: '#787878', width: 150, height: 70, "&:hover": {backgroundColor: '#999999'}}}>

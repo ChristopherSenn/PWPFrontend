@@ -13,6 +13,8 @@ import Grid from '@mui/material/Grid';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {ErrorMessage, SuccesMessage} from '../../actions/messages';
 import Loading from '../../actions/loading'
+import './Register.css'
+
 const theme = createTheme();
 
 export default function Register() {
@@ -23,7 +25,6 @@ export default function Register() {
         password: "",
         roles: "customer"
     });
-    const [messageError, setMessageError] = useState(null)
     const [messageSucces, setMessageSuccess] = useState(null)
     const { email, username, password} = formData;
 
@@ -42,10 +43,7 @@ export default function Register() {
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        if(password.length < 8){
-            setMessageError('Password must be at least 8 digits long!')
-            
-            }else {
+        if(!loading){
                 dispatch(register(username, email, password, "customer"));
                 setMessageSuccess("Registration Successful.")
         }
@@ -54,8 +52,6 @@ export default function Register() {
     const setAlertMessage = () =>{
         if(error){
             return <ErrorMessage>{error}</ErrorMessage>
-        }else if (messageError){
-            return <ErrorMessage>{messageError}</ErrorMessage>
         }else if (messageSucces){
             return  <SuccesMessage>
             {messageSucces}
@@ -68,18 +64,21 @@ export default function Register() {
    
 
     return (
+        <header className="SignUp-header">
+        <div className="SignUpContent"> 
         <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box
                     sx={{
-                        marginTop: 8,
+                        height: 590,
                         display: 'flex',
                         flexDirection: 'column',
-                        alignItems: 'center'
+                        alignItems: 'center',
+                        justifyContent: "center"
                     }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}></Avatar>
+                    <Avatar sx={{ m: 1, bgcolor: '#787878' }}></Avatar>
                     <Typography component="h1" variant="h5">
                         Sign up
                     </Typography>
@@ -95,6 +94,7 @@ export default function Register() {
                             name="username"
                             value={username}
                             onChange={(e) => onChange(e)}
+                            sx={{borderColor: '#787878', color: '#787878', "&:hover": {backgroundColor: '#787878'}}}
                         />
                         <TextField
                             margin="normal"
@@ -105,6 +105,7 @@ export default function Register() {
                             name="email"
                             value={email}
                             onChange={(e) => onChange(e)}
+                            sx={{borderColor: '#787878', color: '#787878', "&:hover": {backgroundColor: '#787878'}}}
 
                         />
                         <TextField
@@ -117,18 +118,19 @@ export default function Register() {
                             id="password"
                             value={password}
                             onChange={(e) => onChange(e)}
+                            sx={{borderColor: '#787878', color: '#787878', "&:hover": {backgroundColor: '#787878'}}}
                         />
                         <Button
                             type="submit"
                             fullWidth
                             variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
+                            sx={{ mt: 3, mb: 2, backgroundColor: '#787878', color: 'white', "&:hover": {backgroundColor: '#999999'} }}
                         >
                             Sign In
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
-                                <Link href="/users/login" variant="body2">
+                                <Link href="/users/login" variant="body2" sx={{ color: 'white', textDecoration: 'none' }}>
                                     Already have an account? Login
                                 </Link>
                             </Grid>
@@ -137,6 +139,7 @@ export default function Register() {
                 </Box>
             </Container>
         </ThemeProvider>
-
+        </div>
+        </header>
     );
 }

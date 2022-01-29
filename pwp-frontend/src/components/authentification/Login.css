@@ -1,9 +1,9 @@
-.Features {
+.Login{
     text-align: center;
     font-family: "Arial";
 }
 
-.Features-header{
+.Login-header{
     background-color: #282c34;
     min-height: 100vh;
     display: flex;
@@ -12,35 +12,11 @@
     justify-content: center;
     font-size: calc(10px + 2vmin);
     color: white;
-    
 }
 
-
-.TextBox {
+.LoginContent{
     background-color: #B4CDCD;
     text-align: left;
     width: 1000px;
     height: 600px;
-}
-
-
-.DeviceName {
-    height: 100px;
-    margin-left: 10px;
-
-}
-
-.SecurityMode {
-    margin-left: 10px;
-    height: 140px;
-}
-
-.Functionalities {
-    margin-left: 10px;
-    height: 200px;
-}
-
-.Delete{
-    text-align: center;
-
 }

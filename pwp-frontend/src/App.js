@@ -8,6 +8,7 @@ import {
 import Login from './components/authentification/Login'
 import Register from './components/authentification/Register'
 import Dashboard from './components/main/Dashboard';
+import SecurityExplanation from './components/main/securityExplanation';
 import LandingPage from './components/main/landingPage'
 import Features from './components/mqttListener/mqttClient';
 import DeviceOverview from './components/deviceManager/DeviceOverview';
@@ -22,6 +23,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/features" element={<Features />} />
           <Route path="/deviceOverview" element={<DeviceOverview />} />
+          <Route path="/securityExplanation" element={<SecurityExplanation />} />
         </Routes>
     </BrowserRouter>
   );

@@ -6,27 +6,9 @@ import {
     USER_REGISTER_FAIL,
     USER_REGISTER_REQUEST,
     USER_REGISTER_SUCCESS,
-    USER_LOADED,
-    AUTH_ERROR
   } from "./types";
   import axios from "axios";
-  import { authHeader } from "../utilis/setToken";
 
-  //get all users 
-  export const getAllUsers = () => async (dispatch) =>{
-    try{
-      const requestOptions = {
-        headers: authHeader()
-    };
-    const res = await axios.get('http://localhost:4500/users', requestOptions)
-
-    dispatch({ type: USER_LOADED, payload: res.data });
-    }catch(error){
-      dispatch({
-        type: AUTH_ERROR,
-      })
-    }
-  }
 
  // login function
   export const login = (username, password) => async (dispatch) => {

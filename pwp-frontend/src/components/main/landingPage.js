@@ -8,11 +8,9 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 
 
-
-
-export default function  LandingPage(){
+export default function LandingPage() {
     return (
-            <div> 
+        <div>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box
@@ -33,13 +31,13 @@ export default function  LandingPage(){
                             </Button>
                         </Grid>
                         <Grid item xs>
-                        <Button fullWidth variant="outlined" component={RouterLink} to="/users/register">
+                            <Button fullWidth variant="outlined" component={RouterLink} to="/users/register">
                                 Sign Up
                             </Button>
                         </Grid>
                     </Grid>
                 </Box>
             </Container>
-            </div>
+        </div>
     )
 }

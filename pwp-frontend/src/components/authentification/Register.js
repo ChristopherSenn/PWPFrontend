@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { register } from "../../actions/userActions";
 import Avatar from '@mui/material/Avatar';
@@ -11,12 +11,12 @@ import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import {ErrorMessage, SuccesMessage} from '../../utilis/messages';
+import { ErrorMessage, SuccesMessage } from '../../utilis/messages';
 import Loading from '../../utilis/loading';
 const theme = createTheme();
 
 export default function Register() {
-     // formData saves the inputs of users
+    // formData saves the inputs of users
     const [formData, setFormData] = useState({
         email: "",
         username: "",
@@ -25,15 +25,15 @@ export default function Register() {
     });
     // state for succesfully messages
     const [messageSucces, setMessageSuccess] = useState(null)
-    const { email, username, password} = formData;
+    const { email, username, password } = formData;
 
     const dispatch = useDispatch();
     //state with the registered user
     const userRegister = useSelector((state) => state.userRegister);
-    
+
     //error saved the erorr messages; 
     // loading:bool is an is for progressBar 
-    const { loading, error} = userRegister;
+    const { loading, error } = userRegister;
 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -41,25 +41,25 @@ export default function Register() {
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        if(!loading){
-                dispatch(register(username, email, password, "customer"));
-                setMessageSuccess("Registration Successful.")
+        if (!loading) {
+            dispatch(register(username, email, password, "customer"));
+            setMessageSuccess("Registration Successful.")
         }
 
     };
-    const setAlertMessage = () =>{
-        if(error){
+    const setAlertMessage = () => {
+        if (error) {
             return <ErrorMessage>{error}</ErrorMessage>
-        }else if (messageSucces){
-            return  <SuccesMessage>
-            {messageSucces}
-            <Link href="/users/login" variant="body2">
-                Please click here to Login
-            </Link>
-        </SuccesMessage>
+        } else if (messageSucces) {
+            return <SuccesMessage>
+                {messageSucces}
+                <Link href="/users/login" variant="body2">
+                    Please click here to Login
+                </Link>
+            </SuccesMessage>
         }
     }
-   
+
 
     return (
         <ThemeProvider theme={theme}>
@@ -77,7 +77,7 @@ export default function Register() {
                     <Typography component="h1" variant="h5">
                         Sign up
                     </Typography>
-                    {loading && <Loading/>}
+                    {loading && <Loading />}
                     {setAlertMessage()}
                     <Box component="form" onSubmit={(e) => onSubmit(e)} sx={{ mt: 1 }}>
                         <TextField

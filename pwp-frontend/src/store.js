@@ -1,18 +1,17 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
+import hubReducer from "./reducers/hubReducer";
 
 import {
   userLoginReducer,
   userRegisterReducer,
-  usersReducer,
 } from "./reducers/userReducers";
 
 // conbine all reducers
 const reducer = combineReducers({
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
-  users: usersReducer,
-
+  hubClicked: hubReducer,
 });
 
 

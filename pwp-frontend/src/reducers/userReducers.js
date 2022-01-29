@@ -6,23 +6,12 @@ import {
   USER_REGISTER_FAIL,
   USER_REGISTER_REQUEST,
   USER_REGISTER_SUCCESS,
-  USER_LOADED,
   AUTH_ERROR
 } from "../actions/types";
 
 let user = JSON.parse(localStorage.getItem('userInfo'));
 const initialState = user ? { isAuth: true, user } : {isAuth:false};
-// reducers for all users
-export const usersReducer = (state =initialState, action) => {
-  switch (action.type) {
-    case USER_LOADED:
-      return {usersList: action.payload };
-    case AUTH_ERROR:
-      return {};
-    default:
-      return state;
-  }
-}
+
 // reducer for logged in user
 export const userLoginReducer = (state = initialState, action) => {
   switch (action.type) {

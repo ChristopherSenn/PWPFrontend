@@ -11,6 +11,7 @@ import {
   Query,
   SuccessResponse,
   Patch,
+  Security
 } from 'tsoa';
 import { IError } from '../models/status.model';
 import { IDevice } from '../models/device.model';
@@ -21,7 +22,7 @@ import { IMqttMessage } from '../models/mqtt.model';
 @Tags('Devices')
 export class DeviceController extends Controller {
   // Create Device Function is only allowed with token
-  // @Security('jwt', ['customer'])
+  @Security('jwt', ['customer'])
   // Request to create a save a New Device into DB By HubId and Thing Desctiption
   @Post('createDevice')
   @SuccessResponse('201', 'Device Created')
@@ -134,8 +135,8 @@ export class DeviceController extends Controller {
    * !!!!!!!!!
    */
   // Delete Device Function is only allowed with token
-  // @Security('jwt', ['customer'])
-  //@Delete('deleteDevice')
+  @Security('jwt', ['customer'])
+  @Delete('deleteDevice')
   @SuccessResponse('201', 'Device sucessfully removed')
   @Example<IDevice>({
     id: '36f15cb1b5a93ffufvrb0701',
@@ -178,12 +179,43 @@ export class DeviceController extends Controller {
     return response;
   }
 
-  // @Security('jwt', ['customer'])
+  @Security('jwt', ['customer'])
   // Request to get Device By HubId
   @Get('getDeviceByHub')
-  @SuccessResponse('200', 'Success')
+  @SuccessResponse('200', 'OK')
+  @Example<IDevice>({
+    id: '36f15cb1b5a93ffufvrb0701',
+    thingDescription: "json content",
+    deviceId: 'uuid-prototype-1.0.1-mixer',
+    hubIds: ['61f15cb1b6a93ffbferb0905'],
+    deviceName: 'MyMixerThing',
+    actions: [
+      {
+        name: 'stir',
+        href: 'mqtt://pwp21.medien.ifi.lmu.de:8883/mixer-1/status',
+        actionType: 'TimeCommand',
+        inputType: 'float',
+      },
+    ],
+    events: [
+      {
+        name: 'status',
+        href: 'mqtt://pwp21.medien.ifi.lmu.de:8883/mixer-1/status',
+        dataType: 'string',
+        dataValue: 'Lorem Ipsum',
+      },
+    ],
+    properties: [
+      {
+        name: 'status',
+        href: 'mqtt://pwp21.medien.ifi.lmu.de:8883/mixer-1/status',
+        dataType: 'string',
+        dataValue: 'Lorem Ipsum',
+      },
+    ],
+  })
   //Error Handling
-  @Response<IError>(400, 'Bad Request', {
+  @Response<IError>(404, 'Bad Request', {
     message: 'HubId not found',
   })
   public async getDevice(@Query() hubId: string): Promise<IDevice[]> {
@@ -191,7 +223,7 @@ export class DeviceController extends Controller {
     return response;
   }
 
-  // @Security('jwt', ['customer'])
+  @Security('jwt', ['customer'])
   // Request to get the Device with all Properties By DeviceName
   @Get('getDeviceDetails')
   @SuccessResponse('201', 'Device sucessfully removed')
@@ -235,7 +267,7 @@ export class DeviceController extends Controller {
     return response;
   }
 
-   // @Security('jwt', ['customer'])
+  @Security('jwt', ['customer'])
   // Add a device to a Hub By userId, hubId and deviceId
   @Patch('addDeviceToHub')
   @SuccessResponse('201', 'Device has been sucessfully added to Hub')
@@ -279,7 +311,7 @@ export class DeviceController extends Controller {
     return response;
   }
 
-   // @Security('jwt', ['customer'])
+  @Security('jwt', ['customer'])
   // Remove a device from a Hub By userId, hubId and deviceId
   @Patch('removeDeviceFromHub')
   @SuccessResponse('201', 'Device sucessfully removed form Hub')
@@ -323,7 +355,7 @@ export class DeviceController extends Controller {
     return response;
   }
 
-  // @Security('jwt', ['customer'])
+  @Security('jwt', ['customer'])
   //Update Event Value to perform an event on hardware tool By inserting deviceId, mqtt topic and  message
   @Patch('updateEventValue')
   @SuccessResponse('201', 'Event Value sucessfully updated')

@@ -81,7 +81,7 @@ export class DeviceService {
   public async deleteDevice(deviceId): Promise<IDevice> {
     return new Promise<IDevice>((resolve, reject) => {
       // Find Device with specific DeviceId in Database 
-      Device.findOneAndDelete(deviceId, (err, result) => {
+      Device.findOneAndDelete({deviceId: deviceId}, (err, result) => {
         if (err) {
           reject(new StatusError('Something went wrong', 404));
         } else {
@@ -114,7 +114,7 @@ export class DeviceService {
       // Find all Devices with specific HubId
       Device.find({ hubIds: hubId }, (err, result) => {
         if (err) {
-          reject(new StatusError('Something went wrong', 404));
+          reject(new StatusError('HubId not found', 404));
         } else {
           const devices: IDevice[] = [];
           result.forEach((d) => {
@@ -143,7 +143,7 @@ export class DeviceService {
       // Find specific Device by received deviceId in Database
       Device.findOne( {deviceId: deviceId}, (err, result) => {
         if (err) {
-          reject(new StatusError('Something went wrong', 404));
+          reject(new StatusError('Device with deviceId not found', 404));
         } else {
           if (result !== null) {
             const actionTofind: IDevice = {

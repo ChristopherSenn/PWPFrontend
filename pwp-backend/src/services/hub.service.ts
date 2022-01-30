@@ -9,6 +9,9 @@ export type HubCreationParams = Pick<IHub, 'hubName' | 'ownerId' | 'memberIds'>;
 export type AddOrRemoveUserParams = { hubId: string; memberIds: string[]; userId: string };
 
 export class HubService {
+  /**
+   * @returns parsedHubs: IHub[] - Array of all Hubs
+   */
   public async getHubs(): Promise<IHub[]> {
     const hubs: HubDocument[] = await Hub.find().exec();
 
@@ -25,7 +28,10 @@ export class HubService {
     return parsedHubs;
   }
 
-  // TODO: search through all Hubs - check if user is a member
+  /**
+   * @param userId ID of the user
+   * @returns parsedHubs: IHub[] - Array of all hubs the user is a memeber of
+   */
   public async getHubsByUserId(userId: string): Promise<IHub[]> {
     const hubs: HubDocument[] = await Hub.find().exec();
 
@@ -44,6 +50,10 @@ export class HubService {
     return parsedHubs;
   }
 
+  /**
+   * @param requestBody description of the request body
+   * @returns parsedHub: IHub: new Hub Object
+   */
   public async createHub(requestBody: HubCreationParams): Promise<IHub> {
     const { hubName, ownerId, memberIds } = requestBody;
 
@@ -75,6 +85,10 @@ export class HubService {
     return parsedHub;
   }
 
+  /**
+   * @param requestBody description of the request body
+   * @returns Promise
+   */
   public async deleteHub(requestBody: HubDeleteParams): Promise<IHub> {
     return new Promise<IHub>((resolve, reject) => {
       Hub.findOneAndDelete({ _id: requestBody.hubId }, (err, res) => {
@@ -110,6 +124,10 @@ export class HubService {
     });
   }
 
+  /**
+   * @param requestBody description of the request body
+   * @returns Promise<IHub> updated hub object
+   */
   public async addUser(requestBody: AddOrRemoveUserParams): Promise<IHub> {
     const { hubId, memberIds, userId } = requestBody;
 
@@ -145,6 +163,10 @@ export class HubService {
     }
   }
 
+  /**
+   * @param requestBody description of the request body
+   * @returns Promise<IHub> updated hub object
+   */
   public async removeUser(requestBody: AddOrRemoveUserParams): Promise<IHub> {
     const { hubId, memberIds, userId } = requestBody;
 
@@ -209,7 +231,10 @@ export class HubService {
     }
   }
 
-  // TODO: write correctly - add token!
+  /**
+   * @param hubId ID of the hub
+   * @returns hub certificate
+   */
   public async getCert(hubId: string): Promise<string> {
     const hub: HubDocument | null = await Hub.findById(hubId).exec();
 

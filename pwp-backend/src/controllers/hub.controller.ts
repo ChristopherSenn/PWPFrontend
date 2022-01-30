@@ -38,13 +38,14 @@ export class HubController extends Controller {
   }
 
   @Get('getHubsByUserId')
+  @Security('jwt', ['customer'])
   public async getHubsByUserId(@Query() userId: string): Promise<IHub[]> {
     const response: IHub[] = await new HubService().getHubsByUserId(userId);
     return response;
   }
 
   @Post('createHub')
-  // @Security('jwt', ['customer'])
+  @Security('jwt', ['customer'])
   @Example<IHub>({
     hubId: 'msa90jalkjm390ßasj3apok4',
     hubName: 'MyHub',
@@ -64,7 +65,7 @@ export class HubController extends Controller {
   }
 
   @Delete('deleteHub')
-  // @Security('jwt', ['customer'])
+  @Security('jwt', ['customer'])
   @Example<IHub>({
     hubId: 'msa90jalkjm390ßasj3apok4',
     hubName: 'MyHub',
@@ -85,19 +86,38 @@ export class HubController extends Controller {
     return response;
   }
 
+  /**
+   * @param requestBody Description for the request body object
+   * @returns requestbody {
+   *    "hubId": "",
+   *    "memberIds": ["", ""],
+   *    "userIds": ["", ""]
+   * }
+   */
   @Patch('addUser')
+  @Security('jwt', ['customer'])
   public async addUser(@Body() requestBody: AddOrRemoveUserParams): Promise<IHub> {
     const response: IHub = await new HubService().addUser(requestBody);
     return response;
   }
 
+  /**
+   * @param requestBody Description for the request body object
+   * @returns requestbody {
+   *    "hubId": "",
+   *    "memberIds": ["", ""],
+   *    "userIds": ["", ""]
+   * }
+   */
   @Patch('removeUser')
+  @Security('jwt', ['customer'])
   public async removeUser(@Body() requestBody: AddOrRemoveUserParams): Promise<IHub> {
     const response: IHub = await new HubService().removeUser(requestBody);
     return response;
   }
 
   @Get('cert')
+  @Security('jwt', ['customer'])
   public async getCert(@Query() hubId: string): Promise<string> {
     const response: string = await new HubService().getCert(hubId);
     return response;

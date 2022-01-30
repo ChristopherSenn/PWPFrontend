@@ -83,7 +83,7 @@ export default function EditHub() {
           typeof value === 'string' ? value.split(',') : value,
         );
       };
-      const deleteMemeber = async (e, memberId) =>{
+      const removeMember = async (e, memberId) =>{
 
         e.preventDefault();
       
@@ -109,7 +109,7 @@ export default function EditHub() {
         membersOfHub.forEach(item =>{
             if(item.id !== memberId ){
                 tempHubMembers.push(item)
-                console.log(item)
+                
 
             }
         })
@@ -210,7 +210,7 @@ export default function EditHub() {
             {membersOfHub.map((member) => (
               <ListItem key={member.username} value={member.username}>
                 <ListItemText primary={member.username} />
-                <IconButton edge="end" aria-label="delete" onClick={(e) => deleteMemeber(e, member.id)}>
+                <IconButton edge="end" aria-label="delete" onClick={(e) => removeMember(e, member.id)}>
                       <DeleteIcon />
                     </IconButton>
               </ListItem>

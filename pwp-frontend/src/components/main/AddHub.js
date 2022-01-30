@@ -35,8 +35,9 @@ export default function AddHub() {
   const getAllUsers = async () => {
     loadUsers().then(users =>{
       for (const item of users.data){
+        if(user.id !== item.id ){
         listOfUsersObject.push({id: item.id, username: item.username});
-      } 
+      } }
       setAllMembersObject(listOfUsersObject)
     })
   }

@@ -19,6 +19,9 @@ import ListItem from '@mui/material/ListItem';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import DashboardCustomizeSharpIcon from '@mui/icons-material/DashboardCustomizeSharp';
+import { authHeader } from "../../utilis/setToken";
+
+
 export default function EditHub() {
 
     const navigate = useNavigate();
@@ -99,22 +102,21 @@ export default function EditHub() {
       };
       const removeMember = async (e, member) =>{
         e.preventDefault();
-      
+  
         const config = {
-            headers: {
-              "Content-type": "application/json",
-            },
-          };
-          const removedUser = {
-            "userId": user.id,
-            "memberIds": member.id,
-            "hubId" : state.hubId
-          }
-          try {
-            await axios.patch(
+          headers: authHeader()
+        };
+      
+        const removedUser = {
+          "userId": user.id,
+          "memberIds": member.id,
+          "hubId" : state.hubId
+        }
+        try {
+          await axios.patch(
             'http://localhost:4500/hubs/removeUser',
             removedUser, config
-            )
+          )
         } catch (error) {
             console.log(error.message);
         }
@@ -148,10 +150,8 @@ export default function EditHub() {
       
         const idsOfSelectedMembers = [];
         const config = {
-            headers: {
-              "Content-type": "application/json",
-            },
-          };
+          headers: authHeader()
+        };
     
         dropDownMembersArray.forEach(member => {
             selectedMemberNames.forEach(selectedMember => {

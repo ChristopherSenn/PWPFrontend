@@ -16,9 +16,7 @@ export const getAllHubsWithoutSettingState = async () => {
 export const deleteHub = async (hubId) => {
   try{
     const config = {
-      headers: {
-        "Content-type": "application/json",
-      },
+      headers: authHeader()
     };
     return await axios.delete('http://localhost:4500/hubs/deleteHub', {
       config,

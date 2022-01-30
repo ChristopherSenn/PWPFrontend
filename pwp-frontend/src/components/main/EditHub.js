@@ -83,6 +83,40 @@ export default function EditHub() {
           typeof value === 'string' ? value.split(',') : value,
         );
       };
+      const deleteMemeber = async (e, memberId) =>{
+
+        e.preventDefault();
+      
+        const config = {
+            headers: {
+              "Content-type": "application/json",
+            },
+          };
+          const removedUser = {
+            "userId": user.id,
+            "memberIds": memberId,
+            "hubId" : state.hubId
+          }
+          try {
+            await axios.patch(
+            'http://localhost:4500/hubs/removeUser',
+            removedUser, config
+            )
+        } catch (error) {
+            console.log(error.message);
+        }
+        const tempHubMembers = [];
+        membersOfHub.forEach(item =>{
+            if(item.id !== memberId ){
+                tempHubMembers.push(item)
+                console.log(item)
+
+            }
+        })
+        setMembersOfHub(tempHubMembers)
+    
+    }
+
 
     // add new members to hub
     const onSubmit = async (e) => {
@@ -176,7 +210,7 @@ export default function EditHub() {
             {membersOfHub.map((member) => (
               <ListItem key={member.username} value={member.username}>
                 <ListItemText primary={member.username} />
-                <IconButton edge="end" aria-label="delete">
+                <IconButton edge="end" aria-label="delete" onClick={(e) => deleteMemeber(e, member.id)}>
                       <DeleteIcon />
                     </IconButton>
               </ListItem>

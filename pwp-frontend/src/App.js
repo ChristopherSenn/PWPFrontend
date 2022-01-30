@@ -12,6 +12,8 @@ import Dashboard from './components/main/Dashboard';
 import SecurityExplanation from './components/main/securityExplanation';
 import LandingPage from './components/main/landingPage';
 import AddHub from './components/main/AddHub';
+import EditHub from './components/main/EditHub';
+
 
 function App() {
 
@@ -24,6 +26,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/securityExplanation" element={<SecurityExplanation />} />
           <Route path="/add-hub" element={<AddHub />} />
+          <Route path="/edit-hub" element={<EditHub />} />
         </Routes>
     </BrowserRouter>
   );

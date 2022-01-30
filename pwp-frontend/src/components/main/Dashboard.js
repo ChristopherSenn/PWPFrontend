@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -14,10 +15,13 @@ import { experimentalStyled as styled } from '@mui/material/styles';
 import Divider from '@mui/material/Divider';
 import { HUB_CLICKED } from '../../actions/types';
 import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
 
 export default function Dashboard() {
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   // get user name
   const [userName, setUserName] = useState("");
   //get users own hubs
@@ -82,6 +86,11 @@ export default function Dashboard() {
     setOwnerHubs(tempHubArr);
   }
 
+  const onEdit = (e, hub) => {
+    // navigates to edit-hub and passes information about which hub was clicked
+    navigate('/edit-hub', { state: hub});
+  }
+
   // Styling of items in which each hub is displayed
   const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
@@ -129,6 +138,9 @@ export default function Dashboard() {
           {ownerHubs.map((hub, index) => (
             <Grid item xs={2} sm={4} md={4} key={index}>
               <Box sx={{ textAlign: 'right'}}>
+                  <IconButton onClick={(e) => onEdit(e, hub)} >
+                        <EditIcon />
+                  </IconButton>
                   <IconButton onClick={(e) => onDelete(e, hub)} >
                         <DeleteIcon />
                   </IconButton>

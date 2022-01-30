@@ -35,7 +35,7 @@ export default function Dashboard() {
   // hubCLicked contains the id of the hub that was clicked
   //const hubClicked = useSelector((state) => state.hubClicked)
 
- 
+ console.log(user)
   //users own hubs
   const showHubs = () => {
 

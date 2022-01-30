@@ -14,6 +14,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import Typography from '@mui/material/Typography';
 import { loadUsers } from '../../actions/userActions';
+import { authHeader } from '../../utilis/setToken';
 export default function AddHub() {
 
   // Man müsste eig nur noch die user-Liste ziehen und anstatt der Dummy-Liste an die Select-Box weiterreichen und dann eben mit dem Form die createHub füttern
@@ -63,9 +64,12 @@ export default function AddHub() {
     }
 
     try {
+      const config = {
+        headers: authHeader()
+      };
         await axios.post(
         'http://localhost:4500/hubs/createHub',
-        createdHubInfos
+        createdHubInfos, config
         )
         navigate('/dashboard');
     } catch (error) {

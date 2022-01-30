@@ -18,12 +18,10 @@ export const deleteHub = async (hubId) => {
     const config = {
       headers: authHeader()
     };
-    return await axios.delete('http://localhost:4500/hubs/deleteHub', {
-      config,
-      data: { 
-        "hubId": hubId
-      }
-    })
+    return await axios.delete('http://localhost:4500/hubs/deleteHub', 
+     hubId, config,
+      
+    )
   } catch(error){
     console.log(error.message)
   }

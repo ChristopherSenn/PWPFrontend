@@ -44,6 +44,14 @@ export class HubController extends Controller {
     return response;
   }
 
+  /**
+   * @param requestBody description of the request body
+   * @example requestBody {
+   *    "hubName": "myHub",
+   *    "ownerId": ["gta90jwerkjm390srdsj3azt9"],
+   *    "userIds": ["fga90zwerkse390srdsj4azt1", "tjg56jwerkwe780srdsj3akk5"]
+   * }
+   */
   @Post('createHub')
   @Security('jwt', ['customer'])
   @Example<IHub>({
@@ -64,6 +72,12 @@ export class HubController extends Controller {
     return response;
   }
 
+  /**
+   * @param requestBody description of the request body
+   * @example requestBody {
+   *    "hubId": "msa90jalkjm390ßasj3apok4"
+   * }
+   */
   @Delete('deleteHub')
   @Security('jwt', ['customer'])
   @Example<IHub>({
@@ -88,10 +102,10 @@ export class HubController extends Controller {
 
   /**
    * @param requestBody Description for the request body object
-   * @returns requestbody {
-   *    "hubId": "",
-   *    "memberIds": ["", ""],
-   *    "userIds": ["", ""]
+   * @example requestBody {
+   *    "hubId": "msa90jalkjm390ßasj3apok4",
+   *    "memberIds": ["gta90jwerkjm390srdsj3azt9", "msa90jalkjm390ßasj3apok4"],
+   *    "userId": ["fga90zwerkse390srdsj4azt1"]
    * }
    */
   @Patch('addUser')
@@ -102,11 +116,11 @@ export class HubController extends Controller {
   }
 
   /**
-   * @param requestBody Description for the request body object
-   * @returns requestbody {
-   *    "hubId": "",
-   *    "memberIds": ["", ""],
-   *    "userIds": ["", ""]
+   * @param requestBody description of the request body
+   * @example requestBody {
+   *    "hubId": "msa90jalkjm390ßasj3apok4",
+   *    "memberIds": ["gta90jwerkjm390srdsj3azt9", "msa90jalkjm390ßasj3apok4"],
+   *    "userId": ["tjg56jwerkwe780srdsj3akk5"]
    * }
    */
   @Patch('removeUser')

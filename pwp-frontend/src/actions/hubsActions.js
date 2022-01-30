@@ -12,3 +12,21 @@ export const getAllHubsWithoutSettingState = async () => {
     console.log(error.message)
   }
 } 
+
+export const deleteHub = async (hubId) => {
+  try{
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
+    return await axios.delete('http://localhost:4500/hubs/deleteHub', {
+      config,
+      data: { 
+        "hubId": hubId
+      }
+    })
+  } catch(error){
+    console.log(error.message)
+  }
+}

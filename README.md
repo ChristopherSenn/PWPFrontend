@@ -1,9 +1,12 @@
 # Setup Backend
   - Make sure your Node Version is at least 16.x.x
   - Get Access to .env file somehow and place it in the pwp-backend root folder
-  - npm install
-  - npm install tsoa -g
-  - npm run build
+  1) cd pwp-backend
+    - npm install
+    - npm install tsoa -g
+    - npm run build
+  2) cd pwp-frontend 
+    - npm install
 
 # Start the server and client (Frontend)
   - go to backend directory (cd pwp-backend)

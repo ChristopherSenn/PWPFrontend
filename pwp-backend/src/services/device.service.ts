@@ -229,7 +229,7 @@ export class DeviceService {
    * @param requestBody Contains the device, the event/property and the new value
    * @returns The updated device object
    */
-  public async updateEventValue(requestBody: IMqttMessage): Promise<IDevice> {
+  public async updateDeviceValue(requestBody: IMqttMessage): Promise<IDevice> {
     const { deviceId, category, topic, message } = requestBody; // Store the properties in body in easier to access variables
 
     return new Promise<IDevice>((resolve, reject) => {

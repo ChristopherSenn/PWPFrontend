@@ -31,6 +31,31 @@ export class UserService {
   }
 
   /**
+   * Get information about a specific user
+   * @param userId Id of the user in question
+   * @returns User Information
+   */
+  public async getUser(userId: string): Promise<IUser> {
+    const user: UserDocument | null = await User.findById(userId).exec(); // Try to find user in db
+
+    if (user !== null) {
+      // parse UserDocument to IUser if found
+      const parsedUser: IUser = {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        password: user.password,
+        enabled: user.enabled,
+        roles: user.roles,
+      };
+      return parsedUser; // Return user
+    } else {
+      // If user not found reject promise with an error
+      return Promise.reject(new StatusError('User not found', 404));
+    }
+  }
+
+  /**
    * Used to verify if the users provided credentials are correct and to log them in (create a JWT token)
    * @param UserLoginParams Contains the provided username and password
    * @returns The loggend in user object including the JWT Token or an error

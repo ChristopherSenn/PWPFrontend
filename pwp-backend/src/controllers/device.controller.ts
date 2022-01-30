@@ -11,6 +11,7 @@ import {
   Query,
   SuccessResponse,
   Patch,
+  Security,
 } from 'tsoa';
 import { IError } from '../models/status.model';
 import { IDevice } from '../models/device.model';
@@ -145,9 +146,12 @@ export class DeviceController extends Controller {
     return response;
   }
 
+  @Security('jwt', ['customer'])
   @Patch('updateEventValue')
+  @Response<IError>(404, 'Not Found')
+  @Response<IError>(401, 'Unauthorized')
   public async updateEventValue(@Body() requestBody: IMqttMessage): Promise<IDevice> {
-    const response: IDevice = await new DeviceService().updateEventValue(requestBody);
+    const response: IDevice = await new DeviceService().updateDeviceValue(requestBody);
     return response;
   }
 }

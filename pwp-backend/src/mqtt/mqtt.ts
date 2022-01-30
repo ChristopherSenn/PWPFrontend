@@ -69,7 +69,7 @@ function connectMqttClient() {
       message: text.toString(),
     };
     // Update the correct property in the database
-    await new DeviceService().updateEventValue(message);
+    await new DeviceService().updateDeviceValue(message);
   });
 }
 

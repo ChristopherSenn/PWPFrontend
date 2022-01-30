@@ -20,51 +20,54 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 export default function EditHub() {
 
+    const navigate = useNavigate();
+    
+    // @state contains the information about the hub that was clicked. It gets passed via navigate() in Dashboard.js
     const { state } = useLocation();
-    // contains the information about the clicked hub
+    // saving the members of the clicked hubs as an array
+    const memberIdsProps = state.memberIds; 
 
     const userLogin = useSelector((state) => state.userLogin);
     const { user } = userLogin; // information of logged in user
  
-
     const [selectedMemberNames, setSelectedMemberNames] = useState([]); // names of memebers that are selected
     const [allMembersObject, setAllMembersObject] = useState([]); // list of all users
-   
-    const listOfUsersObject = []; // contains id and username all users 
-    const [memebersOfHub, setMembersOfHub] = useState([]) // contains Member names and ids of hub 
+    const [membersOfHub, setMembersOfHub] = useState([]) // contains Member names and ids of hub 
     
-    const listOfMembersObject = []; 
+    
+    // getMembersOfEditedHub : id and username
+    const getMembersOfEditedHub = async () => {
+        const usersObject = []; // contains id and username of all users 
 
-    const navigate = useNavigate();
-    
-    // get all users : id and username
-    const getAllUsers = async () => {
-        loadUsers().then(users =>{
-          for (const item of users.data){
-              if(user.id !== item.id ){
-                listOfUsersObject.push({id: item.id, username: item.username});
-              }
-          } 
-          setAllMembersObject(listOfUsersObject)
-     
-        })
-     }
-     // get memeber of hub: username and id
-     const getListOfMembersHub = ()=>{
-        state.memberIds.forEach((memberId)=>{
-            if(memberId !== state.ownerId){
-                allMembersObject.forEach((item)=>{
-                    if(memberId === item.id){
-                        listOfMembersObject.push({id:item.id, username: item.username})
+        loadUsers()
+            .then(users => { // Loading all users from DB
+                for (const item of users.data){
+                    if(user.id !== item.id ){
+                        usersObject.push({id: item.id, username: item.username});
                     }
+                    setAllMembersObject(usersObject)
+                } 
+                return usersObject; // returns an array containing objects with information about every user
+            })
+            .then((users) => { // @users is the value from the previous then()
+                const listOfMembersToShow = []; 
+                // Iterating through all users
+                users.forEach((member)=>{
+                    // Iterating through the members of the clicked hub
+                    memberIdsProps.forEach((item)=>{
+                        if(member.id === item){
+                            // Saving the members of the edited hub in an array. Each member is saved in an object containing username and id
+                            listOfMembersToShow.push({ id: member.id, username: member.username })
+                        }
+                    })
                 })
-            }
-        })
-         setMembersOfHub(listOfMembersObject)
+                // Setting state with the members that should be shown in the members list
+                setMembersOfHub(listOfMembersToShow)
+            })
      }
-    useEffect(() => {
-        getAllUsers()
-        getListOfMembersHub()
+    
+     useEffect(() => {
+        getMembersOfEditedHub()
       }, []);
 
     // redirect to dashboard
@@ -115,7 +118,7 @@ export default function EditHub() {
         } catch (error) {
             console.log(error.message);
         }
-      };
+      }; 
 
 
     return (
@@ -170,7 +173,7 @@ export default function EditHub() {
                 Members of Hub:
           </Typography>
             <List>
-            {memebersOfHub.map((member) => (
+            {membersOfHub.map((member) => (
               <ListItem key={member.username} value={member.username}>
                 <ListItemText primary={member.username} />
                 <IconButton edge="end" aria-label="delete">

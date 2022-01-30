@@ -5,8 +5,10 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { logout } from "../../actions/userActions";
-import { getAllHubsWithoutSettingState } from "../../actions/hubsActions";
+import { getAllHubsWithoutSettingState, deleteHub } from "../../actions/hubsActions";
 import LogoutIcon from '@mui/icons-material/Logout';
+import CloseIcon from '@mui/icons-material/Close';
+import IconButton from '@mui/material/IconButton';
 import Paper from '@mui/material/Paper';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Divider from '@mui/material/Divider';
@@ -29,54 +31,56 @@ export default function Dashboard() {
   // hubCLicked contains the id of the hub that was clicked
   //const hubClicked = useSelector((state) => state.hubClicked)
 
-  let ownerHubsArray = [];
+ 
   //users own hubs
   const showHubs = () => {
 
+    let ownerHubsArray = [];
+    let memberHubsArray = [];
+    
     getAllHubsWithoutSettingState().then(hubs => {
-      for (const hub of hubs.data) {
+
+      hubs.data.forEach((hub, i) => {
         if (hub.ownerId === user.id) {
           // Klappt nicht: Warum auch immer?! 
           // setOwnerHubs([...ownerHubs,[{ hubId: hub.hubId, hubName: hub.hubName }]])
           ownerHubsArray.push({ hubId: hub.hubId, hubName: hub.hubName });
         }
         setOwnerHubs(ownerHubsArray)
-      }
+        hub.memberIds.forEach(member => {
+          if (member === user.id && hub.ownerId !== user.id) {
+            // Klappt ?! 
+            //setUserMemberHubs([...userMemberHubs, { hubId: hub.hubId, hubName: hub.hubName }])
+            memberHubsArray.push({ hubId: hub.hubId, hubName: hub.hubName });
+          }        
+        })
+      })
+      setUserMemberHubs(memberHubsArray)
     });
-  }
-
-  // hubs where user is member
-  const showMemebersHubs = () => {
-    let memberHubsArray = []
-    getAllHubsWithoutSettingState().then(hubs => {
-      if (isAuth && user) {
-        for (const hub of hubs.data) {
-          for (const memberId of hub.memberIds) {
-            if (memberId === user.id && hub.ownerId !== user.id) {
-              // Klappt ?! 
-              //setUserMemberHubs([...userMemberHubs, { hubId: hub.hubId, hubName: hub.hubName }])
-              memberHubsArray.push({ hubId: hub.hubId, hubName: hub.hubName });
-            }
-
-          }
-
-        }
-        setUserMemberHubs(memberHubsArray)
-      }
-    })
   }
 
   useEffect(() => {
     if (user && isAuth) { //stellt sicher, dass geladen
       setUserName(user.username)
       showHubs()
-      showMemebersHubs()
     }
   }, [user])
 
   const logoutHandler = () => {
     dispatch(logout());
   };
+
+  const onDelete = (e, hub) => {
+    deleteHub(hub.hubId);
+    
+    const tempHubArr = [];
+    ownerHubs.forEach(elem => {
+      if(elem != hub) {
+        tempHubArr.push(elem);
+      }
+    })  
+    setOwnerHubs(tempHubArr);
+  }
 
   // Styling of items in which each hub is displayed
   const Item = styled(Paper)(({ theme }) => ({
@@ -121,11 +125,16 @@ export default function Dashboard() {
 
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+          
           {ownerHubs.map((hub, index) => (
             <Grid item xs={2} sm={4} md={4} key={index}>
-
+              <Box sx={{ textAlign: 'right'}}>
+                  <IconButton onClick={(e) => onDelete(e, hub)} >
+                        <CloseIcon />
+                  </IconButton>
+              </Box>
               <Item onClick={(e) => {
-                alert('Device page opens');
+                /* alert('Device page opens'); */
                 dispatch({ type: HUB_CLICKED, payload: hub.hubId })
               }}
                 sx={{ backgroundColor: '#ddfada' }}>

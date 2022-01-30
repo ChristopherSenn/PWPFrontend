@@ -21,11 +21,12 @@ export default function AddHub() {
   const { user } = userLogin;
 
   const [hubName, setHubName] = useState('');
-  const [personName, setPersonName] = useState([]);
-  const [allUsers, setAllUsers] = useState([]);
+  const [selectedMemberNames, setSelectedMemberNames] = useState([]);
+  const [allMembersObject, setAllMembersObject] = useState([]);
   const navigate = useNavigate();
 
-  const listOfUsers = []
+  const listOfUsers = [];
+  const listOfUsersObject = [];
 
   useEffect(() => {
     getAllUsers()
@@ -34,41 +35,50 @@ export default function AddHub() {
   const getAllUsers = async () => {
     loadUsers().then(users =>{
       for (const item of users.data){
-        listOfUsers.push(item.id)
+        listOfUsersObject.push({id: item.id, username: item.username});
       } 
-      setAllUsers(listOfUsers)
+      setAllMembersObject(listOfUsersObject)
     })
- 
-
   }
 
 
   const onSubmit = async (e) => {
     e.preventDefault();
+  
+    const idsOfSelectedMembers = [];
+
+    allMembersObject.forEach(member => {
+        selectedMemberNames.forEach(selectedMember => {
+            if(member.username == selectedMember) {
+                idsOfSelectedMembers.push(member.id)
+            }
+        })
+    })
+
     const createdHubInfos = {
       "hubName": hubName,
       "ownerId": user.id,
-      "memberIds": personName
+      "memberIds": idsOfSelectedMembers
     }
 
     try {
-      await axios.post(
+        await axios.post(
         'http://localhost:4500/hubs/createHub',
         createdHubInfos
-      )
-      navigate('/dashboard');
+        )
+        navigate('/dashboard');
     } catch (error) {
-      console.log(error.response);
-      console.log(error.message);
-      console.log(error.request);
-    }
+        console.log(error.response);
+        console.log(error.message);
+        console.log(error.request);
+    } 
   };
 
   const selectChange = (event) => {
     const {
       target: { value },
     } = event;
-    setPersonName(
+    setSelectedMemberNames(
       typeof value === 'string' ? value.split(',') : value,
     );
   };
@@ -108,16 +118,16 @@ export default function AddHub() {
             label= "Choose Members"
             id="hubUsersSelect"
             multiple
-            value={personName}
+            value={selectedMemberNames}
             fullWidth
             onChange={selectChange}
             renderValue={(selected) => selected.join(', ')}
             input={<OutlinedInput label="All Users" />}
           >
-            {allUsers.map((name) => (
-              <MenuItem key={name} value={name}>
-                <Checkbox checked={personName.indexOf(name) > -1} />
-                <ListItemText primary={name} />
+            {allMembersObject.map((member) => (
+              <MenuItem key={member.username} value={member.username}>
+                <Checkbox checked={selectedMemberNames.indexOf(member.username) > -1} />
+                <ListItemText primary={member.username} />
               </MenuItem>
             ))}
           </Select>

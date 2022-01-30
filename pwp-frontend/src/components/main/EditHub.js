@@ -31,38 +31,51 @@ export default function EditHub() {
     const { user } = userLogin; // information of logged in user
  
     const [selectedMemberNames, setSelectedMemberNames] = useState([]); // names of memebers that are selected
-    const [allMembersObject, setAllMembersObject] = useState([]); // list of all users
+    const [dropDownMembersArray, setdropDownMembersArray] = useState([]); // list of all users
     const [membersOfHub, setMembersOfHub] = useState([]) // contains Member names and ids of hub 
     
     
     // getMembersOfEditedHub : id and username
     const getMembersOfEditedHub = async () => {
-        const usersObject = []; // contains id and username of all users 
+        const usersObjectArray = []; // contains id and username of all users 
 
         loadUsers()
             .then(users => { // Loading all users from DB
                 for (const item of users.data){
                     if(user.id !== item.id ){
-                        usersObject.push({id: item.id, username: item.username});
+                        usersObjectArray.push({id: item.id, username: item.username});
                     }
-                    setAllMembersObject(usersObject)
                 } 
-                return usersObject; // returns an array containing objects with information about every user
+                return usersObjectArray; // returns an array containing objects with information about every user
             })
             .then((users) => { // @users is the value from the previous then()
                 const listOfMembersToShow = []; 
                 // Iterating through all users
                 users.forEach((member)=>{
                     // Iterating through the members of the clicked hub
-                    memberIdsProps.forEach((item)=>{
-                        if(member.id === item){
+                    memberIdsProps.forEach((memberId)=>{
+                        if(member.id === memberId){
                             // Saving the members of the edited hub in an array. Each member is saved in an object containing username and id
                             listOfMembersToShow.push({ id: member.id, username: member.username })
-                        }
+                        } 
                     })
                 })
-                // Setting state with the members that should be shown in the members list
+                // Setting state with the members that are shown in the members list
                 setMembersOfHub(listOfMembersToShow)
+                return listOfMembersToShow;
+            })
+            .then((chosenMember) => { // Updates the dropdown, that only members who haven't been added to the hub yet are shown
+                const listOfDropdownUsers = usersObjectArray;
+                
+                // Removes members which are already added to the hub from the dropdown array
+                listOfDropdownUsers.forEach((user, i) => {
+                    chosenMember.forEach(theChosenOne => {
+                        if(user.id === theChosenOne.id) {
+                            listOfDropdownUsers.splice(i, 1)
+                        }
+                    })
+                })                
+                setdropDownMembersArray(listOfDropdownUsers)           
             })
      }
     
@@ -83,8 +96,7 @@ export default function EditHub() {
           typeof value === 'string' ? value.split(',') : value,
         );
       };
-      const removeMember = async (e, memberId) =>{
-
+      const removeMember = async (e, member) =>{
         e.preventDefault();
       
         const config = {
@@ -94,7 +106,7 @@ export default function EditHub() {
           };
           const removedUser = {
             "userId": user.id,
-            "memberIds": memberId,
+            "memberIds": member.id,
             "hubId" : state.hubId
           }
           try {
@@ -105,16 +117,27 @@ export default function EditHub() {
         } catch (error) {
             console.log(error.message);
         }
-        const tempHubMembers = [];
-        membersOfHub.forEach(item =>{
-            if(item.id !== memberId ){
-                tempHubMembers.push(item)
-                
+        
 
-            }
+        /* For some reason setState isn't executed in time, 
+        therefore we need a promise to update the member's list and the dropdown.
+        Both happens in the code below. */
+        new Promise((resolve) => {
+            const tempHubMembers = [];
+            membersOfHub.forEach(item =>{
+                if(item.id !==  member.id ){
+                    tempHubMembers.push(item)
+                }
+            })
+
+            const tempDropDownMembersArray = dropDownMembersArray;
+            tempDropDownMembersArray.push({ id: member.id, username: member.username});
+            resolve({tempHubMembers: tempHubMembers, tempDropdown: tempDropDownMembersArray});
         })
-        setMembersOfHub(tempHubMembers)
-    
+        .then((tempObjectWithArrays) => {
+            setMembersOfHub(tempObjectWithArrays.tempHubMembers);
+            setdropDownMembersArray(tempObjectWithArrays.tempDropdown);
+        })
     }
 
 
@@ -129,7 +152,7 @@ export default function EditHub() {
             },
           };
     
-        allMembersObject.forEach(member => {
+        dropDownMembersArray.forEach(member => {
             selectedMemberNames.forEach(selectedMember => {
                 if(member.username === selectedMember) {
                     idsOfSelectedMembers.push(member.id)
@@ -177,7 +200,7 @@ export default function EditHub() {
             renderValue={(selected) => selected.join(', ')}
             input={<OutlinedInput label="All Users" />}
           >
-            {allMembersObject.map((member) => (
+            {dropDownMembersArray.map((member) => (
               <MenuItem key={member.username} value={member.username}>
                 <Checkbox checked={selectedMemberNames.indexOf(member.username) > -1} />
                 <ListItemText primary={member.username} />
@@ -210,7 +233,7 @@ export default function EditHub() {
             {membersOfHub.map((member) => (
               <ListItem key={member.username} value={member.username}>
                 <ListItemText primary={member.username} />
-                <IconButton edge="end" aria-label="delete" onClick={(e) => removeMember(e, member.id)}>
+                <IconButton edge="end" aria-label="delete" onClick={(e) => removeMember(e, member)}>
                       <DeleteIcon />
                     </IconButton>
               </ListItem>

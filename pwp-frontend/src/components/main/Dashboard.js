@@ -48,7 +48,7 @@ export default function Dashboard() {
         if (hub.ownerId === user.id) {
           // Klappt nicht: Warum auch immer?! 
           // setOwnerHubs([...ownerHubs,[{ hubId: hub.hubId, hubName: hub.hubName }]])
-          ownerHubsArray.push({ hubId: hub.hubId, hubName: hub.hubName });
+          ownerHubsArray.push({ hubId: hub.hubId, hubName: hub.hubName, memberIds: hub.memberIds, ownerId: hub.ownerId});
         }
         setOwnerHubs(ownerHubsArray)
         hub.memberIds.forEach(member => {

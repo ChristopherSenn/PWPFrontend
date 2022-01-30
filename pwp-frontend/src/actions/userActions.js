@@ -8,7 +8,7 @@ import {
     USER_REGISTER_SUCCESS,
   } from "./types";
   import axios from "axios";
-
+  import { authHeader } from "../utilis/setToken";
 
  // login function
   export const login = (username, password) => async (dispatch) => {
@@ -79,3 +79,15 @@ import {
     localStorage.removeItem("userInfo");
     dispatch({ type: USER_LOGOUT });
   };
+
+
+  export const loadUsers = async () =>{
+    try{
+      const requestOptions = {
+        headers: authHeader()
+      };
+      return await axios.get('http://localhost:4500/users', requestOptions)
+    } catch(error){
+      console.log(error.message)
+    }
+  }

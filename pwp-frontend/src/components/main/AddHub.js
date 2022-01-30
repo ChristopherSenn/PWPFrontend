@@ -11,61 +11,57 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import Container from '@mui/material/Container';
 import axios from "axios";
-
-
+import { useSelector } from "react-redux";
+import Typography from '@mui/material/Typography';
+import { loadUsers } from '../../actions/userActions';
 export default function AddHub() {
 
   // Man müsste eig nur noch die user-Liste ziehen und anstatt der Dummy-Liste an die Select-Box weiterreichen und dann eben mit dem Form die createHub füttern
+  const userLogin = useSelector((state) => state.userLogin);
+  const { user } = userLogin;
 
-  
   const [hubName, setHubName] = useState('');
   const [personName, setPersonName] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
   const navigate = useNavigate();
 
-  const loggedInUserInfo = localStorage.getItem("userInfo");
-  const loggedInUserID = JSON.parse(loggedInUserInfo).id;
+  const listOfUsers = []
 
+  useEffect(() => {
+    getAllUsers()
+  }, []);
 
-  const users = [
-    // TODO: get user list with ids
-    'User #1',
-    'User #2',
-    'User #3',
-  ];
+  const getAllUsers = async () => {
+    loadUsers().then(users =>{
+      for (const item of users.data){
+        listOfUsers.push(item.id)
+      } 
+      setAllUsers(listOfUsers)
+    })
+ 
 
-  useEffect( async () => {      
-    /* try{
-      const us = await axios.get('http://localhost:4500/users');
-      console.log(us)
-    } catch (error) {
-      console.log(error.request)
-    } */ 
-  });
+  }
+
 
   const onSubmit = async (e) => {
-      e.preventDefault();
+    e.preventDefault();
+    const createdHubInfos = {
+      "hubName": hubName,
+      "ownerId": user.id,
+      "memberIds": personName
+    }
 
-      const createdHubInfos = {
-        "hubName": hubName,
-        "ownerId": loggedInUserID,
-        "memberIds": [
-          "61f3f2bbbaefd50dc52a96be"
-        ]
-      }
-      
-      try {
-        await axios.post(
-          'http://localhost:4500/hubs/createHub',
-          createdHubInfos
-        ) 
-        navigate('/dashboard');
-        /* const us = await axios.get('http://localhost:4500/users');
-        console.log(us)  */
-      } catch (error) {
-        console.log(error.response);
-        console.log(error.message);
-        console.log(error.request);
-      }      
+    try {
+      await axios.post(
+        'http://localhost:4500/hubs/createHub',
+        createdHubInfos
+      )
+      navigate('/dashboard');
+    } catch (error) {
+      console.log(error.response);
+      console.log(error.message);
+      console.log(error.request);
+    }
   };
 
   const selectChange = (event) => {
@@ -85,54 +81,64 @@ export default function AddHub() {
     navigate('/dashboard');
   }
 
-  return(
+  return (
     <Container component="main" maxWidth="xs">
-      <Box component="form" onSubmit={(e) => onSubmit(e)}>
-        <TextField
-          required
-          type="text"
-          id="hubname"
-          label="Hub name"
-          fullWidth
-          name="hubName"
-          value={hubName}
-          onChange={(e) => onChange(e)}
+      <Box component="form" onSubmit={(e) => onSubmit(e)} sx={{
+        marginTop: 8,
+        display: 'flex',
+        flexDirection: 'column',
+      }}>
+        <Typography component="h1" variant="h5"  sx={{ mt: 1, alignItems: 'center'}}>
+          Create new Hub
+        </Typography>
+          <TextField
+            required
+            type="text"
+            id="hubname"
+            label="Hub name"
+            fullWidth
+            name="hubName"
+            value={hubName}
+            onChange={(e) => onChange(e)}
           />
 
-        <InputLabel id="hubUsersSelectLabel">Hub users</InputLabel>
-        <Select
-          labelId="hubUsersSelectLabel"
-          id="hubUsersSelect"
-          multiple
-          value={personName}
-          fullWidth
-          onChange={selectChange}
-          renderValue={(selected) => selected.join(', ')}
-          input={<OutlinedInput label="Hub users" />}
-        >
-          {users.map((name) => (
-            <MenuItem key={name} value={name}>
-              <Checkbox checked={personName.indexOf(name) > -1} />
-              <ListItemText primary={name} />
-            </MenuItem>
-          ))}
-        </Select>
-
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-        >
+          <InputLabel id="hubUsersSelectLabel">Choose Member:</InputLabel>
+          <Select
+            labelId="hubUsersSelectLabel"
+            label= "Choose Members"
+            id="hubUsersSelect"
+            multiple
+            value={personName}
+            fullWidth
+            onChange={selectChange}
+            renderValue={(selected) => selected.join(', ')}
+            input={<OutlinedInput label="All Users" />}
+          >
+            {allUsers.map((name) => (
+              <MenuItem key={name} value={name}>
+                <Checkbox checked={personName.indexOf(name) > -1} />
+                <ListItemText primary={name} />
+              </MenuItem>
+            ))}
+          </Select>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 1 }}
+          >
             Create hub
-        </Button>
+          </Button>
 
-        <Button
-          onClick={cancelButtonHandler}
-          fullWidth
-          variant="outlined"
-        >
+          <Button
+            onClick={cancelButtonHandler}
+            fullWidth
+            variant="outlined"
+            sx={{ mt: 1 }}
+          >
             Cancel
-        </Button>
+          </Button>
       </Box>
     </Container>
-  )}
+  )
+}

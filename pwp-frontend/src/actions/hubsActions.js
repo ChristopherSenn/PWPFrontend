@@ -15,14 +15,14 @@ export const getAllHubsWithoutSettingState = async () => {
 
 export const deleteHub = async (hubId) => {
   try{
-    const config = {
-      headers: authHeader()
-    };
-    return await axios.delete('http://localhost:4500/hubs/deleteHub', 
-     hubId, config,
-      
-    )
+    return await axios.delete('http://localhost:4500/hubs/deleteHub', {
+      headers: authHeader(),
+      data: {
+        "hubId": hubId
+      }
+    });
   } catch(error){
     console.log(error.message)
   }
 }
+

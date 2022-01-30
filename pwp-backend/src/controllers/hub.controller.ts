@@ -48,8 +48,8 @@ export class HubController extends Controller {
    * @param requestBody description of the request body
    * @example requestBody {
    *    "hubName": "myHub",
-   *    "ownerId": ["gta90jwerkjm390srdsj3azt9"],
-   *    "userIds": ["fga90zwerkse390srdsj4azt1", "tjg56jwerkwe780srdsj3akk5"]
+   *    "ownerId": "gta90jwerkjm390srdsj3azt9",
+   *    "memberIds": ["fga90zwerkse390srdsj4azt1", "tjg56jwerkwe780srdsj3akk5"]
    * }
    */
   @Post('createHub')
@@ -68,6 +68,7 @@ export class HubController extends Controller {
     message: 'Hub could not be created',
   })
   public async createHub(@Body() requestBody: HubCreationParams): Promise<IHub> {
+    console.log('hi');
     const response: IHub = await new HubService().createHub(requestBody);
     return response;
   }

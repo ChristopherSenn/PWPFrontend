@@ -18,6 +18,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
+import DashboardCustomizeSharpIcon from '@mui/icons-material/DashboardCustomizeSharp';
 export default function EditHub() {
 
     const navigate = useNavigate();
@@ -84,7 +85,7 @@ export default function EditHub() {
       }, []);
 
     // redirect to dashboard
-    const cancelButtonHandler = () => {
+    const redirectToPage = () => {
         navigate('/dashboard');
     }
     // select a member from membersList
@@ -185,7 +186,7 @@ export default function EditHub() {
         display: 'flex',
         flexDirection: 'column',
       }}>
-        <Typography component="h1" variant="h5"  sx={{ mt: 1, alignItems: 'center'}}>
+        <Typography component="h1" variant="h5"  sx={{ mt: 1}}>
             Edit Hub
         </Typography>
         <InputLabel id="hubUsersSelectLabel">Choose Member:</InputLabel>
@@ -217,7 +218,7 @@ export default function EditHub() {
           </Button>
 
             <Button
-            onClick={cancelButtonHandler}
+            onClick={redirectToPage}
             fullWidth
             variant="outlined"
             sx={{ mt: 1 }}
@@ -240,6 +241,15 @@ export default function EditHub() {
             ))}
             </List>
             </Grid>
+            <Button
+            onClick={redirectToPage}
+            fullWidth
+            variant="outlined"
+            sx={{ mt: 1 }}
+            startIcon={<DashboardCustomizeSharpIcon/>}
+            >
+            Back to Dashboard
+            </Button>
     </Container>
     )
 }

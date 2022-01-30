@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 import { logout } from "../../actions/userActions";
 import { getAllHubsWithoutSettingState, deleteHub } from "../../actions/hubsActions";
 import LogoutIcon from '@mui/icons-material/Logout';
-import CloseIcon from '@mui/icons-material/Close';
+import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import Paper from '@mui/material/Paper';
 import { experimentalStyled as styled } from '@mui/material/styles';
@@ -130,7 +130,7 @@ export default function Dashboard() {
             <Grid item xs={2} sm={4} md={4} key={index}>
               <Box sx={{ textAlign: 'right'}}>
                   <IconButton onClick={(e) => onDelete(e, hub)} >
-                        <CloseIcon />
+                        <DeleteIcon />
                   </IconButton>
               </Box>
               <Item onClick={(e) => {

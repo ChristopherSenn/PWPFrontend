@@ -1,17 +1,4 @@
-import {
-  Body,
-  Security,
-  Controller,
-  Get,
-  Path,
-  Post,
-  Query,
-  Route,
-  SuccessResponse,
-  Tags,
-  Example,
-  Response,
-} from 'tsoa';
+import { Body, Security, Controller, Get, Path, Post, Route, SuccessResponse, Tags, Example, Response } from 'tsoa';
 import { IUser } from '../models/user.model';
 import { UserCreationParams, UserLoginParams, UserService } from '../services/user.service';
 import { IError } from '../models/status.model';
@@ -19,10 +6,24 @@ import { IError } from '../models/status.model';
 @Route('users')
 @Tags('Users')
 export class UserController extends Controller {
-  // Not working atm!
+  @Security('jwt', ['customer'])
   @Get('{userId}')
-  public async getUser(@Path() userId: number, @Query() name?: string): Promise<IUser> {
-    return new UserService().get()[0];
+  @Example<IUser>({
+    id: 'msa90jalkjm390ßasj3apok4',
+    username: 'John Doe',
+    email: 'example@mail.com',
+    password: 'hashed password',
+    enabled: 'true',
+    roles: ['customer'],
+  })
+  @Response<IError>(401, 'Unauthorized', {
+    message: 'No token provided',
+  })
+  @Response<IError>(404, 'Not found', {
+    message: 'User not found',
+  })
+  public async getUser(@Path() userId: string): Promise<IUser> {
+    return new UserService().getUser(userId);
   }
 
   @Security('jwt', ['customer'])

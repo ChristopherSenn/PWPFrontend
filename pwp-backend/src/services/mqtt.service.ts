@@ -1,6 +1,9 @@
 import { IMqttMessage } from '../models/mqtt.model';
 import { IStatus } from '../models/status.model';
 
+/**
+ * Delete this as soon as it is not needed for reference anymore!
+ */
 export class MqttService {
   public async processMessage(message: IMqttMessage): Promise<IStatus> {
     switch (message.topic) {

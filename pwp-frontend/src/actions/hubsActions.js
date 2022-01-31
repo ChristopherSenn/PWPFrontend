@@ -2,7 +2,7 @@ import axios from 'axios'
 import { authHeader } from "../utilis/setToken";
 
 
-export const getAllHubsWithoutSettingState = async () => {
+export const getAllHubsFromDB = async () => {
   try{
     const requestOptions = {
       headers: authHeader()

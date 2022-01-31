@@ -15,6 +15,8 @@ import { useSelector } from "react-redux";
 import Typography from '@mui/material/Typography';
 import { loadUsers } from '../../actions/userActions';
 import { authHeader } from '../../utilis/setToken';
+import { sortDropdown } from "../../utilis/sortDropdown";
+
 export default function AddHub() {
 
   // Man müsste eig nur noch die user-Liste ziehen und anstatt der Dummy-Liste an die Select-Box weiterreichen und dann eben mit dem Form die createHub füttern
@@ -26,7 +28,6 @@ export default function AddHub() {
   const [allMembersObject, setAllMembersObject] = useState([]);
   const navigate = useNavigate();
 
-  const listOfUsers = [];
   const listOfUsersObject = [];
 
   useEffect(() => {
@@ -39,7 +40,7 @@ export default function AddHub() {
         if(user.id !== item.id ){
         listOfUsersObject.push({id: item.id, username: item.username});
       } }
-      setAllMembersObject(listOfUsersObject)
+      setAllMembersObject(sortDropdown(listOfUsersObject))
     })
   }
 

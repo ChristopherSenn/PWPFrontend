@@ -20,10 +20,10 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import DashboardCustomizeSharpIcon from '@mui/icons-material/DashboardCustomizeSharp';
 import { authHeader } from "../../utilis/setToken";
+import { sortDropdown } from "../../utilis/sortDropdown";
 
 
 export default function EditHub() {
-
     const navigate = useNavigate();
     
     // @state contains the information about the hub that was clicked. It gets passed via navigate() in Dashboard.js
@@ -41,10 +41,11 @@ export default function EditHub() {
     
     // getMembersOfEditedHub : id and username
     const getMembersOfEditedHub = async () => {
-        const usersObjectArray = []; // contains id and username of all users 
 
         loadUsers()
             .then(users => { // Loading all users from DB
+                const usersObjectArray = []; // contains id and username of all users 
+
                 for (const item of users.data){
                     if(user.id !== item.id ){
                         usersObjectArray.push({id: item.id, username: item.username});
@@ -65,21 +66,22 @@ export default function EditHub() {
                     })
                 })
                 // Setting state with the members that are shown in the members list
-                setMembersOfHub(listOfMembersToShow)
-                return listOfMembersToShow;
+                setMembersOfHub(sortDropdown(listOfMembersToShow))
+                return { allUsers: users, listForMemberSection: listOfMembersToShow };
             })
-            .then((chosenMember) => { // Updates the dropdown, that only members who haven't been added to the hub yet are shown
-                const listOfDropdownUsers = usersObjectArray;
+            .then((objectWithUserLists) => { // Updates the dropdown, that only members who haven't been added to the hub yet are shown
                 
-                // Removes members which are already added to the hub from the dropdown array
-                listOfDropdownUsers.forEach((user, i) => {
-                    chosenMember.forEach(theChosenOne => {
-                        if(user.id === theChosenOne.id) {
-                            listOfDropdownUsers.splice(i, 1)
-                        }
-                    })
-                })                
-                setdropDownMembersArray(listOfDropdownUsers)           
+                const tempDropDownUser = objectWithUserLists.allUsers; 
+                
+                for(const member of objectWithUserLists.listForMemberSection) {
+                  for(const user of objectWithUserLists.allUsers){
+                    if(user.id === member.id) {
+                      const idx = tempDropDownUser.indexOf(user)
+                      tempDropDownUser.splice(idx, 1); 
+                    }
+                  }
+                }        
+                setdropDownMembersArray(sortDropdown(tempDropDownUser))
             })
      }
     
@@ -100,49 +102,49 @@ export default function EditHub() {
           typeof value === 'string' ? value.split(',') : value,
         );
       };
-      const removeMember = async (e, member) =>{
-        e.preventDefault();
-  
-        const config = {
-          headers: authHeader()
-        };
+
+    const removeMember = async (e, member) =>{
+      e.preventDefault();
+
+      const config = {
+        headers: authHeader()
+      };
+    
+      const removedUser = {
+        "userId": user.id,
+        "memberIds": member.id,
+        "hubId" : state.hubId
+      }
+      try {
+        await axios.patch(
+          'http://localhost:4500/hubs/removeUser',
+          removedUser, config
+        )
+      } catch (error) {
+          console.log(error.message);
+      }
       
-        const removedUser = {
-          "userId": user.id,
-          "memberIds": member.id,
-          "hubId" : state.hubId
-        }
-        try {
-          await axios.patch(
-            'http://localhost:4500/hubs/removeUser',
-            removedUser, config
-          )
-        } catch (error) {
-            console.log(error.message);
-        }
-        
 
-        /* For some reason setState isn't executed in time, 
-        therefore we need a promise to update the member's list and the dropdown.
-        Both happens in the code below. */
-        new Promise((resolve) => {
-            const tempHubMembers = [];
-            membersOfHub.forEach(item =>{
-                if(item.id !==  member.id ){
-                    tempHubMembers.push(item)
-                }
-            })
+      /* For some reason setState isn't executed in time, 
+      therefore we need a promise to update the member's list and the dropdown.
+      Both happens in the code below. */
+      new Promise((resolve) => {
+          const tempHubMembers = [];
+          membersOfHub.forEach(item =>{
+              if(item.id !==  member.id ){
+                  tempHubMembers.push(item)
+              }
+          })
 
-            const tempDropDownMembersArray = dropDownMembersArray;
-            tempDropDownMembersArray.push({ id: member.id, username: member.username});
-            resolve({tempHubMembers: tempHubMembers, tempDropdown: tempDropDownMembersArray});
-        })
-        .then((tempObjectWithArrays) => {
-            setMembersOfHub(tempObjectWithArrays.tempHubMembers);
-            setdropDownMembersArray(tempObjectWithArrays.tempDropdown);
-        })
+          const tempDropDownMembersArray = dropDownMembersArray;
+          tempDropDownMembersArray.push({ id: member.id, username: member.username});
+          resolve({tempHubMembers: tempHubMembers, tempDropdown: sortDropdown(tempDropDownMembersArray)});
+      })
+      .then((tempObjectWithArrays) => {
+          setMembersOfHub(sortDropdown(tempObjectWithArrays.tempHubMembers));
+          setdropDownMembersArray(sortDropdown(tempObjectWithArrays.tempDropdown));
+      })
     }
-
 
     // add new members to hub
     const onSubmit = async (e) => {
@@ -187,7 +189,7 @@ export default function EditHub() {
         flexDirection: 'column',
       }}>
         <Typography component="h1" variant="h5"  sx={{ mt: 1}}>
-            Edit Hub
+            Edit Hub Member
         </Typography>
         <InputLabel id="hubUsersSelectLabel">Choose Member:</InputLabel>
           <Select

@@ -52,7 +52,7 @@ export default function AddHub() {
 
     allMembersObject.forEach(member => {
         selectedMemberNames.forEach(selectedMember => {
-            if(member.username == selectedMember) {
+            if(member.username === selectedMember) {
                 idsOfSelectedMembers.push(member.id)
             }
         })

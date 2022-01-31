@@ -21,11 +21,13 @@ import IconButton from '@mui/material/IconButton';
 import DashboardCustomizeSharpIcon from '@mui/icons-material/DashboardCustomizeSharp';
 import { authHeader } from "../../utilis/setToken";
 import { sortDropdown } from "../../utilis/sortDropdown";
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 
 export default function EditHub() {
     const navigate = useNavigate();
@@ -42,14 +44,13 @@ export default function EditHub() {
     const [dropDownMembersArray, setdropDownMembersArray] = useState([]); // list of all users
     const [membersOfHub, setMembersOfHub] = useState([]) // contains Member names and ids of hub 
     
-    const [open, setOpen] = useState(false); // open dialog for delete
-    const [disable, setDisable] = useState(false); // disable buttons
+    const [open, setOpen] = useState(false);
 
-    const handleClickOpen = () => {
-      setOpen(true);
-    };
+    const handleClose = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
   
-    const handleClose = () => {
       setOpen(false);
     };
   
@@ -163,7 +164,7 @@ export default function EditHub() {
           setMembersOfHub(sortDropdown(tempObjectWithArrays.tempHubMembers));
           setdropDownMembersArray(sortDropdown(tempObjectWithArrays.tempDropdown));
       })
-      setOpen(false)
+      setOpen(true);
     }
 
     // add new members to hub
@@ -244,43 +245,26 @@ export default function EditHub() {
             fullWidth
             variant="outlined"
             sx={{ mt: 1 }}
-            >
+          >
             Cancel
-            </Button>
-            </Box>
-            <Grid item xs={12} md={6}> 
-            <Typography sx={{ mt: 4, mb: 2, alignItems: 'center' }} variant="h6" component="div" >
-                Members of Hub:
+          </Button>
+        </Box>
+        <Grid item xs={12} md={6}>
+          <Typography sx={{ mt: 4, mb: 2, alignItems: 'center' }} variant="h6" component="div" >
+            Members of Hub:
           </Typography>
-            <List>
+          <List>
             {membersOfHub.map((member) => (
               <ListItem key={member.username} value={member.username}>
                 <ListItemText primary={member.username} />
-                <IconButton aria-label="delete" onClick={handleClickOpen}>
-                      <DeleteIcon/>
-                    </IconButton>
-
-                    <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {"Delete Member"}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-          Do you really want to delete this member?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button sx={{backgroundColor: '#787878', color: 'white', "&:hover": {backgroundColor: '#999999'}}} onClick={handleClose}>No</Button>
-          <Button sx={{backgroundColor: '#787878', color: 'white', "&:hover": {backgroundColor: '#999999'}}} onClick={(e)=>removeMember(e, member)} autoFocus>
-            Yes
-          </Button>
-        </DialogActions>
-      </Dialog>
+                <IconButton aria-label="delete" onClick={(e) => removeMember(e, member)}>
+                  <DeleteIcon />
+                </IconButton>
+                <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
+                  <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                      Member was successfully deleted
+                  </Alert>
+                </Snackbar>
               </ListItem>
             ))}
             </List>

@@ -16,11 +16,13 @@ import Divider from '@mui/material/Divider';
 import { HUB_CLICKED } from '../../actions/types';
 import AddIcon from '@mui/icons-material/Add';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 
 export default function Dashboard() {
 
@@ -38,15 +40,15 @@ export default function Dashboard() {
   const { isAuth, user } = userLogin;
 
   const [open, setOpen] = useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
+    
+    const handleClose = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+  
+      setOpen(false);
+    };
+  
 
   // hubCLicked contains the id of the hub that was clicked
   //const hubClicked = useSelector((state) => state.hubClicked)
@@ -99,9 +101,9 @@ export default function Dashboard() {
       }
     })  
     setOwnerHubs(tempHubArr);
-    setOpen(false)
+    setOpen(true);
   }
-
+  
   const onEdit = (e, hub) => {
     // navigates to edit-hub and passes information about which hub was clicked
     navigate('/edit-hub', { state: hub});
@@ -158,30 +160,14 @@ export default function Dashboard() {
                 <IconButton onClick={(e) => onEdit(e, hub)} >
                             <GroupAddIcon />
                       </IconButton>
-                    <IconButton  aria-label="delete" onClick={handleClickOpen}>
+                    <IconButton  aria-label="delete" onClick={(e) => onDelete(e, hub)}>
                           <DeleteIcon />
                     </IconButton>
-                    <Dialog
-                open={open}
-               onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {"Delete Hub"}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-          Do you really want to delete this hub?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button sx={{backgroundColor: '#787878', color: 'white', "&:hover": {backgroundColor: '#999999'}}} onClick={handleClose}>No</Button>
-          <Button sx={{backgroundColor: '#787878', color: 'white', "&:hover": {backgroundColor: '#999999'}}} onClick={(e) => onDelete(e, hub)} autoFocus>
-            Yes
-          </Button>
-        </DialogActions>
-      </Dialog>
+                    <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
+                  <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                     Hub was successfully deleted
+                  </Alert>
+                </Snackbar>
                 </Box>
                 <Item onClick={(e) => {
                   /* alert('Device page opens'); */

@@ -78,7 +78,7 @@ export default function Dashboard() {
     
     const tempHubArr = [];
     ownerHubs.forEach(elem => {
-      if(elem != hub) {
+      if(elem !== hub) {
         tempHubArr.push(elem);
       }
     })  
@@ -223,7 +223,7 @@ export default function Dashboard() {
         </div>
   
       </div>
-  )} else if(ownerHubs.length > 0 && userMemberHubs.length == 0) {
+  )} else if(ownerHubs.length > 0 && userMemberHubs.length === 0) {
       return (
         <div>
           <h2>Welcome to Dashboard, {userName}</h2>
@@ -298,7 +298,7 @@ export default function Dashboard() {
         </div>
       )
     }
-  else if(ownerHubs.length == 0 && userMemberHubs.length > 0) {
+  else if(ownerHubs.length === 0 && userMemberHubs.length > 0) {
     return (
       <div>
         <h2>Welcome to Dashboard, {userName}</h2>

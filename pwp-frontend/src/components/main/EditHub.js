@@ -66,7 +66,7 @@ export default function EditHub() {
                     })
                 })
                 // Setting state with the members that are shown in the members list
-                setMembersOfHub(listOfMembersToShow)
+                setMembersOfHub(sortDropdown(listOfMembersToShow))
                 return { allUsers: users, listForMemberSection: listOfMembersToShow };
             })
             .then((objectWithUserLists) => { // Updates the dropdown, that only members who haven't been added to the hub yet are shown
@@ -141,8 +141,8 @@ export default function EditHub() {
           resolve({tempHubMembers: tempHubMembers, tempDropdown: sortDropdown(tempDropDownMembersArray)});
       })
       .then((tempObjectWithArrays) => {
-          setMembersOfHub(tempObjectWithArrays.tempHubMembers);
-          setdropDownMembersArray(tempObjectWithArrays.tempDropdown);
+          setMembersOfHub(sortDropdown(tempObjectWithArrays.tempHubMembers));
+          setdropDownMembersArray(sortDropdown(tempObjectWithArrays.tempDropdown));
       })
     }
 

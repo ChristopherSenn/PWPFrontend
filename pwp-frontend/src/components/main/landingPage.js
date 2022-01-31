@@ -9,9 +9,7 @@ import './landingPage.css'
 
 
 
-
-
-export default function  LandingPage(){
+export default function LandingPage() {
     return (
         <header className="LandingPage-header">
             <div className="LandingPageContent"> 

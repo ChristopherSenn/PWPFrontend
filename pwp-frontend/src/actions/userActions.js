@@ -8,7 +8,9 @@ import {
     USER_REGISTER_SUCCESS,
   } from "./types";
   import axios from "axios";
-  
+
+
+ // login function
   export const login = (username, password) => async (dispatch) => {
     try {
       dispatch({ type: USER_LOGIN_REQUEST });
@@ -28,6 +30,7 @@ import {
       dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
   
       localStorage.setItem("userInfo", JSON.stringify(data));
+
     } catch (error) {
       dispatch({
         type: USER_LOGIN_FAIL,
@@ -39,7 +42,7 @@ import {
     }
   };
 
-  
+  // register function
   export const register = (username, email, password, roles) => async (dispatch) => {
     try {
       dispatch({ type: USER_REGISTER_REQUEST });
@@ -71,7 +74,7 @@ import {
       });
     }
   };
-
+  //logout function
   export const logout = () => async (dispatch) => {
     localStorage.removeItem("userInfo");
     dispatch({ type: USER_LOGOUT });

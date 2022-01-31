@@ -18,6 +18,13 @@ interface IDevice {
     dataType: string;
     dataValue: string;
   }>;
+  properties: Array<{
+    name: string;
+    href: string;
+    dataType: string;
+    dataValue: string;
+  }>;
+
 }
 
 type DeviceDocument = Document & {
@@ -25,6 +32,12 @@ type DeviceDocument = Document & {
   deviceId: string;
   hubIds: Array<string>;
   deviceName: string;
+  properties: Array<{
+    name: string;
+    href: string;
+    dataType: string;
+    dataValue: string;
+  }>;
   actions: Array<{
     name: string;
     href: string;
@@ -37,6 +50,7 @@ type DeviceDocument = Document & {
     dataType: string;
     dataValue: string;
   }>;
+ 
 };
 
 type DeviceInput = {
@@ -44,6 +58,7 @@ type DeviceInput = {
   deviceId: DeviceDocument['deviceId'];
   hubIds: DeviceDocument['hubIds'];
   deviceName: DeviceDocument['deviceName'];
+  properties: DeviceDocument['properties'];
   actions: DeviceDocument['actions'];
   events: DeviceDocument['events'];
 };
@@ -69,6 +84,26 @@ const deviceSchema = new Schema(
       type: Schema.Types.String,
       required: true,
     },
+    properties: [
+      {
+        name: {
+          type: Schema.Types.String,
+          required: true,
+        },
+        href: {
+          type: Schema.Types.String,
+          required: true,
+        },
+        dataType: {
+          type: Schema.Types.String,
+          required: true,
+        },
+        dataValue: {
+          type: Schema.Types.String,
+          required: true,
+        },
+      },
+    ],
     actions: [
       {
         name: {
@@ -109,6 +144,7 @@ const deviceSchema = new Schema(
         },
       },
     ],
+    
   },
   {
     collection: 'devices',

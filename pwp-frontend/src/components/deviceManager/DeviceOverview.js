@@ -7,19 +7,26 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
+import {getDevicesByHub} from './DeviceOverviewInterface'
+import { useSelector, useDispatch } from "react-redux";
+import { DEVICE_CLICKED } from '../../actions/types'
+import { useNavigate } from "react-router-dom";
 
-class AddDevice extends React.Component{
-    render(){
-        return (
-            <div className='AddDevice'>
-                <IconButton aria-label="delete" size="large" sx={{backgroundColor: '#787878', color: 'white', "&:hover": {backgroundColor: '#999999'}}} >
-                  <AddIcon fontSize="inherit" />
-                </IconButton> 
-            </div>
-        )
-    }
 
-}
+
+// class AddDevice extends React.Component{
+//     render(){
+//         return (
+//             <div className='AddDevice'>
+//                 <IconButton aria-label="delete" size="large" sx={{backgroundColor: '#787878', color: 'white', "&:hover": {backgroundColor: '#999999'}}} >
+//                   <AddIcon fontSize="inherit" />
+//                 </IconButton> 
+//             </div>
+//         )
+//     }
+
+// }
+
 
 class DeviceButtons extends React.Component{
     constructor (props){
@@ -42,7 +49,8 @@ class DeviceButtons extends React.Component{
         console.log(this.state.deviceId);
         return(
             <div className = "DeviceButtons">
-                <Button sx={{color: 'white', backgroundColor: '#787878', width: 150, height: 70, "&:hover": {backgroundColor: '#999999'}}}>
+                <Button sx={{color: 'white', backgroundColor: '#787878', width: 200, height: 70, "&:hover": {backgroundColor: '#999999'}}}  href="/features"
+                  >
                       {this.state.deviceName}
                 </Button> 
             </div>
@@ -54,33 +62,60 @@ class DeviceButtons extends React.Component{
 
 
 class Devices extends React.Component{
+    constructor (props){
+        super(props);
+        this.state = {
+            namesOfDevices: [],
+        };
+    }
 
+
+    componentDidMount(){
+
+
+        const clickedHubId = this.props.hubClicked.hubId;
+
+        console.log(getDevicesByHub(clickedHubId));
+        getDevicesByHub(clickedHubId).then(devices => {
+            for (const device of devices.data){
+                const namesOfDevices = this.state.namesOfDevices;
+                const jsonDeviceDescription = JSON.parse(device.thingDescription);
+                const addNewDevice = namesOfDevices.concat([jsonDeviceDescription])
+                this.setState({namesOfDevices: addNewDevice});
+                const test = this.state.namesOfDevices;
+                console.log(test);
+                
+            }
+        })
+
+
+       
+    }
+
+    
     render(){
-        const deviceName1 = "Hallo"
-        const deviceId1 = "123"
 
-        const deviceName2 = "Hi"
-        const deviceId2 = "987"
+        var namesOfDevices = this.state.namesOfDevices;
+        var deviceList = "";
+
+
+        if (namesOfDevices !== null){
+            deviceList = namesOfDevices.map((device) =>
+            deviceList = 
+            <ListItem key= {device.title} sx={{paddingRight: 3}}>
+                <DeviceButtons
+                  deviceName = {device.title}
+                  deviceId = {device.id}
+                ></DeviceButtons>  
+            </ListItem>
+            );
+        }
+        
+
         return(
             <div className='Devices'>
                <List component={Stack} direction="row" sx={{float: 'left'}}>
-                 <ListItem key= 'hello' sx={{paddingRight: 3}}>
-                   <DeviceButtons
-                     deviceName = {deviceName1}
-                     deviceId = {deviceId1}
-                    ></DeviceButtons>
-                 </ListItem>
-                 <ListItem key= 'hi' sx={{paddingRight: 3}}>
-                 <DeviceButtons
-                     deviceName = {deviceName2}
-                     deviceId = {deviceId2}
-                    ></DeviceButtons> 
-                 </ListItem>
-                 <ListItem key= 'hey' sx={{paddingRight: 3}}>
-                   <Button sx={{color: 'white', backgroundColor: '#787878', width: 150, height: 70, "&:hover": {backgroundColor: '#999999'}}}>
-                      hey
-                   </Button>  
-                 </ListItem>
+                 {deviceList}
                </List>
             </div>
         )
@@ -99,25 +134,33 @@ class PageTitle extends React.Component{
 }
 
 class TextBox extends React.Component {
+    
+
 
     render () {
         return(
            <div className='TextBox'>
                <PageTitle/>
                <Divider />
-               <Devices/>
-               <AddDevice/>
+               <Devices
+                 hubClicked={this.props.hubClicked}
+                 navigate={this.props.navigate}
+                 dispatch={this.props.dispatch}
+               />
            </div>
         );
     }
 }
 
 export default function DeviceOverview() {
+    const hubClicked = useSelector((state) => state.hubClicked);
 
     return(
         <div className="DeviceOverview">
           <header className="DeviceOverview-header">
-            <TextBox/>
+            <TextBox
+                hubClicked={hubClicked}
+            />
           </header>
         </div>
     );

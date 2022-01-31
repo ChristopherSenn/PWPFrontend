@@ -1,6 +1,6 @@
 import React from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
-
+// function to show the progressbar
 export default function Loading() {
 
     return (

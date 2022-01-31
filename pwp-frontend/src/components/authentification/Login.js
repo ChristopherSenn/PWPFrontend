@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../actions/userActions";
+import { getAllHubs} from "../../actions/hubsActions";
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,16 +13,16 @@ import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Loading from '../../actions/loading';
-import {ErrorMessage} from '../../actions/messages';
 import './Login.css'
+import Loading from '../../utilis/loading';
+import {ErrorMessage} from '../../utilis/messages';
 
 const theme = createTheme();
 
 export default function Login() {
 
     const navigate = useNavigate()
-
+    // formData saves the inputs of users
     const [formData, setFormData] = useState({
         username: "",
         password: "",
@@ -29,16 +30,18 @@ export default function Login() {
     });
     const { username, password, } = formData;
     const dispatch = useDispatch();
+    // userLogin = information of user that are currenty loggedin
     const userLogin = useSelector((state) => state.userLogin);
-    const { loading, error, userInfo} = userLogin;
+    const { loadingBar, error, isAuth} = userLogin;
+    // state for submittButton (if the button was clicked)
     const [submittButton, setSubmittButton] =useState(null)
 
     useEffect(() => {
-        if (userInfo && submittButton ) {
+        if (isAuth && submittButton ) {
           navigate('/dashboard');
         }
-      });
-
+      }, [isAuth]);
+    // update state with userinputs
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
@@ -46,8 +49,7 @@ export default function Login() {
     const onSubmit = async (e) => {
         e.preventDefault();
         dispatch(login(username, password));
-        setSubmittButton(true)
-        
+        setSubmittButton(true);
     };
     
 
@@ -71,7 +73,7 @@ export default function Login() {
                         Login
                     </Typography>
                     {error && <ErrorMessage>{error}</ErrorMessage>}
-                    {loading && <Loading/>}
+                    {loadingBar && <Loading/>}
                     <Box component="form" onSubmit={(e) => onSubmit(e)} sx={{ mt: 1 }}>
                         <TextField
                             required

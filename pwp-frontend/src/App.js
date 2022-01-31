@@ -4,6 +4,7 @@ import {
   Routes,
   Route
 } from "react-router-dom";
+import React from 'react';
 //pages
 import Login from './components/authentification/Login'
 import Register from './components/authentification/Register'
@@ -12,6 +13,8 @@ import SecurityExplanation from './components/main/securityExplanation';
 import LandingPage from './components/main/landingPage'
 import Features from './components/mqttListener/mqttClient';
 import DeviceOverview from './components/deviceManager/DeviceOverview';
+import AddHub from './components/main/AddHub';
+
 function App() {
 
   return (
@@ -24,6 +27,7 @@ function App() {
           <Route path="/features" element={<Features />} />
           <Route path="/deviceOverview" element={<DeviceOverview />} />
           <Route path="/securityExplanation" element={<SecurityExplanation />} />
+          <Route path="/add-hub" element={<AddHub />} />
         </Routes>
     </BrowserRouter>
   );

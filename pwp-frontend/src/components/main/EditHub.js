@@ -23,8 +23,6 @@ import { authHeader } from "../../utilis/setToken";
 
 
 export default function EditHub() {
-
-    let why = [];
     const navigate = useNavigate();
     
     // @state contains the information about the hub that was clicked. It gets passed via navigate() in Dashboard.js
@@ -82,9 +80,7 @@ export default function EditHub() {
                       sortDropDown(tempDropDownUser); 
                     }
                   }
-                }
-
-                
+                }        
                 setdropDownMembersArray(tempDropDownUser)
             })
      }
@@ -142,9 +138,7 @@ export default function EditHub() {
 
           const tempDropDownMembersArray = dropDownMembersArray;
           tempDropDownMembersArray.push({ id: member.id, username: member.username});
-          sortDropDown(tempDropDownMembersArray);
-          console.log(tempDropDownMembersArray)
-          
+          sortDropDown(tempDropDownMembersArray);          
           resolve({tempHubMembers: tempHubMembers, tempDropdown: tempDropDownMembersArray});
       })
       .then((tempObjectWithArrays) => {

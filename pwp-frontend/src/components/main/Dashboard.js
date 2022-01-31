@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { logout } from "../../actions/userActions";
-import { getAllHubsWithoutSettingState, deleteHub } from "../../actions/hubsActions";
+import { getAllHubsFromDB, deleteHub } from "../../actions/hubsActions";
 import LogoutIcon from '@mui/icons-material/Logout';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
@@ -15,7 +15,7 @@ import { experimentalStyled as styled } from '@mui/material/styles';
 import Divider from '@mui/material/Divider';
 import { HUB_CLICKED } from '../../actions/types';
 import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
 
 export default function Dashboard() {
 
@@ -41,7 +41,7 @@ export default function Dashboard() {
     let ownerHubsArray = [];
     let memberHubsArray = [];
     
-    getAllHubsWithoutSettingState().then(hubs => {
+    getAllHubsFromDB().then(hubs => {
 
       hubs.data.forEach((hub, i) => {
         if (hub.ownerId === user.id) {
@@ -98,129 +98,326 @@ export default function Dashboard() {
     cursor: 'pointer',
   }));
 
-  return (
-    <div>
-      <h2>Welcome to Dashboard, {userName}</h2>
-      <Button
-        aria-label="delete"
-        size="large"
-        sx={{ color: 'white', "&:hover": { backgroundColor: '#999999' } }}
-        variant="contained"
-        component={RouterLink}
-        to="/add-hub"
-        startIcon={<AddIcon fontSize="inherit" />}>
-        hub
-      </Button>
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      ></Box>
-      <span>
-        Hubs you own:
-      </span>
-      <Box
-        sx={{
-          marginTop: 3,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      ></Box>
-
-      <Box sx={{ flexGrow: 1 }}>
-        <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-          
-          {ownerHubs.map((hub, index) => (
-            <Grid item xs={2} sm={4} md={4} key={index}>
-              <Box sx={{ textAlign: 'right'}}>
-                  <IconButton onClick={(e) => onEdit(e, hub)} >
-                        <EditIcon />
-                  </IconButton>
-                  <IconButton onClick={(e) => onDelete(e, hub)} >
-                        <DeleteIcon />
-                  </IconButton>
-              </Box>
-              <Item onClick={(e) => {
-                /* alert('Device page opens'); */
-                dispatch({ type: HUB_CLICKED, payload: hub.hubId })
-              }}
-                sx={{ backgroundColor: '#ddfada' }}>
-                <span>{hub.hubName}</span>
-              </Item>
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
-
-      <Box
-        sx={{
-          marginTop: 3,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      ></Box>
-
-      <Divider />
-
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      ></Box>
-      <span>
-        Hubs you are a member of:
-      </span>
-      <Box
-        sx={{
-          marginTop: 3,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      ></Box>
-
-      <Box sx={{ flexGrow: 1 }}>
-        <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-          {userMemberHubs.map((hub, index) => (
-            <Grid item xs={2} sm={4} md={4} key={hub.hubId}>
-
-              <Item
-                onClick={(e) => {
-                  alert('Device page opens');
-                  dispatch({ type: HUB_CLICKED, payload: hub.hubId })
-
-                }}
-                sx={{ backgroundColor: 'lightgrey' }}>
-                <span>{hub.hubName}</span>
-              </Item>
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
-
-      <div className='logoutButton' style={{
-        position: "fixed",
-        left: "94%",
-        top: "20px"
-      }}>
+  if(ownerHubs.length > 0 && userMemberHubs.length > 0) {
+    return (
+      <div>
+        <h2>Welcome to Dashboard, {userName}</h2>
         <Button
-          sx={{ backgroundColor: 'red', color: 'white', "&:hover": { backgroundColor: '#999999' } }}
+          aria-label="delete"
+          size="large"
+          sx={{ color: 'white', "&:hover": { backgroundColor: '#999999' } }}
           variant="contained"
           component={RouterLink}
-          to="/users/login"
-          onClick={logoutHandler}
-          startIcon={<LogoutIcon />}>
+          to="/add-hub"
+          startIcon={<AddIcon fontSize="inherit" />}>
+          hub
         </Button>
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        ></Box>
+        <span>
+          Hubs you own:
+        </span>
+        <Box
+          sx={{
+            marginTop: 3,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        ></Box>
+  
+        <Box sx={{ flexGrow: 1 }}>
+          <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+            
+            {ownerHubs.map((hub, index) => (
+              <Grid item xs={2} sm={4} md={4} key={index}>
+                <Box sx={{ textAlign: 'right'}}>
+                    <IconButton onClick={(e) => onEdit(e, hub)} >
+                          <GroupAddIcon />
+                    </IconButton>
+                    <IconButton onClick={(e) => onDelete(e, hub)} >
+                          <DeleteIcon />
+                    </IconButton>
+                </Box>
+                <Item onClick={(e) => {
+                  /* alert('Device page opens'); */
+                  dispatch({ type: HUB_CLICKED, payload: hub.hubId })
+                }}
+                  sx={{ backgroundColor: '#ddfada' }}>
+                  <span>{hub.hubName}</span>
+                </Item>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+  
+        <Box
+          sx={{
+            marginTop: 3,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        ></Box>
+  
+        <Divider />
+  
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        ></Box>
+        <span>
+          Hubs you are a member of:
+        </span>
+        <Box
+          sx={{
+            marginTop: 3,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        ></Box>
+  
+        <Box sx={{ flexGrow: 1 }}>
+          <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+            {userMemberHubs.map((hub, index) => (
+              <Grid item xs={2} sm={4} md={4} key={hub.hubId}>
+  
+                <Item
+                  onClick={(e) => {
+                    alert('Device page opens');
+                    dispatch({ type: HUB_CLICKED, payload: hub.hubId })
+  
+                  }}
+                  sx={{ backgroundColor: 'lightgrey' }}>
+                  <span>{hub.hubName}</span>
+                </Item>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+  
+        <div className='logoutButton' style={{
+          position: "fixed",
+          left: "94%",
+          top: "20px"
+        }}>
+          <Button
+            sx={{ backgroundColor: 'red', color: 'white', "&:hover": { backgroundColor: '#999999' } }}
+            variant="contained"
+            component={RouterLink}
+            to="/users/login"
+            onClick={logoutHandler}
+            startIcon={<LogoutIcon />}>
+          </Button>
+        </div>
+  
       </div>
+  )} else if(ownerHubs.length > 0 && userMemberHubs.length == 0) {
+      return (
+        <div>
+          <h2>Welcome to Dashboard, {userName}</h2>
+          <Button
+            aria-label="delete"
+            size="large"
+            sx={{ color: 'white', "&:hover": { backgroundColor: '#999999' } }}
+            variant="contained"
+            component={RouterLink}
+            to="/add-hub"
+            startIcon={<AddIcon fontSize="inherit" />}>
+            hub
+          </Button>
+          <Box
+            sx={{
+              marginTop: 8,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          ></Box>
+          <span>
+            Hubs you own:
+          </span>
+          <Box
+            sx={{
+              marginTop: 3,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          ></Box>
 
-    </div>
-  );
+          <Box sx={{ flexGrow: 1 }}>
+            <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+              
+              {ownerHubs.map((hub, index) => (
+                <Grid item xs={2} sm={4} md={4} key={index}>
+                  <Box sx={{ textAlign: 'right'}}>
+                      <IconButton onClick={(e) => onEdit(e, hub)} >
+                            <GroupAddIcon />
+                      </IconButton>
+                      <IconButton onClick={(e) => onDelete(e, hub)} >
+                            <DeleteIcon />
+                      </IconButton>
+                  </Box>
+                  <Item onClick={(e) => {
+                    /* alert('Device page opens'); */
+                    dispatch({ type: HUB_CLICKED, payload: hub.hubId })
+                  }}
+                    sx={{ backgroundColor: '#ddfada' }}>
+                    <span>{hub.hubName}</span>
+                  </Item>
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+          <div className='logoutButton' style={{
+            position: "fixed",
+            left: "94%",
+            top: "20px"
+          }}>
+            <Button
+              sx={{ backgroundColor: 'red', color: 'white', "&:hover": { backgroundColor: '#999999' } }}
+              variant="contained"
+              component={RouterLink}
+              to="/users/login"
+              onClick={logoutHandler}
+              startIcon={<LogoutIcon />}>
+            </Button>
+          </div>
+        </div>
+      )
+    }
+  else if(ownerHubs.length == 0 && userMemberHubs.length > 0) {
+    return (
+      <div>
+        <h2>Welcome to Dashboard, {userName}</h2>
+        <Button
+          aria-label="delete"
+          size="large"
+          sx={{ color: 'white', "&:hover": { backgroundColor: '#999999' } }}
+          variant="contained"
+          component={RouterLink}
+          to="/add-hub"
+          startIcon={<AddIcon fontSize="inherit" />}>
+          hub
+        </Button>
+  
+        <Box
+          sx={{
+            marginTop: 3,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        ></Box>
+  
+        <Divider />
+  
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        ></Box>
+        <span>
+          Hubs you are a member of:
+        </span>
+        <Box
+          sx={{
+            marginTop: 3,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        ></Box>
+  
+        <Box sx={{ flexGrow: 1 }}>
+          <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+            {userMemberHubs.map((hub, index) => (
+              <Grid item xs={2} sm={4} md={4} key={hub.hubId}>
+  
+                <Item
+                  onClick={(e) => {
+                    alert('Device page opens');
+                    dispatch({ type: HUB_CLICKED, payload: hub.hubId })
+  
+                  }}
+                  sx={{ backgroundColor: 'lightgrey' }}>
+                  <span>{hub.hubName}</span>
+                </Item>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+  
+        <div className='logoutButton' style={{
+          position: "fixed",
+          left: "94%",
+          top: "20px"
+        }}>
+          <Button
+            sx={{ backgroundColor: 'red', color: 'white', "&:hover": { backgroundColor: '#999999' } }}
+            variant="contained"
+            component={RouterLink}
+            to="/users/login"
+            onClick={logoutHandler}
+            startIcon={<LogoutIcon />}>
+          </Button>
+        </div>
+  
+      </div>
+  )}
+  else {
+    return (
+      <div>
+        <h2>Welcome to Dashboard, {userName}</h2>
+        <Button
+          aria-label="delete"
+          size="large"
+          sx={{ color: 'white', "&:hover": { backgroundColor: '#999999' } }}
+          variant="contained"
+          component={RouterLink}
+          to="/add-hub"
+          startIcon={<AddIcon fontSize="inherit" />}>
+          hub
+        </Button>
+  
+        <Box
+          sx={{
+            marginTop: 3,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        ></Box>
+        <div className='logoutButton' style={{
+          position: "fixed",
+          left: "94%",
+          top: "20px"
+        }}>
+          <Button
+            sx={{ backgroundColor: 'red', color: 'white', "&:hover": { backgroundColor: '#999999' } }}
+            variant="contained"
+            component={RouterLink}
+            to="/users/login"
+            onClick={logoutHandler}
+            startIcon={<LogoutIcon />}>
+          </Button>
+        </div>
+  
+      </div>
+  )}
 }

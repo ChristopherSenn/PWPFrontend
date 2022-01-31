@@ -20,6 +20,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import DashboardCustomizeSharpIcon from '@mui/icons-material/DashboardCustomizeSharp';
 import { authHeader } from "../../utilis/setToken";
+import { sortDropdown } from "../../utilis/sortDropdown";
 
 
 export default function EditHub() {
@@ -77,11 +78,10 @@ export default function EditHub() {
                     if(user.id === member.id) {
                       const idx = tempDropDownUser.indexOf(user)
                       tempDropDownUser.splice(idx, 1); 
-                      sortDropDown(tempDropDownUser); 
                     }
                   }
                 }        
-                setdropDownMembersArray(tempDropDownUser)
+                setdropDownMembersArray(sortDropdown(tempDropDownUser))
             })
      }
     
@@ -138,26 +138,12 @@ export default function EditHub() {
 
           const tempDropDownMembersArray = dropDownMembersArray;
           tempDropDownMembersArray.push({ id: member.id, username: member.username});
-          sortDropDown(tempDropDownMembersArray);          
-          resolve({tempHubMembers: tempHubMembers, tempDropdown: tempDropDownMembersArray});
+          resolve({tempHubMembers: tempHubMembers, tempDropdown: sortDropdown(tempDropDownMembersArray)});
       })
       .then((tempObjectWithArrays) => {
           setMembersOfHub(tempObjectWithArrays.tempHubMembers);
           setdropDownMembersArray(tempObjectWithArrays.tempDropdown);
       })
-    }
-
-    const sortDropDown = (listToSort) => {
-      listToSort.sort((userA, userB) => {
-        if(userA.username.toUpperCase() < userB.username.toUpperCase()){ 
-          return -1; 
-        }
-        if(userA.username.toUpperCase() > userB.username.toUpperCase()){ 
-          return 1; 
-        }
-        return 0;
-      })
-      return listToSort;
     }
 
     // add new members to hub
@@ -203,7 +189,7 @@ export default function EditHub() {
         flexDirection: 'column',
       }}>
         <Typography component="h1" variant="h5"  sx={{ mt: 1}}>
-            Edit Hub
+            Edit Hub Member
         </Typography>
         <InputLabel id="hubUsersSelectLabel">Choose Member:</InputLabel>
           <Select

@@ -16,7 +16,7 @@ import Typography from '@mui/material/Typography';
 import { loadUsers } from '../../actions/userActions';
 import { authHeader } from '../../utilis/setToken';
 import { sortDropdown } from "../../utilis/sortDropdown";
-
+import DashboardCustomizeSharpIcon from '@mui/icons-material/DashboardCustomizeSharp';
 export default function AddHub() {
 
   // Man müsste eig nur noch die user-Liste ziehen und anstatt der Dummy-Liste an die Select-Box weiterreichen und dann eben mit dem Form die createHub füttern
@@ -94,7 +94,14 @@ export default function AddHub() {
   }
 
   const cancelButtonHandler = () => {
-    navigate('/dashboard');
+      setHubName('');
+    if(selectedMemberNames.length > 0){
+      setSelectedMemberNames([])
+    }
+  }
+    // redirect to dashboard
+    const redirectToPage = () => {
+      navigate('/dashboard');
   }
 
   return (
@@ -142,6 +149,7 @@ export default function AddHub() {
             fullWidth
             variant="contained"
             sx={{ mt: 1 }}
+            disabled={hubName.length === 0}
           >
             Create hub
           </Button>
@@ -154,6 +162,16 @@ export default function AddHub() {
           >
             Cancel
           </Button>
+          <Button
+            onClick={redirectToPage}
+            fullWidth
+            variant="outlined"
+            sx={{ mt: 1 }}
+            startIcon={<DashboardCustomizeSharpIcon/>}
+            sx={{ mt: 1 , backgroundColor: '#787878', color: 'white', "&:hover": {backgroundColor: '#999999'}}}
+            >
+            Back to Dashboard
+            </Button>
       </Box>
     </Container>
   )

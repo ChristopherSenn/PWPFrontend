@@ -42,7 +42,8 @@ export default function EditHub() {
     const [dropDownMembersArray, setdropDownMembersArray] = useState([]); // list of all users
     const [membersOfHub, setMembersOfHub] = useState([]) // contains Member names and ids of hub 
     
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(false); // open dialog for delete
+    const [disable, setDisable] = useState(false); // disable buttons
 
     const handleClickOpen = () => {
       setOpen(true);
@@ -107,6 +108,10 @@ export default function EditHub() {
     const redirectToPage = () => {
         navigate('/dashboard');
     }
+    const cancelMembers = () => {
+      setSelectedMemberNames([])
+  }
+    
     // select a member from membersList
     const selectChange = (event) => {
         const {
@@ -229,12 +234,13 @@ export default function EditHub() {
             fullWidth
             variant="contained"
             sx={{ mt: 1 }}
+            disabled={selectedMemberNames.length === 0}
           >
             Add Members
           </Button>
 
             <Button
-            onClick={redirectToPage}
+            onClick={cancelMembers}
             fullWidth
             variant="outlined"
             sx={{ mt: 1 }}
@@ -283,8 +289,8 @@ export default function EditHub() {
             onClick={redirectToPage}
             fullWidth
             variant="outlined"
-            sx={{ mt: 1 }}
             startIcon={<DashboardCustomizeSharpIcon/>}
+            sx={{ mt: 1 , backgroundColor: '#787878', color: 'white', "&:hover": {backgroundColor: '#999999'}}}
             >
             Back to Dashboard
             </Button>

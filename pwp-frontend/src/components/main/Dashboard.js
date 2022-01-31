@@ -16,6 +16,11 @@ import Divider from '@mui/material/Divider';
 import { HUB_CLICKED } from '../../actions/types';
 import AddIcon from '@mui/icons-material/Add';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 export default function Dashboard() {
 
@@ -31,6 +36,17 @@ export default function Dashboard() {
   // get all information about logged user (single)
   const userLogin = useSelector((state) => state.userLogin);
   const { isAuth, user } = userLogin;
+
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
 
   // hubCLicked contains the id of the hub that was clicked
   //const hubClicked = useSelector((state) => state.hubClicked)
@@ -83,6 +99,7 @@ export default function Dashboard() {
       }
     })  
     setOwnerHubs(tempHubArr);
+    setOpen(false)
   }
 
   const onEdit = (e, hub) => {
@@ -137,13 +154,34 @@ export default function Dashboard() {
             
             {ownerHubs.map((hub, index) => (
               <Grid item xs={2} sm={4} md={4} key={index}>
-                <Box sx={{ textAlign: 'right'}}>
-                    <IconButton onClick={(e) => onEdit(e, hub)} >
-                          <GroupAddIcon />
-                    </IconButton>
-                    <IconButton onClick={(e) => onDelete(e, hub)} >
-                          <DeleteIcon />
-                    </IconButton>
+                <Box sx={{ textAlign: 'right' }}>
+                  <IconButton onClick={(e) => onEdit(e, hub)} >
+                    <GroupAddIcon />
+                  </IconButton>
+                  <IconButton aria-label="delete" onClick={handleClickOpen}>
+                    <DeleteIcon />
+                  </IconButton>
+                  <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                  >
+                    <DialogTitle id="alert-dialog-title">
+                      {"Delete Hub"}
+                    </DialogTitle>
+                    <DialogContent>
+                      <DialogContentText id="alert-dialog-description">
+                        Do you really want to delete this hub?
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button sx={{ backgroundColor: '#787878', color: 'white', "&:hover": { backgroundColor: '#999999' } }} onClick={handleClose}>No</Button>
+                      <Button sx={{ backgroundColor: '#787878', color: 'white', "&:hover": { backgroundColor: '#999999' } }} onClick={(e) => onDelete(e, hub)} autoFocus>
+                        Yes
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
                 </Box>
                 <Item onClick={(e) => {
                   /* alert('Device page opens'); */

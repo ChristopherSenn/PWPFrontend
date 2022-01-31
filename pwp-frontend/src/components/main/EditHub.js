@@ -21,7 +21,11 @@ import IconButton from '@mui/material/IconButton';
 import DashboardCustomizeSharpIcon from '@mui/icons-material/DashboardCustomizeSharp';
 import { authHeader } from "../../utilis/setToken";
 import { sortDropdown } from "../../utilis/sortDropdown";
-
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 export default function EditHub() {
     const navigate = useNavigate();
@@ -38,6 +42,16 @@ export default function EditHub() {
     const [dropDownMembersArray, setdropDownMembersArray] = useState([]); // list of all users
     const [membersOfHub, setMembersOfHub] = useState([]) // contains Member names and ids of hub 
     
+    const [open, setOpen] = useState(false);
+
+    const handleClickOpen = () => {
+      setOpen(true);
+    };
+  
+    const handleClose = () => {
+      setOpen(false);
+    };
+  
     
     // getMembersOfEditedHub : id and username
     const getMembersOfEditedHub = async () => {
@@ -144,12 +158,12 @@ export default function EditHub() {
           setMembersOfHub(sortDropdown(tempObjectWithArrays.tempHubMembers));
           setdropDownMembersArray(sortDropdown(tempObjectWithArrays.tempDropdown));
       })
+      setOpen(false)
     }
 
     // add new members to hub
     const onSubmit = async (e) => {
         e.preventDefault();
-      
         const idsOfSelectedMembers = [];
         const config = {
           headers: authHeader()
@@ -236,9 +250,31 @@ export default function EditHub() {
             {membersOfHub.map((member) => (
               <ListItem key={member.username} value={member.username}>
                 <ListItemText primary={member.username} />
-                <IconButton edge="end" aria-label="delete" onClick={(e) => removeMember(e, member)}>
-                      <DeleteIcon />
+                <IconButton aria-label="delete" onClick={handleClickOpen}>
+                      <DeleteIcon/>
                     </IconButton>
+
+                    <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Delete Member"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+          Do you really want to delete this member?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button sx={{backgroundColor: '#787878', color: 'white', "&:hover": {backgroundColor: '#999999'}}} onClick={handleClose}>No</Button>
+          <Button sx={{backgroundColor: '#787878', color: 'white', "&:hover": {backgroundColor: '#999999'}}} onClick={(e)=>removeMember(e, member)} autoFocus>
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
               </ListItem>
             ))}
             </List>

@@ -16,8 +16,6 @@ import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import DialogTitle from '@mui/material/DialogTitle';
-import Dialog from '@mui/material/Dialog';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import DashboardCustomizeSharpIcon from '@mui/icons-material/DashboardCustomizeSharp';
@@ -26,6 +24,7 @@ import { sortDropdown } from "../../utilis/sortDropdown";
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import InfoIcon from '@mui/icons-material/Info';
+import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -222,6 +221,13 @@ export default function EditHub() {
         flexDirection: 'column',
       }}>
         <Typography component="h1" variant="h5"  sx={{ mt: 1}}>
+        <Button
+            onClick={redirectToPage}
+            variant="text"
+            sx={{ mt:1 ,  width:"20px", "&:hover": {backgroundColor: '#cbc3be'}}}
+            startIcon={<ArrowBackIosOutlinedIcon sx={{ color: '#ab9c8a', width: "100%", height:"1%" }}/>}
+            >
+            </Button>
           Edit Hub 
           <IconButton variant="outlined" onClick={openDialogHandler}>
             <InfoIcon />
@@ -231,7 +237,7 @@ export default function EditHub() {
             position: "absolute", left: "40%",
             top: "50%", bottom: "50%"
           }}>
-            <Alert onClose={closeDialogHandler} severity="info" sx={{ width: '100%' }}>
+            <Alert onClose={closeDialogHandler} severity="info" sx={{ width: '100%',  bgcolor: '#69849b' }}>
               <List sx={{ pt: 0 }}>
                 <Typography>Hub Information:</Typography>
                 <ListItem >
@@ -274,7 +280,7 @@ export default function EditHub() {
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 1 }}
+            sx={{ mt: 1, bgcolor: "#3d6a66", color:"white" ,  "&:hover": { backgroundColor: '#7c9a92' }}}
             disabled={selectedMemberNames.length === 0}
           >
             Add Members
@@ -283,8 +289,8 @@ export default function EditHub() {
             <Button
             onClick={cancelMembers}
             fullWidth
-            variant="outlined"
-            sx={{ mt: 1 }}
+            variant="text"
+            sx={{ mt: 1 ,color:"#3d6a66", bgcolor:"#c7d3bf",  "&:hover": { backgroundColor: '#c1c9cd' }}}
           >
             Cancel
           </Button>
@@ -309,15 +315,6 @@ export default function EditHub() {
             ))}
             </List>
             </Grid>
-            <Button
-            onClick={redirectToPage}
-            fullWidth
-            variant="outlined"
-            startIcon={<DashboardCustomizeSharpIcon/>}
-            sx={{ mt: 1 , backgroundColor: '#787878', color: 'white', "&:hover": {backgroundColor: '#999999'}}}
-            >
-            Back to Dashboard
-            </Button>
     </Container>
     )
 }

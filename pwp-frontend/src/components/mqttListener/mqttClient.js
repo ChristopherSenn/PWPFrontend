@@ -1,10 +1,10 @@
 import React from "react";
 import mqtt from "mqtt";
 import TextBox from '../deviceFeatures/Features';
-import { useSelector, useDispatch } from "react-redux";
 import keyFile from './client_frontend.key';
 import certFile from './client_frontend.pem'
 import {getDeviceDetails} from './DeviceInterface'
+import { useLocation } from "react-router-dom";
 
 
 
@@ -103,7 +103,7 @@ class MQTTClient extends React.Component {
       
 
       const connectionOptions = {
-        port: 1883,
+        port: 8091,
         clientId: 'PWP_PUBLIC_FRONTEND_CLIENT ' + Math.random().toString(16).substr(2, 8),
         clean: true,
         key: key,
@@ -112,7 +112,8 @@ class MQTTClient extends React.Component {
         reconnectPeriod: 1000,
       };
 
-        this.client = mqtt.connect('mqtt://pwp21.medien.ifi.lmu.de:1883', connectionOptions);
+        this.client = mqtt.connect('wss://pwp21.medien.ifi.lmu.de:8091', connectionOptions);
+
 
         
     
@@ -135,6 +136,9 @@ class MQTTClient extends React.Component {
         //check: deviceId, properties, events, actions
           //client receives a message 
           this.client.on("message", (topic, message) => {
+            console.log("gotmessage")
+            console.log(topic);
+            console.log(message);
             if (topic === "actions"){
                 const actions = this.state.actions;
                 const action = message.toString();
@@ -167,10 +171,16 @@ class MQTTClient extends React.Component {
 
 export default function Features() {
 
+
+const { state } = useLocation();
+console.log(state);
+
     return(
-        <div className="Features">
+        <div className="Features"> 
           
-            <MQTTClient>
+            <MQTTClient
+            //deviceClicked={deviceClicked}
+            >
             </MQTTClient> 
          
         </div>

@@ -30,7 +30,7 @@ export default function Dashboard() {
   const { isAuth, user } = userLogin;
 
   // hubCLicked contains the id of the hub that was clicked
-  //const hubClicked = useSelector((state) => state.hubClicked)
+  const hubClicked = useSelector((state) => state.hubClicked)
 
   let ownerHubsArray = [];
   //users own hubs

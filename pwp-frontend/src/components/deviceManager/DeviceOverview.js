@@ -8,9 +8,10 @@ import ListItem from '@mui/material/ListItem';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import {getDevicesByHub} from './DeviceOverviewInterface'
-import { useSelector, useDispatch } from "react-redux";
-import { DEVICE_CLICKED } from '../../actions/types'
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
+
 
 
 
@@ -28,6 +29,8 @@ import { useNavigate } from "react-router-dom";
 // }
 
 
+
+
 class DeviceButtons extends React.Component{
     constructor (props){
         super(props);
@@ -42,14 +45,23 @@ class DeviceButtons extends React.Component{
         this.setState({deviceId: this.props.deviceId})
     }
 
-    clickTest
+   
+   
 
     render(){
+
+        
         console.log(this.state.deviceName);
         console.log(this.state.deviceId);
         return(
             <div className = "DeviceButtons">
-                <Button sx={{color: 'white', backgroundColor: '#787878', width: 200, height: 70, "&:hover": {backgroundColor: '#999999'}}}  href="/features"
+                <Button sx={{color: 'white', backgroundColor: '#787878', width: 200, height: 70, "&:hover": {backgroundColor: '#999999'}}}   
+                onClick={(e) => {
+                this.props.handleDeviceSelected(this.state.deviceId);
+                
+                
+              }} 
+              
                   >
                       {this.state.deviceName}
                 </Button> 
@@ -61,6 +73,7 @@ class DeviceButtons extends React.Component{
 }
 
 
+
 class Devices extends React.Component{
     constructor (props){
         super(props);
@@ -69,6 +82,10 @@ class Devices extends React.Component{
         };
     }
 
+
+
+    handleDeviceSelected(deviceId){
+        console.log("ist in devices");    }
 
     componentDidMount(){
 
@@ -79,11 +96,10 @@ class Devices extends React.Component{
         getDevicesByHub(clickedHubId).then(devices => {
             for (const device of devices.data){
                 const namesOfDevices = this.state.namesOfDevices;
-                const jsonDeviceDescription = JSON.parse(device.thingDescription);
-                const addNewDevice = namesOfDevices.concat([jsonDeviceDescription])
+                console.log(device)
+                console.log(device.deviceId);
+                const addNewDevice = namesOfDevices.concat([device])
                 this.setState({namesOfDevices: addNewDevice});
-                const test = this.state.namesOfDevices;
-                console.log(test);
                 
             }
         })
@@ -102,10 +118,11 @@ class Devices extends React.Component{
         if (namesOfDevices !== null){
             deviceList = namesOfDevices.map((device) =>
             deviceList = 
-            <ListItem key= {device.title} sx={{paddingRight: 3}}>
+            <ListItem key= {device.deviceId} sx={{paddingRight: 3}}>
                 <DeviceButtons
-                  deviceName = {device.title}
-                  deviceId = {device.id}
+                  deviceName = {device.deviceName}
+                  deviceId = {device.deviceId}
+                  handleDeviceSelected = {(deviceId) => this.props.handleDeviceSelected(deviceId)}
                 ></DeviceButtons>  
             </ListItem>
             );
@@ -134,7 +151,6 @@ class PageTitle extends React.Component{
 }
 
 class TextBox extends React.Component {
-    
 
 
     render () {
@@ -146,20 +162,37 @@ class TextBox extends React.Component {
                  hubClicked={this.props.hubClicked}
                  navigate={this.props.navigate}
                  dispatch={this.props.dispatch}
+                 handleDeviceSelected = {(deviceId) => this.props.handleDeviceSelected(deviceId)}
                />
            </div>
         );
     }
 }
 
+
+
 export default function DeviceOverview() {
     const hubClicked = useSelector((state) => state.hubClicked);
+   
+   
+
+    const navigate= useNavigate();
+
+
+    function handleDeviceSelected(deviceId) {
+        
+        navigate("/features", {state: deviceId});
+
+    }
+
+        
 
     return(
         <div className="DeviceOverview">
           <header className="DeviceOverview-header">
             <TextBox
                 hubClicked={hubClicked}
+                handleDeviceSelected={handleDeviceSelected}
             />
           </header>
         </div>

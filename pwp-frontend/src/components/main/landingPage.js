@@ -3,41 +3,48 @@ import { Link as RouterLink } from "react-router-dom";
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
+import './landingPage.css'
+
 
 
 export default function LandingPage() {
     return (
-        <div>
-            <Container component="main" maxWidth="xs">
+        <header className="LandingPage-header">
+            <div className="LandingPageContent"> 
+            <Container component="main" maxWidth="xs" sx={{
+                        alignItems: 'center',
+                        justifyContent: "center"
+                    }}>
                 <CssBaseline />
                 <Box
                     sx={{
-                        marginTop: 8,
+                        height: 500,
                         display: 'flex',
                         flexDirection: 'column',
-                        alignItems: 'center'
+                        alignItems: 'center',
+                        justifyContent: "center"
                     }}
                 >
-                    <Typography component="h1" variant="h5">
+                    <h2>
                         Smart Home App
-                    </Typography>
+                    </h2>
                     <Grid container>
                         <Grid item xs>
-                            <Button fullWidth variant="contained" component={RouterLink} to="/users/login">
+                            <Button fullWidth variant="contained" component={RouterLink} to="/users/login" sx={{backgroundColor: '#787878', color: 'white', "&:hover": {backgroundColor: '#999999'}}}>
                                 Login
                             </Button>
                         </Grid>
                         <Grid item xs>
-                            <Button fullWidth variant="outlined" component={RouterLink} to="/users/register">
+                        <Button fullWidth variant="outlined" component={RouterLink} to="/users/register" sx={{borderColor: '#787878', color: '#787878', "&:hover": {backgroundColor: '#999999'}}}>
                                 Sign Up
                             </Button>
                         </Grid>
                     </Grid>
                 </Box>
             </Container>
-        </div>
+            </div>
+            </header>
     )
 }

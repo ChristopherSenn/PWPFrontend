@@ -11,8 +11,10 @@ import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import './Register.css'
 import { ErrorMessage, SuccesMessage } from '../../utilis/messages';
 import Loading from '../../utilis/loading';
+
 const theme = createTheme();
 
 export default function Register() {
@@ -30,6 +32,8 @@ export default function Register() {
     const dispatch = useDispatch();
     //state with the registered user
     const userRegister = useSelector((state) => state.userRegister);
+
+    console.log(userRegister);
 
     //error saved the erorr messages; 
     // loading:bool is an is for progressBar 
@@ -62,18 +66,21 @@ export default function Register() {
 
 
     return (
+        <header className="SignUp-header">
+        <div className="SignUpContent"> 
         <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box
                     sx={{
-                        marginTop: 8,
+                        height: 590,
                         display: 'flex',
                         flexDirection: 'column',
-                        alignItems: 'center'
+                        alignItems: 'center',
+                        justifyContent: "center"
                     }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}></Avatar>
+                    <Avatar sx={{ m: 1, bgcolor: '#787878' }}></Avatar>
                     <Typography component="h1" variant="h5">
                         Sign up
                     </Typography>
@@ -89,6 +96,7 @@ export default function Register() {
                             name="username"
                             value={username}
                             onChange={(e) => onChange(e)}
+                            sx={{borderColor: '#787878', color: '#787878', "&:hover": {backgroundColor: '#787878'}}}
                         />
                         <TextField
                             margin="normal"
@@ -99,6 +107,7 @@ export default function Register() {
                             name="email"
                             value={email}
                             onChange={(e) => onChange(e)}
+                            sx={{borderColor: '#787878', color: '#787878', "&:hover": {backgroundColor: '#787878'}}}
 
                         />
                         <TextField
@@ -111,18 +120,19 @@ export default function Register() {
                             id="password"
                             value={password}
                             onChange={(e) => onChange(e)}
+                            sx={{borderColor: '#787878', color: '#787878', "&:hover": {backgroundColor: '#787878'}}}
                         />
                         <Button
                             type="submit"
                             fullWidth
                             variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
+                            sx={{ mt: 3, mb: 2, backgroundColor: '#787878', color: 'white', "&:hover": {backgroundColor: '#999999'} }}
                         >
                             Sign Up
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
-                                <Link href="/users/login" variant="body2">
+                                <Link href="/users/login" variant="body2" sx={{ color: 'white', textDecoration: 'none' }}>
                                     Already have an account? Login
                                 </Link>
                             </Grid>
@@ -131,6 +141,7 @@ export default function Register() {
                 </Box>
             </Container>
         </ThemeProvider>
-
+        </div>
+        </header>
     );
 }

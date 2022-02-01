@@ -12,6 +12,7 @@ import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import './Login.css'
 import Loading from '../../utilis/loading';
 import {ErrorMessage} from '../../utilis/messages';
 
@@ -52,18 +53,21 @@ export default function Login() {
     
 
     return (
+        <header className="Login-header">
+        <div className="LoginContent"> 
         <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box
                     sx={{
-                        marginTop: 8,
+                        height: 550,
                         display: 'flex',
                         flexDirection: 'column',
-                        alignItems: 'center'
+                        alignItems: 'center',
+                        justifyContent: "center"
                     }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}></Avatar>
+                    <Avatar sx={{ m: 1, bgcolor: '#787878' }}></Avatar>
                     <Typography component="h1" variant="h5">
                         Login
                     </Typography>
@@ -79,6 +83,7 @@ export default function Login() {
                             name="username"
                             value={username}
                             onChange={(e) => onChange(e)}
+                            sx={{borderColor: '#787878', color: '#787878', "&:hover": {backgroundColor: '#787878'}}}
                         />
                         <TextField
                             margin="normal"
@@ -90,32 +95,36 @@ export default function Login() {
                             id="password"
                             value={password}
                             onChange={(e) => onChange(e)}
+                            sx={{borderColor: '#787878', color: '#787878', "&:hover": {backgroundColor: '#787878'}}}
                         />
                         <Button
                             type="submit"
                             fullWidth
                             variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
+                            sx={{ mt: 3, mb: 2, backgroundColor: '#787878', color: 'white', "&:hover": {backgroundColor: '#999999'} }}
                         >
                             Login
                         </Button>
                         <Grid container>
                             <Grid item xs>
-                                <Link href="#" variant="body2">
+                                <Link href="#" variant="body2" sx={{ color: 'white', textDecoration: 'none' }}>
                                     Forgot password?
                                 </Link>
                             </Grid>
                             <Grid item>
-                                <Link href="/users/register" variant="body2">
+                                <Link href="/users/register" variant="body2" sx={{ color: 'white', textDecoration: 'none' }}>
                                     {"Don't have an account? Sign Up"}
                                 </Link>
                             </Grid>
                         </Grid>
+                        
                     </Box>
 
                 </Box>
             </Container>
         </ThemeProvider>
+        </div>
+        </header>
 
     );
 }

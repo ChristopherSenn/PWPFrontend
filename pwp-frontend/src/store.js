@@ -11,7 +11,7 @@ import {
 const reducer = combineReducers({
   userLogin: userLoginReducer,
   userRegister: userRegisterReducer,
-  hubClicked: hubReducer,
+  hubClicked: hubReducer
 });
 
 

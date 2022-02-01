@@ -1,12 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 
 export default function SecurityExplanation() {
   return(
-    <div>
-      <Container>
+    <div className='SecurityExplanation'>
+      <Container sx={{color: 'white', backgroundColor: '#787878', fontFamily: 'Arial'}}>
         <h2>No connection</h2>
         <p>All connections to the device are blocked. Note that also this dashboard will not be avaible in this mode.</p>
 

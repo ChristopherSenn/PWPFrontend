@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from "react-redux";
-import { Link as RouterLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -74,8 +74,9 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 export default function Dashboard() {
 
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
 
   // get user name
   const [userName, setUserName] = useState("");
@@ -99,7 +100,7 @@ export default function Dashboard() {
 
 
   // hubCLicked contains the id of the hub that was clicked
-  //const hubClicked = useSelector((state) => state.hubClicked)
+  const hubClicked = useSelector((state) => state.hubClicked)
 
   //users own hubs
   const showHubs = () => {
@@ -155,7 +156,9 @@ export default function Dashboard() {
 
  
 
-  if (ownerHubs.length > 0 && userMemberHubs.length > 0) {
+
+  
+  if(ownerHubs.length > 0 && userMemberHubs.length > 0) {
     return (
       <ThemeProvider theme={theme}>
         <CssBaseline />
@@ -217,7 +220,7 @@ export default function Dashboard() {
                   </Snackbar>
                 </Box>
                 <Item1 onClick={(e) => {
-                  /* alert('Device page opens'); */
+                  navigate('/deviceOverview');
                   dispatch({ type: HUB_CLICKED, payload: hub.hubId })
                 }}>
                   <span>{hub.hubName}</span>
@@ -271,7 +274,7 @@ export default function Dashboard() {
 
                 <Item2
                   onClick={(e) => {
-                    alert('Device page opens');
+                    navigate('/deviceOverview');
                     dispatch({ type: HUB_CLICKED, payload: hub.hubId })
 
                   }}>
@@ -445,7 +448,7 @@ export default function Dashboard() {
 
                 <Item2
                   onClick={(e) => {
-                    alert('Device page opens');
+                    navigate('/deviceOverview');
                     dispatch({ type: HUB_CLICKED, payload: hub.hubId })
 
                   }}

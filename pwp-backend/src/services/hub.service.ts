@@ -2,13 +2,17 @@ import { StatusError } from '../models/status.model';
 import { IHub, HubDocument, Hub, HubInput } from '../models/hub.model';
 import { Device } from '../models/device.model';
 import { Types } from 'mongoose';
-import createCertificate from '../functions/createCertificate';
+import { generatePassword } from '../functions/generatePassword';
+import { addAccount, removeAccount } from '../mqtt/mqtt';
 
 export type HubDeleteParams = Pick<IHub, 'hubId'>;
 export type HubCreationParams = Pick<IHub, 'hubName' | 'ownerId' | 'memberIds'>;
 export type AddOrRemoveUserParams = { hubId: string; memberIds: string[]; userId: string };
 
 export class HubService {
+  /**
+   * @returns parsedHubs: IHub[] - Array of all Hubs
+   */
   public async getHubs(): Promise<IHub[]> {
     const hubs: HubDocument[] = await Hub.find().exec();
 
@@ -18,14 +22,17 @@ export class HubService {
         hubId: hub._id,
         ownerId: hub.ownerId,
         memberIds: hub.memberIds,
-        cert: hub.cert,
+        password: hub.password,
       };
     });
 
     return parsedHubs;
   }
 
-  // TODO: search through all Hubs - check if user is a member
+  /**
+   * @param userId ID of the user
+   * @returns parsedHubs: IHub[] - Array of all hubs the user is a memeber of
+   */
   public async getHubsByUserId(userId: string): Promise<IHub[]> {
     const hubs: HubDocument[] = await Hub.find().exec();
 
@@ -37,13 +44,17 @@ export class HubService {
         hubId: hub._id,
         ownerId: hub.ownerId,
         memberIds: hub.memberIds,
-        cert: hub.cert,
+        password: hub.password,
       };
     });
 
     return parsedHubs;
   }
 
+  /**
+   * @param requestBody description of the request body
+   * @returns parsedHub: IHub: new Hub Object
+   */
   public async createHub(requestBody: HubCreationParams): Promise<IHub> {
     const { hubName, ownerId, memberIds } = requestBody;
 
@@ -54,13 +65,13 @@ export class HubService {
     if (!memberIds.includes(ownerId)) {
       memberIds.push(ownerId);
     }
-    const cert: string = createCertificate();
+    const password: string = generatePassword(20);
 
     const hubInput: HubInput = {
       hubName,
       ownerId,
       memberIds,
-      cert,
+      password,
     };
 
     const hubSchema = new Hub(hubInput);
@@ -70,11 +81,17 @@ export class HubService {
       hubId: newHub._id,
       ownerId: newHub.ownerId,
       memberIds: newHub.memberIds,
-      cert: newHub.cert,
+      password: newHub.password,
     };
+    // Add the account to the mqtt broker
+    addAccount(newHub._id, newHub.password);
     return parsedHub;
   }
 
+  /**
+   * @param requestBody description of the request body
+   * @returns Promise
+   */
   public async deleteHub(requestBody: HubDeleteParams): Promise<IHub> {
     return new Promise<IHub>((resolve, reject) => {
       Hub.findOneAndDelete({ _id: requestBody.hubId }, (err, res) => {
@@ -87,7 +104,7 @@ export class HubService {
               hubId: res._id,
               ownerId: res.ownerId,
               memberIds: res.memberIds,
-              cert: res.cert,
+              password: res.password,
             };
 
             const hubId = new Types.ObjectId(requestBody.hubId);
@@ -100,7 +117,7 @@ export class HubService {
                 });
               }
             });
-
+            removeAccount(requestBody.hubId || '');
             resolve(parsedHub);
           } else {
             reject(new StatusError('Hub not found', 404));
@@ -110,6 +127,10 @@ export class HubService {
     });
   }
 
+  /**
+   * @param requestBody description of the request body
+   * @returns Promise<IHub> updated hub object
+   */
   public async addUser(requestBody: AddOrRemoveUserParams): Promise<IHub> {
     const { hubId, memberIds, userId } = requestBody;
 
@@ -128,7 +149,7 @@ export class HubService {
                   hubId: res._id,
                   ownerId: res.ownerId,
                   memberIds: res.memberIds,
-                  cert: res.cert,
+                  password: res.password,
                 };
                 resolve(parsedHub);
               } else {
@@ -145,6 +166,10 @@ export class HubService {
     }
   }
 
+  /**
+   * @param requestBody description of the request body
+   * @returns Promise<IHub> updated hub object
+   */
   public async removeUser(requestBody: AddOrRemoveUserParams): Promise<IHub> {
     const { hubId, memberIds, userId } = requestBody;
 
@@ -170,7 +195,7 @@ export class HubService {
                     hubId: res._id,
                     ownerId: res.ownerId,
                     memberIds: res.memberIds,
-                    cert: res.cert,
+                    password: res.password,
                   };
                   resolve(parsedHub);
                 } else {
@@ -192,7 +217,7 @@ export class HubService {
                   hubId: res._id,
                   ownerId: res.ownerId,
                   memberIds: res.memberIds,
-                  cert: res.cert,
+                  password: res.password,
                 };
                 resolve(parsedHub);
               } else {
@@ -209,12 +234,15 @@ export class HubService {
     }
   }
 
-  // TODO: write correctly - add token!
-  public async getCert(hubId: string): Promise<string> {
+  /**
+   * @param hubId ID of the hub
+   * @returns hub password
+   */
+  public async getPassword(hubId: string): Promise<string> {
     const hub: HubDocument | null = await Hub.findById(hubId).exec();
 
     if (hub) {
-      return hub.cert;
+      return hub.password;
     } else {
       throw new StatusError('Hub not found', 404);
     }

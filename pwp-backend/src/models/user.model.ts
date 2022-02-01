@@ -1,5 +1,8 @@
 import mongoose, { Schema, Model, Document } from 'mongoose';
 
+/**
+ * Representation of a database user without unneccessary information. This is used to handle users throughout the app and is returned from API calls in most cases
+ */
 interface IUser {
   username: string;
   email: string;
@@ -10,6 +13,7 @@ interface IUser {
   token?: string;
 }
 
+// The representation of a database user (Contains extra metadata)
 type UserDocument = Document & {
   username: string;
   email: string;
@@ -18,6 +22,7 @@ type UserDocument = Document & {
   roles: Array<'customer' | 'manufacturer' | 'admin'>;
 };
 
+// The UserInput type makes it easier to create new users
 type UserInput = {
   username: UserDocument['username'];
   email: UserDocument['email'];
@@ -26,6 +31,7 @@ type UserInput = {
   roles: UserDocument['roles'];
 };
 
+// Definition of a User in the database
 const usersSchema = new Schema(
   {
     username: {

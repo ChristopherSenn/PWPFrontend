@@ -14,6 +14,8 @@ import LandingPage from './components/main/landingPage'
 import Features from './components/mqttListener/mqttClient';
 import DeviceOverview from './components/deviceManager/DeviceOverview';
 import AddHub from './components/main/AddHub';
+import EditHub from './components/main/EditHub';
+
 
 function App() {
 
@@ -28,6 +30,7 @@ function App() {
           <Route path="/deviceOverview" element={<DeviceOverview />} />
           <Route path="/securityExplanation" element={<SecurityExplanation />} />
           <Route path="/add-hub" element={<AddHub />} />
+          <Route path="/edit-hub" element={<EditHub />} />
         </Routes>
     </BrowserRouter>
   );

@@ -51,8 +51,7 @@ class DeviceButtons extends React.Component{
     render(){
 
         
-        console.log(this.state.deviceName);
-        console.log(this.state.deviceId);
+        
         return(
             <div className = "DeviceButtons">
                 <Button sx={{color: 'white', backgroundColor: '#787878', width: 200, height: 70, "&:hover": {backgroundColor: '#999999'}}}   
@@ -91,8 +90,6 @@ class Devices extends React.Component{
 
 
         const clickedHubId = this.props.hubClicked.hubId;
-
-        console.log(getDevicesByHub(clickedHubId));
 
         getDevicesByHub(clickedHubId).then(devices => {
             for (const device of devices.data){

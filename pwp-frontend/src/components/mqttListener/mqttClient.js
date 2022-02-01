@@ -87,7 +87,6 @@ class MQTTClient extends React.Component {
 
       
       const properties = data.properties;
-      console.log(properties);
       for (const property of properties){
         if (property.name === "acessmode"){
            const securityMode = property.dataValue;
@@ -131,7 +130,7 @@ class MQTTClient extends React.Component {
        getDeviceDetails(deviceId).then(deviceDetails => {
         const data = deviceDetails.data;
 
-        console.log(data);
+        
 
         this.getDeviceName(data);
         this.getSecurityMode(data);

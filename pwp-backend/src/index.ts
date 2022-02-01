@@ -11,17 +11,18 @@ import { connectToDatabase } from './db/databaseConnection';
 import { errorHandler } from './middleware/errorHandler';
 import { connectMqttClient } from './mqtt/mqtt';
 
-export const app = express();
+export const app = express(); // Init express
 
-const allowedOrigins = ['http://localhost:3000'];
+const allowedOrigins = ['http://localhost:3000']; // Define allowed origins
 
+// Setup cors with allowed origins
 const corsOptions: cors.CorsOptions = {
   origin: allowedOrigins,
 };
 
-const port = process.env.PORT || 4500;
+const port = process.env.PORT || 4500; // Set port
 
-app.use(cors(corsOptions));
+app.use(cors(corsOptions)); // Use cors settings
 app.use(morgan('tiny')); // Request logging
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -40,7 +41,7 @@ app.listen(port, async () => {
   console.log(`API Documentation at http://localhost:${port}/docs`);
 
   console.log('Connecting MQTT Client...');
-  connectMqttClient();
+  connectMqttClient(); // Connect the mqtt client
 });
 
 // Register error handler

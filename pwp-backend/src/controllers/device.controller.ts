@@ -11,7 +11,7 @@ import {
   Query,
   SuccessResponse,
   Patch,
-  Security
+  Security,
 } from 'tsoa';
 import { IError } from '../models/status.model';
 import { IDevice } from '../models/device.model';
@@ -29,68 +29,61 @@ export class DeviceController extends Controller {
   @Example<IDevice>({
     id: '36f15cb1b5a93ffufvrb0701',
     thingDescription: {
-      "@context": [
-          "https://www.w3.org/2019/wot/td/v1",
-          {
-              "pwpref": "link zu unserem Server",
-              "mqv": "http://www.example.org/mqtt-binding#"
-          }
+      '@context': [
+        'https://www.w3.org/2019/wot/td/v1',
+        {
+          pwpref: 'link zu unserem Server',
+          mqv: 'http://www.example.org/mqtt-binding#',
+        },
       ],
-      "id": "uuid-prototype-1.0.1-mixer",
-      "title": "MyMixerThing",
-      "modes": [
-          "MODE_OFFLINE",
-          "MODE_AP_ONLY",
-          "MODE_HUB_LOCAL",
-          "MODE_HUB_INTERNET"
-      ],
-      "security": [
-          "basic_sc"
-      ],
-      "properties": {
-          "status": {
-              "@type": "pwpref:ModeState",
-              "type": "boolean",
-              "observable": true,
-              "forms": [
-                  {
-                      "href": "mqtt://pwp21.medien.ifi.lmu.de:8883/mixer-1/status",
-                      "op": "observeProperty",
-                      "mqv:controlPacketValue": "SUBSCRIBE"
-                  }
-              ]
-          }
+      id: 'uuid-prototype-1.0.1-mixer',
+      title: 'MyMixerThing',
+      modes: ['MODE_OFFLINE', 'MODE_AP_ONLY', 'MODE_HUB_LOCAL', 'MODE_HUB_INTERNET'],
+      security: ['basic_sc'],
+      properties: {
+        status: {
+          '@type': 'pwpref:ModeState',
+          type: 'boolean',
+          observable: true,
+          forms: [
+            {
+              href: 'mqtt://pwp21.medien.ifi.lmu.de:8883/mixer-1/status',
+              op: 'observeProperty',
+              'mqv:controlPacketValue': 'SUBSCRIBE',
+            },
+          ],
+        },
       },
-      "actions": {
-          "stir": {
-              "@type": "pwpref:TimeCommand",
-              "input": {
-                  "type": "float"
-              },
-              "forms": [
-                  {
-                    "href": "mqtt://pwp21.medien.ifi.lmu.de:8883/mixer-1/stir",
-                    "op": "invokeaction",
-                    "mqv:controlPacketValue": "PUBLISH"
-                  }
-                ]
-          }
+      actions: {
+        stir: {
+          '@type': 'pwpref:TimeCommand',
+          input: {
+            type: 'float',
+          },
+          forms: [
+            {
+              href: 'mqtt://pwp21.medien.ifi.lmu.de:8883/mixer-1/stir',
+              op: 'invokeaction',
+              'mqv:controlPacketValue': 'PUBLISH',
+            },
+          ],
+        },
       },
-      "events": {
-          "unexpectedturnoff": {
-              "data": {
-                  "type": "string"
-              },
-              "forms": [
-                  {
-                    "href": "mqtt://pwp21.medien.ifi.lmu.de:8883/mixer-1/unexpectedturnoff",
-                    "op": ["invokeaction"],
-                    "subscribeevent": "SUBSCRIBE"
-                  }
-                ]
-          }
-      }
-  },
+      events: {
+        unexpectedturnoff: {
+          data: {
+            type: 'string',
+          },
+          forms: [
+            {
+              href: 'mqtt://pwp21.medien.ifi.lmu.de:8883/mixer-1/unexpectedturnoff',
+              op: ['invokeaction'],
+              subscribeevent: 'SUBSCRIBE',
+            },
+          ],
+        },
+      },
+    },
     deviceId: 'uuid-prototype-1.0.1-mixer',
     hubIds: ['61f15cb1b6a93ffbferb0905'],
     deviceName: 'MyMixerThing',
@@ -119,7 +112,7 @@ export class DeviceController extends Controller {
       },
     ],
   })
- //Error Handling
+  // Error Handling
   @Response<IError>(400, 'Bad Request', {
     message: 'HubId or Thing Description in wrong Format',
   })
@@ -127,6 +120,7 @@ export class DeviceController extends Controller {
     const response: IDevice = await new DeviceService().createDevice(requestBody);
     return response;
   }
+
   // Delete device with DeviceId
   /**
    * !!!!!!!!!
@@ -140,7 +134,7 @@ export class DeviceController extends Controller {
   @SuccessResponse('201', 'Device sucessfully removed')
   @Example<IDevice>({
     id: '36f15cb1b5a93ffufvrb0701',
-    thingDescription: "json content",
+    thingDescription: 'json content',
     deviceId: 'uuid-prototype-1.0.1-mixer',
     hubIds: ['61f15cb1b6a93ffbferb0905'],
     deviceName: 'MyMixerThing',
@@ -169,7 +163,7 @@ export class DeviceController extends Controller {
       },
     ],
   })
-  //Error Handling
+  // Error Handling
   @Response<IError>(404, 'Bad Request', {
     message: 'Device not found',
   })
@@ -185,7 +179,7 @@ export class DeviceController extends Controller {
   @SuccessResponse('200', 'OK')
   @Example<IDevice>({
     id: '36f15cb1b5a93ffufvrb0701',
-    thingDescription: "json content",
+    thingDescription: 'json content',
     deviceId: 'uuid-prototype-1.0.1-mixer',
     hubIds: ['61f15cb1b6a93ffbferb0905'],
     deviceName: 'MyMixerThing',
@@ -214,7 +208,7 @@ export class DeviceController extends Controller {
       },
     ],
   })
-  //Error Handling
+  // Error Handling
   @Response<IError>(404, 'Bad Request', {
     message: 'HubId not found',
   })
@@ -229,7 +223,7 @@ export class DeviceController extends Controller {
   @SuccessResponse('201', 'Device sucessfully removed')
   @Example<IDevice>({
     id: '36f15cb1b5a93ffufvrb0701',
-    thingDescription: "json content",
+    thingDescription: 'json content',
     deviceId: 'uuid-prototype-1.0.1-mixer',
     hubIds: ['61f15cb1b6a93ffbferb0905'],
     deviceName: 'MyMixerThing',
@@ -258,7 +252,7 @@ export class DeviceController extends Controller {
       },
     ],
   })
-  //Error Handling
+  // Error Handling
   @Response<IError>(404, 'Bad Request', {
     message: 'Device not found',
   })
@@ -273,7 +267,7 @@ export class DeviceController extends Controller {
   @SuccessResponse('201', 'Device has been sucessfully added to Hub')
   @Example<IDevice>({
     id: '36f15cb1b5a93ffufvrb0701',
-    thingDescription: "json content",
+    thingDescription: 'json content',
     deviceId: 'uuid-prototype-1.0.1-mixer',
     hubIds: ['61f15cb1b6a93ffbferb0905'],
     deviceName: 'MyMixerThing',
@@ -302,7 +296,7 @@ export class DeviceController extends Controller {
       },
     ],
   })
-  //Error Handling
+  // Error Handling
   @Response<IError>(404, 'Bad Request', {
     message: 'Device not found',
   })
@@ -317,7 +311,7 @@ export class DeviceController extends Controller {
   @SuccessResponse('201', 'Device sucessfully removed form Hub')
   @Example<IDevice>({
     id: '36f15cb1b5a93ffufvrb0701',
-    thingDescription: "json content",
+    thingDescription: 'json content',
     deviceId: 'uuid-prototype-1.0.1-mixer',
     hubIds: ['61f15cb1b6a93ffbferb0905'],
     deviceName: 'MyMixerThing',
@@ -346,7 +340,7 @@ export class DeviceController extends Controller {
       },
     ],
   })
-  //Error Handling
+  // Error Handling
   @Response<IError>(404, 'Bad Request', {
     message: 'Device not found',
   })
@@ -356,12 +350,12 @@ export class DeviceController extends Controller {
   }
 
   @Security('jwt', ['customer'])
-  //Update Event Value to perform an event on hardware tool By inserting deviceId, mqtt topic and  message
-  @Patch('updateEventValue')
+  // Update Event Value to perform an event on hardware tool By inserting deviceId, mqtt topic and  message
+  @Patch('updateDeviceValue')
   @SuccessResponse('201', 'Event Value sucessfully updated')
   @Example<IDevice>({
     id: '36f15cb1b5a93ffufvrb0701',
-    thingDescription: "json content",
+    thingDescription: 'json content',
     deviceId: 'uuid-prototype-1.0.1-mixer',
     hubIds: ['61f15cb1b6a93ffbferb0905'],
     deviceName: 'MyMixerThing',
@@ -390,12 +384,12 @@ export class DeviceController extends Controller {
       },
     ],
   })
-  //Error Handling
+  // Error Handling
   @Response<IError>(404, 'Bad Request', {
     message: 'Database Error',
   })
-  public async updateEventValue(@Body() requestBody: IMqttMessage): Promise<IDevice> {
-    const response: IDevice = await new DeviceService().updateEventValue(requestBody);
+  public async updateDeviceValue(@Body() requestBody: IMqttMessage): Promise<IDevice> {
+    const response: IDevice = await new DeviceService().updateDeviceValue(requestBody);
     return response;
   }
 }

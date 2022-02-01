@@ -73,6 +73,100 @@ class Delete extends React.Component {
     }
 }
 
+class DeviceProperties extends React.Component{
+
+    render() {
+        return(
+            <div className='DeviceProperties'>
+                <h3>Current properties:</h3>
+                  
+            </div>
+        )
+    }
+}
+
+class ActionButtons extends React.Component{
+    constructor (props){
+        super(props);
+        this.state = {
+            actionName: "",
+            inputType: "",
+            alertIsOpen: false,
+            inputForAction: "",
+        };
+    }
+
+    componentDidMount() {
+        this.setState({actionName: this.props.actionName});
+        this.setState({inputType: this.props.inputType})
+    }
+
+
+    handleOpenAlert = () => {
+        this.setState({alertIsOpen: true});
+    };
+
+    handleCloseAlert = () => {
+        this.setState({alertIsOpen: false});
+    };
+
+
+    handleChangeInput = (event) => {
+        this.setState({inputForAction: event.target.value});
+      }
+    
+
+   
+   
+
+    render(){
+        
+        return(
+            <div className = "ActionButtons">
+                <Button sx={{color: 'white', backgroundColor: '#787878', width: 150, height: 70, "&:hover": {backgroundColor: '#999999'}}} 
+                onClick={(e) => {
+                const actionName = this.state.actionName;
+                const inputType = this.state.inputType;
+
+                if (inputType === "float"){
+                    this.handleOpenAlert()
+                }
+
+                
+                
+              }} 
+                >
+                  {this.state.actionName}
+                </Button>
+                <Dialog
+                  open = {this.state.alertIsOpen}
+                  onClose = {this.handleCloseAlert}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">
+                        {this.state.actionName}
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id ="alert-dialog-description">
+                            How long do you want to {this.state.actionName}?
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                    <label > 
+                      <input type="text" name="topic" value={this.state.inputForAction} onChange={this.handleChangeInput} />
+                    </label>
+                    <br/>
+                    <Button sx={{backgroundColor: '#787878', color: 'white', "&:hover": {backgroundColor: '#999999'}}} onClick={this.handleCloseAlert}>Submit</Button>
+                    </DialogActions>
+                </Dialog>
+            </div>
+        )
+    }
+
+
+}
+
 
 class Functionalities extends React.Component {
     constructor (props){
@@ -88,17 +182,21 @@ class Functionalities extends React.Component {
 
 
     render () {
+
+        
         
         var actions = this.props.actions;
         var actionList = "";
+        
 
         if (actions !== null){
             actionList = actions.map((action) =>
             actionList = 
-            <ListItem key= {action} sx={{paddingRight: 3}}>
-                <Button sx={{color: 'white', backgroundColor: '#787878', width: 150, height: 70, "&:hover": {backgroundColor: '#999999'}}}>
-                  {action}
-                </Button>  
+            <ListItem key= {action.actionName} sx={{paddingRight: 3, marginTop: -3}}>
+                <ActionButtons
+                  actionName={action.actionName}
+                  inputType={action.inputType}
+                ></ActionButtons>
             </ListItem>
             );
         }
@@ -121,8 +219,8 @@ class DeviceStatus extends React.Component{
 
     render() {
         return(
-            <div className='SecurityMode'>
-                <h3>Current device status:</h3>
+            <div className='DeviceStatus'>
+                <h3>Current events:</h3>
                   
             </div>
         )
@@ -146,12 +244,15 @@ class SecurityMode extends React.Component{
     };
 
     render() {
+
+        
+        
         const securityExplanationPopupOpen = Boolean(this.state.anchorEl);
         const securityExplanationPopup = securityExplanationPopupOpen ? 'simple-popover' : undefined;
         return(
             <div className='SecurityMode'>
                 <h3>Currently used Security Mode:</h3>
-                <Button startIcon={<FontAwesomeIcon icon={faInfo} />} sx={{color: 'white', backgroundColor: '#787878', "&:hover": {backgroundColor: '#999999'}}} aria-describedby={securityExplanationPopup} variant="contained" onClick={this.securityExplanationClick}>Local Network </Button> 
+                <Button startIcon={<FontAwesomeIcon icon={faInfo} />} sx={{color: 'white', backgroundColor: '#787878', "&:hover": {backgroundColor: '#999999'}}} aria-describedby={securityExplanationPopup} variant="contained" onClick={this.securityExplanationClick}>hello </Button> 
                 <Popover
                       id={securityExplanationPopup}
                       open={securityExplanationPopupOpen}
@@ -171,24 +272,11 @@ class SecurityMode extends React.Component{
 
 
 class DeviceName extends React.Component {
-    constructor (props){
-        super(props);
-        this.state = {
-            deviceName: 'Your Device',
-        };
-    }
-
-    componentDidMount(){
-        console.log("ist aufgerufen")
-        this.setState({deviceName: "Mixer"});
-    }
-
-
     
     render (){
         return(
             <div className='DeviceName'>
-                <h1>{this.state.deviceName}</h1>
+                <h1>{this.props.deviceName}</h1>
             </div>
         )
     }
@@ -197,23 +285,35 @@ class DeviceName extends React.Component {
 class TextBox extends React.Component {
 
     render () {
+        
         return(
            <div className='TextBox'>
-               <DeviceName>
-               </DeviceName>
+               <DeviceName
+                 deviceName = {this.props.deviceName}
+               ></DeviceName>
                <Divider />
                <List component={Stack} direction="row" sx={{marginTop: -3, marginLeft: -2}} >
                <ListItem key= 'SecurityMode' >
-               <SecurityMode/>
+               <SecurityMode
+                   securityMode = {this.props.securityMode}
+               >
+               </SecurityMode>
                </ListItem>
                <ListItem key= 'DeviceStatus' >
                <DeviceStatus/>
                </ListItem>
+               <ListItem key ="DeviceProperties">
+                   <DeviceProperties></DeviceProperties>
+               </ListItem>
                </List>
                <Divider />
+               
                <Functionalities
                  actions={this.props.actions}
                ></Functionalities>
+               
+               
+               
                <Delete>
 
                </Delete>

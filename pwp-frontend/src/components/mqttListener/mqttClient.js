@@ -87,18 +87,93 @@ class MQTTClient extends React.Component {
             client:null,
             connectionStatus: "Disconnected",
             data: [],
-            title: "",
-            status: [],
+            deviceId:"",
+            deviceName: 'Your Device',
+            events: [],
+            properties: [],
             securityMode: "",
             actions: [],
         };
     }
 
+    getDeviceName(data){
+
+      const deviceName = data.deviceName;
+      this.setState({deviceName: deviceName});
+      
+    };
+
+    getSecurityMode(data){
+
+      
+      const properties = data.properties;
+      console.log(properties);
+      for (const property of properties){
+        if (property.name === "accessmode"){
+           const securityMode = property.dataValue;
+           this.setState({securityMode: securityMode});
+        }
+      }
+
+
+    };
+
+    getActions(data){
+
+      // getDeviceDetails(deviceId).then(deviceDetails => {
+      //   const data = deviceDetails.data;
+
+      //   console.log(data);
+
+      //   this.getDeviceName(data);
+      //   this.getSecurityMode(data);
+      //   this.getActions(data);
+
+      const actions = data.actions;
+      const actionsInState = this.state.actions;
+      console.log(actions);
+      console.log(actions[0]);
+
+      
+
+      for (const action of actions){
+        const actionName = action.name;
+        const inputType = action.inputType;
+        console.log(typeof(inputType));
+        const payload = {actionName, inputType};
+        const newActionsInState = actionsInState.concat([payload]);
+        this.setState({actions: newActionsInState})
+
+      }
+
+      const test = this.state.actions;
+      console.log(test);
+      console.log(typeof(test));
+    
+
+    };
+
+
     
 
     componentDidMount() {
 
-      console.log(getDeviceDetails("uuid-prototype-1.0.1-mixer"));
+      const deviceId = this.props.deviceClicked;
+
+
+       getDeviceDetails(deviceId).then(deviceDetails => {
+        const data = deviceDetails.data;
+
+        console.log(data);
+
+        this.getDeviceName(data);
+        this.getSecurityMode(data);
+        this.getActions(data);
+        
+      });
+      
+      
+     
 
       
 
@@ -139,12 +214,12 @@ class MQTTClient extends React.Component {
             console.log("gotmessage")
             console.log(topic);
             console.log(message);
-            if (topic === "actions"){
-                const actions = this.state.actions;
-                const action = message.toString();
-                const newactions = actions.concat([action]);
-                this.setState({actions: newactions});
-            }
+            // if (topic === "actions"){
+            //     const actions = this.state.actions;
+            //     const action = message.toString();
+            //     const newactions = actions.concat([action]);
+            //     this.setState({actions: newactions});
+            // }
             const data = this.state.data;
             const payload = {topic, message: message.toString()};
             if (payload.topic) {
@@ -161,7 +236,9 @@ class MQTTClient extends React.Component {
               <div className='MQTTClient'>
                 <header className="Features-header">
                   <TextBox
-                    actions={this.state.actions}   
+                    deviceName = {this.state.deviceName}
+                    securityMode = {this.state.securityMode} 
+                    actions = {this.state.actions}
                   ></TextBox>
                 </header>
               </div>
@@ -179,7 +256,7 @@ console.log(state);
         <div className="Features"> 
           
             <MQTTClient
-            //deviceClicked={deviceClicked}
+            deviceClicked={state}
             >
             </MQTTClient> 
          

@@ -32,13 +32,23 @@
 
 .SecurityMode {
     margin-left: 10px;
-    height: 140px;
+    height: 180px;
+    
+}
+.DeviceStatus{
+    height:180px;
 }
 
 .Functionalities {
     margin-left: 10px;
-    height: 200px;
+    height: 150px;
 }
+
+.DeviceProperties{
+    height: 180px;
+    
+}
+
 
 .Delete{
     text-align: center;

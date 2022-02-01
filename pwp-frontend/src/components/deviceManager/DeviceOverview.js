@@ -93,11 +93,10 @@ class Devices extends React.Component{
         const clickedHubId = this.props.hubClicked.hubId;
 
         console.log(getDevicesByHub(clickedHubId));
+
         getDevicesByHub(clickedHubId).then(devices => {
             for (const device of devices.data){
                 const namesOfDevices = this.state.namesOfDevices;
-                console.log(device)
-                console.log(device.deviceId);
                 const addNewDevice = namesOfDevices.concat([device])
                 this.setState({namesOfDevices: addNewDevice});
                 

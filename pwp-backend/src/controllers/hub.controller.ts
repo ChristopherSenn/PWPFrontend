@@ -131,7 +131,7 @@ export class HubController extends Controller {
     return response;
   }
 
-  @Get('cert')
+  @Get('password')
   @Security('jwt', ['customer'])
   public async getPassword(@Query() hubId: string): Promise<string> {
     const response: string = await new HubService().getPassword(hubId);

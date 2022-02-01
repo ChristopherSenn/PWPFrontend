@@ -17,7 +17,7 @@ const connectionOptions: mqtt.IClientOptions = {
   // key: fs.readFileSync(clientKeyPath, 'utf8'), // Set CA Key
   // cert: fs.readFileSync(clientPemPath, 'utf8'), // Set CA Pem File
   username: 'client_backend',
-  password: 'password',
+  password: '5fE7HU8ZrxUeSRYmWg6eBxmJ',
   connectTimeout: 4000, // Set connection timeout
   reconnectPeriod: 1000, // Set the Reconnect Period
 };

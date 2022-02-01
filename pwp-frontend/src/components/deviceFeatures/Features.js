@@ -16,6 +16,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Popover from '@mui/material/Popover';
 import SecurityExplanation from '../main/securityExplanation';
+import {deleteDevice} from '../mqttListener/DeviceInterface';
 
 
 
@@ -29,6 +30,7 @@ class Delete extends React.Component {
         };
     }
 
+
     handleOpenAlert = () => {
         this.setState({alertIsOpen: true});
     };
@@ -38,8 +40,14 @@ class Delete extends React.Component {
     };
 
 
-    hanldeDelete = () => {
-        console.log("Delete was pressed");
+    handleDelete = () => {
+
+        this.handleCloseAlert();
+        const deviceId = this.props.deviceId;
+
+
+        deleteDevice(deviceId);
+
        
     };
 
@@ -65,7 +73,7 @@ class Delete extends React.Component {
                     </DialogContent>
                     <DialogActions>
                         <Button sx={{backgroundColor: '#787878', color: 'white', "&:hover": {backgroundColor: '#999999'}}} onClick={this.handleCloseAlert}>No</Button>
-                        <Button sx={{backgroundColor: '#787878', color: 'white', "&:hover": {backgroundColor: '#999999'}}} onClick={this.handleCloseAlert} autoFocus>Yes</Button>
+                        <Button sx={{backgroundColor: '#787878', color: 'white', "&:hover": {backgroundColor: '#999999'}}} onClick={this.handleDelete} autoFocus>Yes</Button>
                     </DialogActions>
                 </Dialog>
             </div>
@@ -73,17 +81,6 @@ class Delete extends React.Component {
     }
 }
 
-class DeviceProperties extends React.Component{
-
-    render() {
-        return(
-            <div className='DeviceProperties'>
-                <h3>Current properties:</h3>
-                  
-            </div>
-        )
-    }
-}
 
 class ActionButtons extends React.Component{
     constructor (props){
@@ -215,12 +212,66 @@ class Functionalities extends React.Component {
     }
 }
 
+class FakeProperties extends React.Component{
+    constructor (props){
+        super(props);
+        this.state = {
+            show: false,
+        };
+    }
+
+    componentDidMount(){
+        setTimeout(() => this.setState({show:true}), 5000)
+    }
+
+    render(){
+        return(
+            this.state.show &&
+            <h5>Status: ON</h5>
+        )
+    }
+}
+
+class DeviceProperties extends React.Component{
+    
+
+    render() {
+        return(
+            <div className='DeviceProperties'>
+                <h3>Current properties:</h3>
+                <FakeProperties/>
+            </div>
+        )
+    }
+}
+
+class FakeEvents extends React.Component{
+    constructor (props){
+        super(props);
+        this.state = {
+            show: false,
+        };
+    }
+
+    componentDidMount(){
+        setTimeout(() => this.setState({show:true}), 7000)
+    }
+
+    render(){
+        return(
+            this.state.show &&
+            <h5>Event: Open</h5>
+        )
+    }
+}
+
 class DeviceStatus extends React.Component{
 
     render() {
         return(
             <div className='DeviceStatus'>
                 <h3>Current events:</h3>
+                <FakeEvents/>
                   
             </div>
         )
@@ -252,7 +303,7 @@ class SecurityMode extends React.Component{
         return(
             <div className='SecurityMode'>
                 <h3>Currently used Security Mode:</h3>
-                <Button startIcon={<FontAwesomeIcon icon={faInfo} />} sx={{color: 'white', backgroundColor: '#787878', "&:hover": {backgroundColor: '#999999'}}} aria-describedby={securityExplanationPopup} variant="contained" onClick={this.securityExplanationClick}>hello </Button> 
+                <Button startIcon={<FontAwesomeIcon icon={faInfo} />} sx={{color: 'white', backgroundColor: '#787878', "&:hover": {backgroundColor: '#999999'}}} aria-describedby={securityExplanationPopup} variant="contained" onClick={this.securityExplanationClick}>{this.props.securityMode} </Button> 
                 <Popover
                       id={securityExplanationPopup}
                       open={securityExplanationPopupOpen}
@@ -311,12 +362,9 @@ class TextBox extends React.Component {
                <Functionalities
                  actions={this.props.actions}
                ></Functionalities>
-               
-               
-               
-               <Delete>
-
-               </Delete>
+               <Delete
+                 deviceId = {this.props.deviceId}
+               ></Delete>
            </div>
         );
     }

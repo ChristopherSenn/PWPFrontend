@@ -13,3 +13,17 @@ export const getDeviceDetails = async (deviceId) => {
         console.log(error.message)
       }
 }
+
+export const deleteDevice = async (deviceId) => {
+    try{
+        const requestHeader = {
+            headers: authHeader()
+        };
+        return await axios.delete('http://localhost:4500/devices/deleteDevice?deviceId=' + deviceId,
+        requestHeader
+        )
+    }catch(error){
+        console.log(error.message)
+      }
+
+}

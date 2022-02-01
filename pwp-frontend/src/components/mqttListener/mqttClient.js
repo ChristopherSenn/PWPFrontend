@@ -60,26 +60,6 @@ readCertFile();
 
 
 
-  // fetch(keyFile)
-  // .then(r => r.text())
-  // .then(textKey => {
-  //   console.log(textKey);
-  //   fetch(certFile)
-  //   .then(r => r.text())
-  //   .then(textCert => {
-  //   console.log(textCert)
-  // });
-    
-  // });
-
-fetch(certFile)
-  .then(r => r.text())
-  .then(text => {
-    //cert = text;
-  });
-
-
-
 class MQTTClient extends React.Component {
     constructor (props){
         super(props);
@@ -109,7 +89,7 @@ class MQTTClient extends React.Component {
       const properties = data.properties;
       console.log(properties);
       for (const property of properties){
-        if (property.name === "accessmode"){
+        if (property.name === "acessmode"){
            const securityMode = property.dataValue;
            this.setState({securityMode: securityMode});
         }
@@ -120,35 +100,20 @@ class MQTTClient extends React.Component {
 
     getActions(data){
 
-      // getDeviceDetails(deviceId).then(deviceDetails => {
-      //   const data = deviceDetails.data;
-
-      //   console.log(data);
-
-      //   this.getDeviceName(data);
-      //   this.getSecurityMode(data);
-      //   this.getActions(data);
-
       const actions = data.actions;
       const actionsInState = this.state.actions;
-      console.log(actions);
-      console.log(actions[0]);
 
       
 
       for (const action of actions){
         const actionName = action.name;
         const inputType = action.inputType;
-        console.log(typeof(inputType));
         const payload = {actionName, inputType};
         const newActionsInState = actionsInState.concat([payload]);
         this.setState({actions: newActionsInState})
 
       }
 
-      const test = this.state.actions;
-      console.log(test);
-      console.log(typeof(test));
     
 
     };
@@ -159,6 +124,8 @@ class MQTTClient extends React.Component {
     componentDidMount() {
 
       const deviceId = this.props.deviceClicked;
+      this.setState({deviceId: deviceId});
+
 
 
        getDeviceDetails(deviceId).then(deviceDetails => {
@@ -175,6 +142,8 @@ class MQTTClient extends React.Component {
       
      
 
+      //hubId : username
+      //password: /gethub 
       
 
       const connectionOptions = {
@@ -239,6 +208,7 @@ class MQTTClient extends React.Component {
                     deviceName = {this.state.deviceName}
                     securityMode = {this.state.securityMode} 
                     actions = {this.state.actions}
+                    deviceId = {this.state.deviceId}
                   ></TextBox>
                 </header>
               </div>
@@ -250,7 +220,6 @@ export default function Features() {
 
 
 const { state } = useLocation();
-console.log(state);
 
     return(
         <div className="Features"> 

@@ -16,6 +16,8 @@ import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
+import DialogTitle from '@mui/material/DialogTitle';
+import Dialog from '@mui/material/Dialog';
 import DeleteIcon from '@mui/icons-material/Delete';
 import IconButton from '@mui/material/IconButton';
 import DashboardCustomizeSharpIcon from '@mui/icons-material/DashboardCustomizeSharp';
@@ -23,6 +25,7 @@ import { authHeader } from "../../utilis/setToken";
 import { sortDropdown } from "../../utilis/sortDropdown";
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import InfoIcon from '@mui/icons-material/Info';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -34,6 +37,7 @@ export default function EditHub() {
     
     // @state contains the information about the hub that was clicked. It gets passed via navigate() in Dashboard.js
     const { state } = useLocation();
+
     // saving the members of the clicked hubs as an array
     const memberIdsProps = state.memberIds; 
 
@@ -43,6 +47,7 @@ export default function EditHub() {
     const [selectedMemberNames, setSelectedMemberNames] = useState([]); // names of memebers that are selected
     const [dropDownMembersArray, setdropDownMembersArray] = useState([]); // list of all users
     const [membersOfHub, setMembersOfHub] = useState([]) // contains Member names and ids of hub 
+    const [openDialog, setOpenDialog] = useState(false);
     
     const [open, setOpen] = useState(false);
 
@@ -200,6 +205,14 @@ export default function EditHub() {
         }
       }; 
 
+    const openDialogHandler = () => {
+      setOpenDialog(true);
+    };
+    
+    const closeDialogHandler = () => {
+      setOpenDialog(false);
+    };
+    
 
     return (
     <Container component="main" maxWidth="xs">
@@ -209,8 +222,37 @@ export default function EditHub() {
         flexDirection: 'column',
       }}>
         <Typography component="h1" variant="h5"  sx={{ mt: 1}}>
-            Edit Hub Member
+          Edit Hub 
+          <IconButton variant="outlined" onClick={openDialogHandler}>
+            <InfoIcon />
+          </IconButton>
         </Typography>
+       
+        <Dialog
+          open={openDialog}
+          onClose={closeDialogHandler}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+        <DialogTitle id="alert-dialog-title">Hub Information</DialogTitle>
+        <List sx={{ pt: 0 }}>
+            <ListItem button >
+              <ListItemText primary={`ID: ${state.hubId}`} key={1} />
+            </ListItem>
+            <ListItem button >
+              <ListItemText primary={`Password: ${state.password}`} key={2}/>
+            </ListItem>
+        </List>
+      </Dialog>
+    
+        <Box
+          sx={{
+            marginTop: 3,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        ></Box>
         <InputLabel id="hubUsersSelectLabel">Choose Member:</InputLabel>
           <Select
             labelId="hubUsersSelectLabel"

@@ -63,15 +63,11 @@ export default function Dashboard() {
 
       hubs.data.forEach((hub, i) => {
         if (hub.ownerId === user.id) {
-          // Klappt nicht: Warum auch immer?! 
-          // setOwnerHubs([...ownerHubs,[{ hubId: hub.hubId, hubName: hub.hubName }]])
-          ownerHubsArray.push({ hubId: hub.hubId, hubName: hub.hubName, memberIds: hub.memberIds, ownerId: hub.ownerId});
+          ownerHubsArray.push({ hubId: hub.hubId, hubName: hub.hubName, memberIds: hub.memberIds, ownerId: hub.ownerId, password: hub.password });
         }
         setOwnerHubs(ownerHubsArray)
         hub.memberIds.forEach(member => {
           if (member === user.id && hub.ownerId !== user.id) {
-            // Klappt ?! 
-            //setUserMemberHubs([...userMemberHubs, { hubId: hub.hubId, hubName: hub.hubName }])
             memberHubsArray.push({ hubId: hub.hubId, hubName: hub.hubName });
           }        
         })

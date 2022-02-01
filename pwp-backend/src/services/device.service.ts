@@ -284,8 +284,8 @@ export class DeviceService {
       // Find the correct device
       Device.findOne({ deviceId: deviceId }, (err, result) => {
         // If the device is not found or another db error occurrs, reject the Promise
-        if (err) {
-          reject(new StatusError(err.message, 404));
+        if (err || result === null) {
+          reject(new StatusError('Invalid Device ID', 404));
         } else {
           const eventPos = result[category].findIndex((c) => c.name === topic); // Find the position of the requested event in the events array
           // If the position is -1 the event was not found. In this case, reject the promise

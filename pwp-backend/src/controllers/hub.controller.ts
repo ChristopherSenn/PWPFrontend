@@ -27,7 +27,7 @@ export class HubController extends Controller {
     hubName: 'MyHub',
     ownerId: 'gta90jwerkjm390srdsj3azt9',
     memberIds: ['gta90jwerkjm390srdsj3azt9', 'msa90jalkjm390ßasj3apok4'],
-    cert: 'Client certificate',
+    password: 'Hub Password',
   })
   @Response<IError>(401, 'Unauthorized', {
     message: 'No token provided',
@@ -59,7 +59,7 @@ export class HubController extends Controller {
     hubName: 'MyHub',
     ownerId: 'gta90jwerkjm390srdsj3azt9',
     memberIds: ['gta90jwerkjm390srdsj3azt9', 'msa90jalkjm390ßasj3apok4'],
-    cert: 'Client certificate',
+    password: 'Hub Password',
   })
   @Response<IError>(401, 'Unauthorized', {
     message: 'No token provided',
@@ -86,7 +86,7 @@ export class HubController extends Controller {
     hubName: 'MyHub',
     ownerId: 'gta90jwerkjm390srdsj3azt9',
     memberIds: ['gta90jwerkjm390srdsj3azt9', 'msa90jalkjm390ßasj3apok4'],
-    cert: 'Client certificate',
+    password: 'Hub Password',
   })
   @Response<IError>(401, 'Unauthorized', {
     message: 'No token provided',
@@ -133,8 +133,8 @@ export class HubController extends Controller {
 
   @Get('cert')
   @Security('jwt', ['customer'])
-  public async getCert(@Query() hubId: string): Promise<string> {
-    const response: string = await new HubService().getCert(hubId);
+  public async getPassword(@Query() hubId: string): Promise<string> {
+    const response: string = await new HubService().getPassword(hubId);
     return response;
   }
 }

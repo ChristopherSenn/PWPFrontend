@@ -5,21 +5,21 @@ interface IHub {
   hubId?: string;
   ownerId: string;
   memberIds: Array<string>;
-  cert: string;
+  password: string;
 }
 
 type HubDocument = Document & {
   hubName: string;
   ownerId: string;
   memberIds: Array<string>;
-  cert: string;
+  password: string;
 };
 
 type HubInput = {
   hubName: HubDocument['hubName'];
   ownerId: HubDocument['ownerId'];
   memberIds: HubDocument['memberIds'];
-  cert: HubDocument['cert'];
+  password: HubDocument['password'];
 };
 
 const hubSchema = new Schema(
@@ -28,7 +28,7 @@ const hubSchema = new Schema(
       type: Schema.Types.String,
       required: true,
     },
-    cert: {
+    password: {
       type: Schema.Types.String,
       required: true,
     },

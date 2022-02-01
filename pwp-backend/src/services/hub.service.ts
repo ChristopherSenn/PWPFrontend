@@ -2,7 +2,8 @@ import { StatusError } from '../models/status.model';
 import { IHub, HubDocument, Hub, HubInput } from '../models/hub.model';
 import { Device } from '../models/device.model';
 import { Types } from 'mongoose';
-import createCertificate from '../functions/createCertificate';
+import { generatePassword } from '../functions/generatePassword';
+import { addAccount, removeAccount } from '../mqtt/mqtt';
 
 export type HubDeleteParams = Pick<IHub, 'hubId'>;
 export type HubCreationParams = Pick<IHub, 'hubName' | 'ownerId' | 'memberIds'>;
@@ -21,7 +22,7 @@ export class HubService {
         hubId: hub._id,
         ownerId: hub.ownerId,
         memberIds: hub.memberIds,
-        cert: hub.cert,
+        password: hub.password,
       };
     });
 
@@ -43,7 +44,7 @@ export class HubService {
         hubId: hub._id,
         ownerId: hub.ownerId,
         memberIds: hub.memberIds,
-        cert: hub.cert,
+        password: hub.password,
       };
     });
 
@@ -64,13 +65,13 @@ export class HubService {
     if (!memberIds.includes(ownerId)) {
       memberIds.push(ownerId);
     }
-    const cert: string = createCertificate();
+    const password: string = generatePassword(20);
 
     const hubInput: HubInput = {
       hubName,
       ownerId,
       memberIds,
-      cert,
+      password,
     };
 
     const hubSchema = new Hub(hubInput);
@@ -80,8 +81,10 @@ export class HubService {
       hubId: newHub._id,
       ownerId: newHub.ownerId,
       memberIds: newHub.memberIds,
-      cert: newHub.cert,
+      password: newHub.password,
     };
+    // Add the account to the mqtt broker
+    addAccount(newHub._id, newHub.password);
     return parsedHub;
   }
 
@@ -101,7 +104,7 @@ export class HubService {
               hubId: res._id,
               ownerId: res.ownerId,
               memberIds: res.memberIds,
-              cert: res.cert,
+              password: res.password,
             };
 
             const hubId = new Types.ObjectId(requestBody.hubId);
@@ -114,7 +117,7 @@ export class HubService {
                 });
               }
             });
-
+            removeAccount(requestBody.hubId || '');
             resolve(parsedHub);
           } else {
             reject(new StatusError('Hub not found', 404));
@@ -146,7 +149,7 @@ export class HubService {
                   hubId: res._id,
                   ownerId: res.ownerId,
                   memberIds: res.memberIds,
-                  cert: res.cert,
+                  password: res.password,
                 };
                 resolve(parsedHub);
               } else {
@@ -192,7 +195,7 @@ export class HubService {
                     hubId: res._id,
                     ownerId: res.ownerId,
                     memberIds: res.memberIds,
-                    cert: res.cert,
+                    password: res.password,
                   };
                   resolve(parsedHub);
                 } else {
@@ -214,7 +217,7 @@ export class HubService {
                   hubId: res._id,
                   ownerId: res.ownerId,
                   memberIds: res.memberIds,
-                  cert: res.cert,
+                  password: res.password,
                 };
                 resolve(parsedHub);
               } else {
@@ -233,13 +236,13 @@ export class HubService {
 
   /**
    * @param hubId ID of the hub
-   * @returns hub certificate
+   * @returns hub password
    */
-  public async getCert(hubId: string): Promise<string> {
+  public async getPassword(hubId: string): Promise<string> {
     const hub: HubDocument | null = await Hub.findById(hubId).exec();
 
     if (hub) {
-      return hub.cert;
+      return hub.password;
     } else {
       throw new StatusError('Hub not found', 404);
     }

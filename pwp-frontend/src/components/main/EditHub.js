@@ -47,8 +47,9 @@ export default function EditHub() {
     const [selectedMemberNames, setSelectedMemberNames] = useState([]); // names of memebers that are selected
     const [dropDownMembersArray, setdropDownMembersArray] = useState([]); // list of all users
     const [membersOfHub, setMembersOfHub] = useState([]) // contains Member names and ids of hub 
-    const [openDialog, setOpenDialog] = useState(false);
-    
+    const [openDialog, setOpenDialog] = useState();
+
+
     const [open, setOpen] = useState(false);
 
     const handleClose = (event, reason) => {
@@ -205,10 +206,9 @@ export default function EditHub() {
         }
       }; 
 
-    const openDialogHandler = () => {
-      setOpenDialog(true);
-    };
-    
+    const openDialogHandler =() => {
+      setOpenDialog(true)
+    }
     const closeDialogHandler = () => {
       setOpenDialog(false);
     };
@@ -227,24 +227,22 @@ export default function EditHub() {
             <InfoIcon />
           </IconButton>
         </Typography>
-       
-        <Dialog
-          open={openDialog}
-          onClose={closeDialogHandler}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-        <DialogTitle id="alert-dialog-title">Hub Information</DialogTitle>
-        <List sx={{ pt: 0 }}>
-            <ListItem button >
-              <ListItemText primary={`ID: ${state.hubId}`} key={1} />
-            </ListItem>
-            <ListItem button >
-              <ListItemText primary={`Password: ${state.password}`} key={2}/>
-            </ListItem>
-        </List>
-      </Dialog>
-    
+          <Snackbar open={openDialog} onClose={closeDialogHandler} style={{
+            position: "absolute", left: "40%",
+            top: "50%", bottom: "50%"
+          }}>
+            <Alert onClose={closeDialogHandler} severity="info" sx={{ width: '100%' }}>
+              <List sx={{ pt: 0 }}>
+                <Typography>Hub Information:</Typography>
+                <ListItem >
+                  <ListItemText primary={`ID: ${state.hubId}`} key={1} />
+                </ListItem>
+                <ListItem  >
+                  <ListItemText primary={`Password: ${state.password}`} key={2} />
+                </ListItem>
+              </List>
+            </Alert>
+          </Snackbar>
         <Box
           sx={{
             marginTop: 3,

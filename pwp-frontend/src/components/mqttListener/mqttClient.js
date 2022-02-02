@@ -100,7 +100,8 @@ class MQTTClient extends React.Component {
     getActions(data){
 
       const actions = data.actions;
-      const actionsInState = this.state.actions;
+
+      console.log(actions);
 
       
 
@@ -108,10 +109,14 @@ class MQTTClient extends React.Component {
         const actionName = action.name;
         const inputType = action.inputType;
         const payload = {actionName, inputType};
+        const actionsInState = this.state.actions;
         const newActionsInState = actionsInState.concat([payload]);
         this.setState({actions: newActionsInState})
 
       }
+
+      const test = this.state.actions;
+      console.log(test);
 
     
 

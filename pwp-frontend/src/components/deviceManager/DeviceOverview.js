@@ -134,10 +134,11 @@ export default function DeviceOverview() {
     const hubClicked = useSelector((state) => state.hubClicked);
     const navigate = useNavigate();
 
-    if (window.performance) {
-        if (performance.navigation.type !== 1) {
-            localStorage.setItem("hubClicked", JSON.stringify(hubClicked));
-        }
+    const isReloaded = performance.getEntriesByType("navigation")[0].type;
+
+
+    if (isReloaded === 'navigate') {
+        localStorage.setItem("hubClicked", JSON.stringify(hubClicked));   
     }
 
     function handleDeviceSelected(deviceId) {

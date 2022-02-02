@@ -23,6 +23,7 @@ import Box from '@mui/material/Box';
 import { deleteDevice } from '../mqttListener/DeviceInterface';
 import { useNavigate } from "react-router-dom";
 import { Navigate } from 'react-router-dom';
+import TextField from '@mui/material/TextField';
 
 class Delete extends React.Component {
 
@@ -58,7 +59,7 @@ class Delete extends React.Component {
         }
         return (
             <div className='Delete'>
-                <IconButton aria-label="delete" size="large" sx={{ backgroundColor: '#787878', color: 'white', "&:hover": { backgroundColor: '#999999' } }} onClick={this.handleOpenAlert}>
+                <IconButton aria-label="delete" size="large"  onClick={this.handleOpenAlert}>
                     <DeleteIcon/>
                 </IconButton>
                 <Dialog
@@ -67,17 +68,17 @@ class Delete extends React.Component {
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
                 >
-                    <DialogTitle id="alert-dialog-title">
+                    <DialogTitle id="alert-dialog-title" style={{color:"#3b4834", fontFamily: 'Arial'}}>
                         {"Delete Device"}
                     </DialogTitle>
                     <DialogContent>
-                        <DialogContentText id="alert-dialog-description">
+                        <DialogContentText id="alert-dialog-description" sx={{color:"#3b4834", fontFamily: 'Arial'}}>
                             Do you really want to delete this device?
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button sx={{ backgroundColor: '#787878', color: 'white', "&:hover": { backgroundColor: '#999999' } }} onClick={this.handleCloseAlert}>No</Button>
-                        <Button sx={{ backgroundColor: '#787878', color: 'white', "&:hover": { backgroundColor: '#999999' } }} onClick={this.handleDelete} autoFocus>Yes</Button>
+                        <Button sx={{marginRight:'12px', backgroundColor: '#c6c3b3', color: 'black', "&:hover": { backgroundColor: '#cbc3be' } }} onClick={this.handleCloseAlert}>No</Button>
+                        <Button sx={{ backgroundColor: '#3b4834', color: 'white', "&:hover": { backgroundColor: '#cbc3be' } }} onClick={this.handleDelete} autoFocus>Yes</Button>
                     </DialogActions>
                 </Dialog>
             </div>
@@ -124,7 +125,7 @@ class ActionButtons extends React.Component {
 
         return (
             <div className="ActionButtons">
-                <Button sx={{ color: 'white', backgroundColor: '#787878', width: 150, height: 70, "&:hover": { backgroundColor: '#999999' } }}
+                <Button sx={{ color: 'white', backgroundColor: '#314448', width: 140, height: 40, "&:hover": {backgroundColor: '#cbc3be'} }}
                     onClick={(e) => {
                         const actionName = this.state.actionName;
                         const inputType = this.state.inputType;
@@ -145,20 +146,23 @@ class ActionButtons extends React.Component {
                     aria-labelledby="alert-dialog-title"
                     aria-describedby="alert-dialog-description"
                 >
-                    <DialogTitle id="alert-dialog-title">
+                    <DialogTitle id="alert-dialog-title" style={{color:"#3b4834", fontFamily: 'Arial'}}>
                         {this.state.actionName}
                     </DialogTitle>
                     <DialogContent>
-                        <DialogContentText id="alert-dialog-description">
+                        <DialogContentText id="alert-dialog-description" style={{color:"#3b4834", fontFamily: 'Arial'}}>
                             How long do you want to {this.state.actionName}?
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <label >
-                            <input type="text" name="topic" value={this.state.inputForAction} onChange={this.handleChangeInput} />
-                        </label>
-                        <br />
-                        <Button sx={{ backgroundColor: '#787878', color: 'white', "&:hover": { backgroundColor: '#999999' } }} onClick={this.handleCloseAlert}>Submit</Button>
+                            <div> 
+                            <TextField type="text" name="topic" value={this.state.inputForAction} onChange={this.handleChangeInput} style={{marginRight:'50px'}} />
+                         <div>
+                             <br/>
+                             <Button sx={{ backgroundColor: '#c6c3b3', color: 'black', "&:hover": { backgroundColor: '#cbc3be' } }} onClick={this.handleCloseAlert}>Cancel</Button>
+                            <Button sx={{marginLeft:"12px",  backgroundColor: '#3b4834', color: 'white', "&:hover": { backgroundColor: '#cbc3be' } }} onClick={this.handleCloseAlert}>Submit</Button>
+                            </div>
+                            </div>
                     </DialogActions>
                 </Dialog>
             </div>
@@ -273,10 +277,10 @@ class DeviceStatus extends React.Component {
 
     render() {
         return(
-           <div> 
-             <h4 style={{color:"#7c9a92"}}>Current events:</h4>
-                <FakeEvents/>
-            </div>
+            <div className='DeviceProperties'>
+            <h4 style={{color:"#7c9a92"}}>Current events:</h4>
+            <FakeEvents/>
+        </div>
         
         )
     }

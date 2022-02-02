@@ -19,7 +19,7 @@ export default function SecurityExplanation() {
         <h3>Only device within the same network as the device will be able to access it.</h3>
 
         <h2>Full internet access</h2>
-        <h3>The device will establish an internet connection and will be accessible from all endpoints its registered to.</h3>
+        <h3>The device will establish an internet connection and will be accessible from all endpoints it's registered to.</h3>
       </Alert>
     </div>
   );

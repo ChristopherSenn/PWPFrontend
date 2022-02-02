@@ -57,6 +57,7 @@ const theme = createTheme({
   textAlign: 'center',
   cursor: 'pointer',
   backgroundColor: '#69849b',
+  color: 'white'
   }));
    // Styling of items in which each hub is displayed
  const Item2 = styled(Paper)(({ theme }) => ({
@@ -64,7 +65,7 @@ const theme = createTheme({
   padding: theme.spacing(2),
   textAlign: 'center',
   cursor: 'pointer',
-  backgroundColor: '#dcdcdd',
+  backgroundColor: '#a8c7cb',
   }));
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -162,7 +163,7 @@ export default function Dashboard() {
     return (
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Typography variant="h5"  component="div">
+        <Typography variant="h4"  component="div">
        Hi, {userName}!
       </Typography>
         <Button
@@ -183,9 +184,9 @@ export default function Dashboard() {
             alignItems: 'center',
           }}
         ></Box>
-        <span style={{ marginLeft: '15px' }}>
+        <Typography  variant="h5" style={{ marginRight: '90%', color: '#69849b', fontWeight: "bolder"}}>
           Hubs you own:
-        </span>
+        </Typography>
         <Box
           sx={{
             marginTop: 3,
@@ -249,9 +250,9 @@ export default function Dashboard() {
             alignItems: 'center',
           }}
         ></Box>
-        <span style={{ marginLeft: '15px' }}>
-          Hubs you are a member of:
-        </span>
+       <Typography  variant="h5" style={{ marginRight: '82%', color: '#a8c7cb', fontWeight: "bolder"}}>
+          Hubs you are a member of :
+        </Typography>
         <Box
           sx={{
             marginTop: 3,

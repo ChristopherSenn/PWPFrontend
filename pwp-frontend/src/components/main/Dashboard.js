@@ -360,7 +360,7 @@ export default function Dashboard() {
                   </IconButton>
                 </Box>
                 <Item1 onClick={(e) => {
-               
+                  navigate('/deviceOverview');
                   dispatch({ type: HUB_CLICKED, payload: hub.hubId })
                 }}
                   >

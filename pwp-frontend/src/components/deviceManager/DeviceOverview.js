@@ -54,14 +54,17 @@ class DeviceButtons extends React.Component {
 
 function Devices(props) {
 
+
     const hubClicked = JSON.parse(localStorage.getItem('hubClicked'));
     const [devicesArray, setDevicesArray] = useState([]);
 
     const getDevices = (clickedHubId) => {
         getDevicesByHub(clickedHubId)
             .then(resolvedPromise => {
+                console.log(resolvedPromise);
                 const devicesArrayTemp = resolvedPromise.data;
                 setDevicesArray(devicesArrayTemp);
+                console.log(devicesArrayTemp);
             })
     }
 
@@ -140,7 +143,8 @@ export default function DeviceOverview() {
     const isReloaded = performance.getEntriesByType("navigation")[0].type;
 
 
-    if (isReloaded === 'navigate') {
+
+    if (isReloaded === 'navigate' || isReloaded === 'reload') {
         localStorage.setItem("hubClicked", JSON.stringify(hubClicked));   
     }
 

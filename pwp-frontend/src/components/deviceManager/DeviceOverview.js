@@ -10,8 +10,6 @@ import Divider from '@mui/material/Divider';
 import { getDevicesByHub } from './DeviceOverviewInterface'
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import Box from '@mui/material/Box';
-
 
 
 class DeviceButtons extends React.Component {
@@ -54,7 +52,9 @@ class DeviceButtons extends React.Component {
 
 function Devices(props) {
 
+
     const hubClicked = JSON.parse(localStorage.getItem('hubClicked'));
+    
     const [devicesArray, setDevicesArray] = useState([]);
 
     const getDevices = (clickedHubId) => {
@@ -66,7 +66,7 @@ function Devices(props) {
     }
 
     useEffect(() => {
-        getDevices(hubClicked.hubId);
+        getDevices(hubClicked);
     }, []);
 
 
@@ -136,13 +136,6 @@ class TextBox extends React.Component {
 export default function DeviceOverview() {
     const hubClicked = useSelector((state) => state.hubClicked);
     const navigate = useNavigate();
-
-    const isReloaded = performance.getEntriesByType("navigation")[0].type;
-
-
-    if (isReloaded === 'navigate') {
-        localStorage.setItem("hubClicked", JSON.stringify(hubClicked));   
-    }
 
     function handleDeviceSelected(deviceId) {
         navigate("/features", { state: deviceId });

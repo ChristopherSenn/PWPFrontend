@@ -1,36 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import './DeviceOverview.css'
-import IconButton from '@mui/material/IconButton';
-import AddIcon from '@mui/icons-material/Add';
 import Stack from '@mui/material/Stack';
+import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import { getDevicesByHub } from './DeviceOverviewInterface'
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
-
-
-
-
-
-// class AddDevice extends React.Component{
-//     render(){
-//         return (
-//             <div className='AddDevice'>
-//                 <IconButton aria-label="delete" size="large" sx={{backgroundColor: '#787878', color: 'white', "&:hover": {backgroundColor: '#999999'}}} >
-//                   <AddIcon fontSize="inherit" />
-//                 </IconButton> 
-//             </div>
-//         )
-//     }
-
-// }
-
-
-
 
 class DeviceButtons extends React.Component {
     constructor(props) {
@@ -66,7 +45,7 @@ class DeviceButtons extends React.Component {
 function Devices(props) {
 
     const hubClicked = JSON.parse(localStorage.getItem('hubClicked'));
-     const [devicesArray, setDevicesArray] = useState([]);
+    const [devicesArray, setDevicesArray] = useState([]);
 
     const getDevices = (clickedHubId) => {
         getDevicesByHub(clickedHubId)
@@ -99,14 +78,26 @@ function Devices(props) {
 }
 
 
-class PageTitle extends React.Component {
-    render() {
-        return (
-            <div className='PageTitle'>
-                <h1>Available Devices</h1>
-            </div>
-        )
+function PageTitle() {
+
+    const navigate = useNavigate();
+    const redirectToPage = () => {
+        navigate('/dashboard');
     }
+    
+    return (
+        <Typography component="h1" variant="h5" sx={{ mt: 2, alignItems: 'center' }}>
+            <Button
+                onClick={redirectToPage}
+                variant='text'
+                sx={{ mt: 1, width: "30px", "&:hover": { backgroundColor: '#cbc3be' } }}
+                startIcon={<ArrowBackIosOutlinedIcon sx={{ color: '#ab9c8a', width: "100%", height: "1%" }} />}
+            >
+            </Button>
+        Available Devices
+        </Typography>
+    )
+
 }
 
 class TextBox extends React.Component {
@@ -122,7 +113,7 @@ class TextBox extends React.Component {
                     navigate={this.props.navigate}
                     dispatch={this.props.dispatch}
                     handleDeviceSelected={(deviceId) => this.props.handleDeviceSelected(deviceId)}
-                /> 
+                />
             </div>
         );
     }

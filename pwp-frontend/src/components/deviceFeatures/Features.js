@@ -17,10 +17,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Popover from '@mui/material/Popover';
 import SecurityExplanation from '../main/securityExplanation';
 import {deleteDevice} from '../mqttListener/DeviceInterface';
-
-
-
-
+import InfoIcon from '@mui/icons-material/Info';
+import { Typography } from '@mui/material';
+import Box from '@mui/material/Box';
 class Delete extends React.Component {
 
     constructor (props){
@@ -55,7 +54,7 @@ class Delete extends React.Component {
         return(
             <div className='Delete'>
                 <IconButton aria-label="delete" size="large" sx={{backgroundColor: '#787878', color: 'white', "&:hover": {backgroundColor: '#999999'}}} onClick = {this.handleOpenAlert}>
-                  <DeleteIcon fontSize="inherit"/>
+                  <DeleteIcon />
                 </IconButton>
                 <Dialog
                   open = {this.state.alertIsOpen}
@@ -200,8 +199,8 @@ class Functionalities extends React.Component {
 
 
         return(
-            <div className='Functionalities'>
-                <h3>Functionalities:</h3>
+            <div>
+                <h4 style={{color:"#7c9a92", textAlign:"left"}}>Functionalities:</h4>
                 <List component={Stack} direction="row" sx={{float: 'left'}}>
                   {actionList}
                 </List>
@@ -227,7 +226,7 @@ class FakeProperties extends React.Component{
     render(){
         return(
             this.state.show &&
-            <h5>Status: ON</h5>
+            <h5 style={{color:"#314448"}}>Status: ON</h5>
         )
     }
 }
@@ -238,7 +237,7 @@ class DeviceProperties extends React.Component{
     render() {
         return(
             <div className='DeviceProperties'>
-                <h3>Current properties:</h3>
+                <h4 style={{color:"#7c9a92"}}>Current properties:</h4>
                 <FakeProperties/>
             </div>
         )
@@ -260,7 +259,7 @@ class FakeEvents extends React.Component{
     render(){
         return(
             this.state.show &&
-            <h5>Event: Open</h5>
+            <h5 style={{color:"#314448"}}>Event: Open</h5>
         )
     }
 }
@@ -269,11 +268,11 @@ class DeviceStatus extends React.Component{
 
     render() {
         return(
-            <div className='DeviceStatus'>
-                <h3>Current events:</h3>
+           <div> 
+             <h4 style={{color:"#7c9a92"}}>Current events:</h4>
                 <FakeEvents/>
-                  
             </div>
+        
         )
     }
 }
@@ -302,8 +301,9 @@ class SecurityMode extends React.Component{
         const securityExplanationPopup = securityExplanationPopupOpen ? 'simple-popover' : undefined;
         return(
             <div className='SecurityMode'>
-                <h3>Currently used Security Mode:</h3>
-                <Button startIcon={<FontAwesomeIcon icon={faInfo} />} sx={{color: 'white', backgroundColor: '#787878', "&:hover": {backgroundColor: '#999999'}}} aria-describedby={securityExplanationPopup} variant="contained" onClick={this.securityExplanationClick}>{this.props.securityMode} </Button> 
+                
+                <h4 style={{color:"#7c9a92"}} > Currently used Security Mode:</h4>
+                <Button startIcon={<InfoIcon variant="outlined" />} sx={{backgroundColor:"#e0e8e5",color:"#314448", "&:hover": {backgroundColor: '#cbc3be'}}} variant="contained"  onClick={this.securityExplanationClick}>{this.props.securityMode} </Button> 
                 <Popover
                       id={securityExplanationPopup}
                       open={securityExplanationPopupOpen}
@@ -316,6 +316,7 @@ class SecurityMode extends React.Component{
                     >
                       <SecurityExplanation/>
                     </Popover> 
+                   
             </div>
         )
     }
@@ -327,7 +328,7 @@ class DeviceName extends React.Component {
     render (){
         return(
             <div className='DeviceName'>
-                <h1>{this.props.deviceName}</h1>
+                <Typography variant="h3" sx={{color:"#161811"}}>{this.props.deviceName}</Typography>
             </div>
         )
     }
@@ -343,7 +344,7 @@ class TextBox extends React.Component {
                  deviceName = {this.props.deviceName}
                ></DeviceName>
                <Divider />
-               <List component={Stack} direction="row" sx={{marginTop: -3, marginLeft: -2}} >
+               <List component={Stack} direction="row" sx={{marginTop: -3, marginLeft: -2,  display: 'absolute'}} >
                <ListItem key= 'SecurityMode' >
                <SecurityMode
                    securityMode = {this.props.securityMode}
@@ -362,9 +363,13 @@ class TextBox extends React.Component {
                <Functionalities
                  actions={this.props.actions}
                ></Functionalities>
-               <Delete
+               <br/>
+               <br/>
+               <br/>
+               <Delete 
                  deviceId = {this.props.deviceId}
                ></Delete>
+               
            </div>
         );
     }

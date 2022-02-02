@@ -21,6 +21,7 @@ import MuiAlert from '@mui/material/Alert';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import CssBaseline from '@mui/material/CssBaseline';
+import DeviceOverview from '../deviceManager/DeviceOverview';
 
 const theme = createTheme({
 
@@ -102,47 +103,47 @@ export default function Dashboard() {
   };
 
   //users own hubs
-  const showHubs = () => {
-
-    let ownerHubsArray = [];
-    let memberHubsArray = [];
-
-    getAllHubsFromDB().then(hubs => {
-
-      hubs.data.forEach((hub, i) => {
-        if (hub.ownerId === user.id) {
-          ownerHubsArray.push({ hubId: hub.hubId, hubName: hub.hubName, memberIds: hub.memberIds, ownerId: hub.ownerId, password: hub.password });
-        }
-        setOwnerHubs(ownerHubsArray)
-        hub.memberIds.forEach(member => {
-          if (member === user.id && hub.ownerId !== user.id) {
-            memberHubsArray.push({ hubId: hub.hubId, hubName: hub.hubName });
-          }
-        })
-      })
-      setUserMemberHubs(memberHubsArray)
-
-      // Change css classes to update the displayed headings accordingly
-      if (ownerHubsArray.length > 0 && memberHubsArray.length > 0) {
-        setCssVisibilityItem1('block');
-        setCssVisibilityItem2('block');
-      } else if (ownerHubsArray.length > 0 && memberHubsArray.length === 0) {
-        setCssVisibilityItem1('block');
-        setCssVisibilityItem2('none');
-      } else if (ownerHubsArray.length === 0 && memberHubsArray.length > 0) {
-        setCssVisibilityItem1('none');
-        setCssVisibilityItem2('block');
-      } else if (ownerHubsArray.length === 0 && memberHubsArray.length === 0) {
-        setCssVisibilityItem1('none');
-        setCssVisibilityItem2('none');
-      }
-    });
-  }
+  // const showHubs = () => {
+  //
+  //   let ownerHubsArray = [];
+  //   let memberHubsArray = [];
+  //
+  //   getAllHubsFromDB().then(hubs => {
+  //
+  //     hubs.data.forEach((hub, i) => {
+  //       if (hub.ownerId === user.id) {
+  //         ownerHubsArray.push({ hubId: hub.hubId, hubName: hub.hubName, memberIds: hub.memberIds, ownerId: hub.ownerId, password: hub.password });
+  //       }
+  //       setOwnerHubs(ownerHubsArray)
+  //       hub.memberIds.forEach(member => {
+  //         if (member === user.id && hub.ownerId !== user.id) {
+  //           memberHubsArray.push({ hubId: hub.hubId, hubName: hub.hubName });
+  //         }
+  //       })
+  //     })
+  //     setUserMemberHubs(memberHubsArray)
+  //
+  //     // Change css classes to update the displayed headings accordingly
+  //     if (ownerHubsArray.length > 0 && memberHubsArray.length > 0) {
+  //       setCssVisibilityItem1('block');
+  //       setCssVisibilityItem2('block');
+  //     } else if (ownerHubsArray.length > 0 && memberHubsArray.length === 0) {
+  //       setCssVisibilityItem1('block');
+  //       setCssVisibilityItem2('none');
+  //     } else if (ownerHubsArray.length === 0 && memberHubsArray.length > 0) {
+  //       setCssVisibilityItem1('none');
+  //       setCssVisibilityItem2('block');
+  //     } else if (ownerHubsArray.length === 0 && memberHubsArray.length === 0) {
+  //       setCssVisibilityItem1('none');
+  //       setCssVisibilityItem2('none');
+  //     }
+  //   });
+  // }
 
   useEffect(() => {
     if (user && isAuth) { //stellt sicher, dass geladen
       setUserName(user.username)
-      showHubs()
+      // showHubs()
     }
   }, [user])
 
@@ -150,30 +151,30 @@ export default function Dashboard() {
     dispatch(logout());
   };
 
-  const onDelete = (e, hub) => {
-    deleteHub(hub.hubId);
+  // const onDelete = (e, hub) => {
+  //   deleteHub(hub.hubId);
+  //
+  //   const tempHubArr = [];
+  //   ownerHubs.forEach(elem => {
+  //     if (elem !== hub) {
+  //       tempHubArr.push(elem);
+  //     }
+  //   })
+  //   setOwnerHubs(tempHubArr);
+  //   setOpen(true);
+  //
+  //   // Change css classes to update the displayed headings accordingly
+  //   if (tempHubArr.length > 0) {
+  //     setCssVisibilityItem1('block');
+  //   } else {
+  //     setCssVisibilityItem1('none');
+  //   }
+  // }
 
-    const tempHubArr = [];
-    ownerHubs.forEach(elem => {
-      if (elem !== hub) {
-        tempHubArr.push(elem);
-      }
-    })
-    setOwnerHubs(tempHubArr);
-    setOpen(true);
-
-    // Change css classes to update the displayed headings accordingly
-    if (tempHubArr.length > 0) {
-      setCssVisibilityItem1('block');
-    } else {
-      setCssVisibilityItem1('none');
-    }
-  }
-
-  const onEdit = (e, hub) => {
-    // navigates to edit-hub and passes information about which hub was clicked
-    navigate('/edit-hub', { state: hub });
-  }
+  // const onEdit = (e, hub) => {
+  //   // navigates to edit-hub and passes information about which hub was clicked
+  //   navigate('/edit-hub', { state: hub });
+  // }
 
 
 
@@ -185,16 +186,7 @@ export default function Dashboard() {
       <Typography variant="h4" component="div">
         Hi, {userName}!
       </Typography>
-      <Button
-        aria-label="delete"
-        size="large"
-        sx={{ color: 'white', "&:hover": { backgroundColor: '#999999' }, marginLeft: '15px' }}
-        variant="contained"
-        component={RouterLink}
-        to="/add-hub"
-        startIcon={<AddIcon fontSize="inherit" />}>
-        hub
-      </Button>
+
       <Box
         sx={{
           marginTop: 8,
@@ -204,110 +196,14 @@ export default function Dashboard() {
           display: `${cssVisibilityItem1}`,
         }}
       ></Box>
-      <Typography variant="h5" sx={{ marginLeft: '14px', marginRight: '89%', color: '#69849b', fontWeight: "bolder", display: `${cssVisibilityItem1}` }}>
-        Hubs you own:
+      <Typography variant="h5" sx={{ marginLeft: '14px', marginRight: '89%', color: '#69849b', fontWeight: "bolder" }}>
+        Devices in your local network:
       </Typography>
-      <Box
-        sx={{
-          marginTop: 3,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          display: `${cssVisibilityItem1}`,
-        }}
-      ></Box>
 
-      <Box sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        p: 1,
-        m: 1,
-        borderRadius: 1,
-      }}>
-        <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 
-          {ownerHubs.map((hub, index) => (
-            <Grid item xs={2} sm={4} md={4} key={index}>
-              <Box sx={{ textAlign: 'right' }}>
-                <IconButton onClick={(e) => onEdit(e, hub)} >
-                  <GroupAddIcon />
-                </IconButton>
-                <IconButton aria-label="delete" onClick={(e) => onDelete(e, hub)}>
-                  <DeleteIcon />
-                </IconButton>
-                <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
-                  <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-                    Hub was successfully deleted
-                  </Alert>
-                </Snackbar>
-              </Box>
-              <Item1 onClick={(e) => {
-                navigate('/deviceOverview');
-                dispatch({ type: HUB_CLICKED, payload: hub.hubId });
-                localStorage.setItem("hubClicked", JSON.stringify(hub.hubId));
-              }}>
-                <span>{hub.hubName}</span>
-              </Item1>
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
+      <DeviceOverview/>
 
-      <Box
-        sx={{
-          marginTop: 3,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      ></Box>
 
-      <Divider style={{ display: `${cssVisibilityItem1}` }} />
-
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      ></Box>
-      <Typography variant="h5" style={{ marginLeft: '15px', marginRight: '82%', color: '#a8c7cb', fontWeight: "bolder", display: `${cssVisibilityItem2}` }}>
-        Hubs you are a member of:
-      </Typography>
-      <Box
-        sx={{
-          marginTop: 3,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
-      ></Box>
-
-      <Box sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        p: 1,
-        m: 1,
-        borderRadius: 1,
-      }}>
-        <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-          {userMemberHubs.map((hub, index) => (
-            <Grid item xs={2} sm={4} md={4} key={hub.hubId}>
-
-              <Item2
-                onClick={(e) => {
-                  navigate('/deviceOverview');
-                  dispatch({ type: HUB_CLICKED, payload: hub.hubId });
-                  localStorage.setItem("hubClicked", JSON.stringify(hub.hubId));
-
-                }}>
-                <span>{hub.hubName}</span>
-              </Item2>
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
 
       <div className='logoutButton' style={{
         position: "fixed",

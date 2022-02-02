@@ -20,6 +20,7 @@ import Popover from '@mui/material/Popover';
 import SecurityExplanation from '../main/securityExplanation';
 import { deleteDevice } from '../mqttListener/DeviceInterface';
 import { useNavigate } from "react-router-dom";
+import { Navigate } from 'react-router-dom';
 
 class Delete extends React.Component {
 
@@ -27,6 +28,7 @@ class Delete extends React.Component {
         super(props);
         this.state = {
             alertIsOpen: false,
+            redirect: false
         };
     }
 
@@ -41,17 +43,17 @@ class Delete extends React.Component {
 
 
     handleDelete = () => {
-
         this.handleCloseAlert();
         const deviceId = this.props.deviceId;
-
-
         deleteDevice(deviceId);
-
-
+        this.setState({ redirect: true});
     };
 
     render() {
+        const { redirect } = this.state;
+        if(redirect) {
+            return <Navigate to='/deviceOverview'/>;
+        }
         return (
             <div className='Delete'>
                 <IconButton aria-label="delete" size="large" sx={{ backgroundColor: '#787878', color: 'white', "&:hover": { backgroundColor: '#999999' } }} onClick={this.handleOpenAlert}>

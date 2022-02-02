@@ -184,7 +184,7 @@ export default function Dashboard() {
             alignItems: 'center',
           }}
         ></Box>
-        <Typography  variant="h5" style={{ marginRight: '90%', color: '#69849b', fontWeight: "bolder"}}>
+        <Typography  variant="h5" style={{  marginLeft: '14px', marginRight: '89%', color: '#69849b', fontWeight: "bolder"}}>
           Hubs you own:
         </Typography>
         <Box
@@ -250,7 +250,7 @@ export default function Dashboard() {
             alignItems: 'center',
           }}
         ></Box>
-       <Typography  variant="h5" style={{ marginRight: '82%', color: '#a8c7cb', fontWeight: "bolder"}}>
+       <Typography  variant="h5" style={{ marginLeft: '15px', marginRight: '82%', color: '#a8c7cb', fontWeight: "bolder"}}>
           Hubs you are a member of :
         </Typography>
         <Box
@@ -328,9 +328,9 @@ export default function Dashboard() {
             alignItems: 'center',
           }}
         ></Box>
-        <span style={{ marginLeft: '15px' }}>
+          <Typography  variant="h5" style={{  marginLeft: '14px', marginRight: '89%', color: '#69849b', fontWeight: "bolder"}}>
           Hubs you own:
-        </span>
+        </Typography>
         <Box
           sx={{
             marginTop: 3,
@@ -424,9 +424,9 @@ export default function Dashboard() {
             alignItems: 'center',
           }}
         ></Box>
-        <span style={{ marginLeft: '15px' }}>
-          Hubs you are a member of:
-        </span>
+          <Typography  variant="h5" style={{ marginLeft: '15px', marginRight: '82%', color: '#a8c7cb', fontWeight: "bolder"}}>
+          Hubs you are a member of :
+        </Typography>
         <Box
           sx={{
             marginTop: 3,

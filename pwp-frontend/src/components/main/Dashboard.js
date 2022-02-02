@@ -101,10 +101,6 @@ export default function Dashboard() {
     setOpen(false);
   };
 
-
-  // hubCLicked contains the id of the hub that was clicked
-  const hubClicked = useSelector((state) => state.hubClicked)
-
   //users own hubs
   const showHubs = () => {
 
@@ -227,7 +223,6 @@ export default function Dashboard() {
         p: 1,
         m: 1,
         borderRadius: 1,
-        display: `${cssVisibilityItem1}`
       }}>
         <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
 

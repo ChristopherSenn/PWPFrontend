@@ -3,8 +3,6 @@ import './Features.css'
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faInfo } from '@fortawesome/free-solid-svg-icons/faInfo';
 import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
@@ -19,7 +17,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Popover from '@mui/material/Popover';
 import SecurityExplanation from '../main/securityExplanation';
 import InfoIcon from '@mui/icons-material/Info';
-import Box from '@mui/material/Box';
 import { deleteDevice } from '../mqttListener/DeviceInterface';
 import { useNavigate } from "react-router-dom";
 import { Navigate } from 'react-router-dom';
@@ -127,15 +124,11 @@ class ActionButtons extends React.Component {
             <div className="ActionButtons">
                 <Button sx={{ color: 'white', backgroundColor: '#314448', width: 140, height: 40, "&:hover": {backgroundColor: '#cbc3be'} }}
                     onClick={(e) => {
-                        const actionName = this.state.actionName;
                         const inputType = this.state.inputType;
 
                         if (inputType === "float") {
                             this.handleOpenAlert()
                         }
-
-
-
                     }}
                 >
                     {this.state.actionName}

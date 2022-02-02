@@ -56,20 +56,19 @@ function Devices(props) {
 
 
     const hubClicked = JSON.parse(localStorage.getItem('hubClicked'));
+    
     const [devicesArray, setDevicesArray] = useState([]);
 
     const getDevices = (clickedHubId) => {
         getDevicesByHub(clickedHubId)
             .then(resolvedPromise => {
-                console.log(resolvedPromise);
                 const devicesArrayTemp = resolvedPromise.data;
                 setDevicesArray(devicesArrayTemp);
-                console.log(devicesArrayTemp);
             })
     }
 
     useEffect(() => {
-        getDevices(hubClicked.hubId);
+        getDevices(hubClicked);
     }, []);
 
 
@@ -139,14 +138,6 @@ class TextBox extends React.Component {
 export default function DeviceOverview() {
     const hubClicked = useSelector((state) => state.hubClicked);
     const navigate = useNavigate();
-
-    const isReloaded = performance.getEntriesByType("navigation")[0].type;
-
-
-
-    if (isReloaded === 'navigate' || isReloaded === 'reload') {
-        localStorage.setItem("hubClicked", JSON.stringify(hubClicked));   
-    }
 
     function handleDeviceSelected(deviceId) {
         navigate("/features", { state: deviceId });

@@ -223,6 +223,7 @@ export default function Dashboard() {
                 <Item1 onClick={(e) => {
                   navigate('/deviceOverview');
                   dispatch({ type: HUB_CLICKED, payload: hub.hubId })
+                  localStorage.setItem("hubClicked", JSON.stringify(hub.hubId));
                 }}>
                   <span>{hub.hubName}</span>
                 </Item1>
@@ -277,6 +278,7 @@ export default function Dashboard() {
                   onClick={(e) => {
                     navigate('/deviceOverview');
                     dispatch({ type: HUB_CLICKED, payload: hub.hubId })
+                    localStorage.setItem("hubClicked", JSON.stringify(hub.hubId));
 
                   }}>
                   <span>{hub.hubName}</span>
@@ -362,6 +364,7 @@ export default function Dashboard() {
                 <Item1 onClick={(e) => {
                   navigate('/deviceOverview');
                   dispatch({ type: HUB_CLICKED, payload: hub.hubId })
+                  localStorage.setItem("hubClicked", JSON.stringify(hub.hubId));
                 }}
                   >
                   <span>{hub.hubName}</span>
@@ -451,6 +454,7 @@ export default function Dashboard() {
                   onClick={(e) => {
                     navigate('/deviceOverview');
                     dispatch({ type: HUB_CLICKED, payload: hub.hubId })
+                    localStorage.setItem("hubClicked", JSON.stringify(hub.hubId));
 
                   }}
                   sx={{ backgroundColor: 'lightgrey' }}>

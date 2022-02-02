@@ -59,7 +59,7 @@ class Delete extends React.Component {
         return (
             <div className='Delete'>
                 <IconButton aria-label="delete" size="large" sx={{ backgroundColor: '#787878', color: 'white', "&:hover": { backgroundColor: '#999999' } }} onClick={this.handleOpenAlert}>
-                    <DeleteIcon fontSize="inherit" />
+                    <DeleteIcon/>
                 </IconButton>
                 <Dialog
                     open={this.state.alertIsOpen}

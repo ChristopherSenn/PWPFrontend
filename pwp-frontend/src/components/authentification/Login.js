@@ -63,7 +63,7 @@ export default function Login() {
                         alignItems: 'center'
                     }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}></Avatar>
+                    <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}></Avatar>
                     <Typography component="h1" variant="h5">
                         Login
                     </Typography>
@@ -95,7 +95,7 @@ export default function Login() {
                             type="submit"
                             fullWidth
                             variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
+                            sx={{ mt: 3, mb: 2, backgroundColor: "#3d6a66", "&:hover": { backgroundColor: '#cbc3be' } }}
                         >
                             Login
                         </Button>

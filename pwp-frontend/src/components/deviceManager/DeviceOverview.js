@@ -34,7 +34,7 @@ class DeviceButtons extends React.Component {
 
         return (
             <div className="DeviceButtons">
-                <Button sx={{ color: 'black', backgroundColor: '#d0c3bd', width: 200, height: 70, "&:hover": { backgroundColor: '#dcdcdd' } }}
+                <Button sx={{ color: 'black', backgroundColor:"#7c9a92", width: 200, height: 70, "&:hover": { backgroundColor: '#dcdcdd' } }}
                     onClick={(e) => {
                         this.props.handleDeviceSelected(this.state.deviceId);
                     }}
@@ -69,9 +69,9 @@ function Devices(props) {
 
     return (
         <div className='Devices'>
-            <List component={Stack} direction="row" sx={{ float: 'left' }}>
+            <List component={Stack} direction="row" sx={{ float: 'left'}}>
                 {devicesArray.map((device) => (
-                    <ListItem key={device.deviceId} sx={{ paddingRight: 3 }}>
+                    <ListItem key={device.deviceId} sx={{ paddingRight: 3}}>
                         <DeviceButtons
                             deviceName={device.deviceName}
                             deviceId={device.deviceId}
@@ -95,7 +95,7 @@ function PageTitle() {
     }
     
     return (
-        <Typography component="h1" variant="h5" sx={{ mt: 2, alignItems: 'center' }}>
+        <Typography component="h1" variant="h5" sx={{ mt: 2, alignItems: 'center', color:"#314448"}}>
             <Button
                 onClick={redirectToPage}
                 variant='text'

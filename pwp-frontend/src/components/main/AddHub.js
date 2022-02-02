@@ -19,7 +19,6 @@ import { sortDropdown } from "../../utilis/sortDropdown";
 import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
 export default function AddHub() {
 
-  // Man müsste eig nur noch die user-Liste ziehen und anstatt der Dummy-Liste an die Select-Box weiterreichen und dann eben mit dem Form die createHub füttern
   const userLogin = useSelector((state) => state.userLogin);
   const { user } = userLogin;
 

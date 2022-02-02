@@ -5,6 +5,8 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfo } from '@fortawesome/free-solid-svg-icons/faInfo';
+import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
+import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -16,63 +18,66 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Popover from '@mui/material/Popover';
 import SecurityExplanation from '../main/securityExplanation';
-import {deleteDevice} from '../mqttListener/DeviceInterface';
 import InfoIcon from '@mui/icons-material/Info';
-import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
+import { deleteDevice } from '../mqttListener/DeviceInterface';
+import { useNavigate } from "react-router-dom";
+import { Navigate } from 'react-router-dom';
+
 class Delete extends React.Component {
 
-    constructor (props){
+    constructor(props) {
         super(props);
         this.state = {
             alertIsOpen: false,
+            redirect: false
         };
     }
 
 
     handleOpenAlert = () => {
-        this.setState({alertIsOpen: true});
+        this.setState({ alertIsOpen: true });
     };
 
     handleCloseAlert = () => {
-        this.setState({alertIsOpen: false});
+        this.setState({ alertIsOpen: false });
     };
 
 
     handleDelete = () => {
-
         this.handleCloseAlert();
         const deviceId = this.props.deviceId;
-
-
         deleteDevice(deviceId);
-
-       
+        this.setState({ redirect: true});
     };
 
-    render () {
-        return(
+    render() {
+        const { redirect } = this.state;
+        if(redirect) {
+            return <Navigate to='/deviceOverview'/>;
+        }
+        return (
             <div className='Delete'>
-                <IconButton aria-label="delete" size="large" sx={{backgroundColor: '#787878', color: 'white', "&:hover": {backgroundColor: '#999999'}}} onClick = {this.handleOpenAlert}>
-                  <DeleteIcon />
+                <IconButton aria-label="delete" size="large" sx={{ backgroundColor: '#787878', color: 'white', "&:hover": { backgroundColor: '#999999' } }} onClick={this.handleOpenAlert}>
+                    <DeleteIcon fontSize="inherit" />
                 </IconButton>
                 <Dialog
-                  open = {this.state.alertIsOpen}
-                  onClose = {this.handleCloseAlert}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
+                    open={this.state.alertIsOpen}
+                    onClose={this.handleCloseAlert}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
                 >
                     <DialogTitle id="alert-dialog-title">
                         {"Delete Device"}
                     </DialogTitle>
                     <DialogContent>
-                        <DialogContentText id ="alert-dialog-description">
+                        <DialogContentText id="alert-dialog-description">
                             Do you really want to delete this device?
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button sx={{backgroundColor: '#787878', color: 'white', "&:hover": {backgroundColor: '#999999'}}} onClick={this.handleCloseAlert}>No</Button>
-                        <Button sx={{backgroundColor: '#787878', color: 'white', "&:hover": {backgroundColor: '#999999'}}} onClick={this.handleDelete} autoFocus>Yes</Button>
+                        <Button sx={{ backgroundColor: '#787878', color: 'white', "&:hover": { backgroundColor: '#999999' } }} onClick={this.handleCloseAlert}>No</Button>
+                        <Button sx={{ backgroundColor: '#787878', color: 'white', "&:hover": { backgroundColor: '#999999' } }} onClick={this.handleDelete} autoFocus>Yes</Button>
                     </DialogActions>
                 </Dialog>
             </div>
@@ -81,8 +86,8 @@ class Delete extends React.Component {
 }
 
 
-class ActionButtons extends React.Component{
-    constructor (props){
+class ActionButtons extends React.Component {
+    constructor(props) {
         super(props);
         this.state = {
             actionName: "",
@@ -93,67 +98,67 @@ class ActionButtons extends React.Component{
     }
 
     componentDidMount() {
-        this.setState({actionName: this.props.actionName});
-        this.setState({inputType: this.props.inputType})
+        this.setState({ actionName: this.props.actionName });
+        this.setState({ inputType: this.props.inputType })
     }
 
 
     handleOpenAlert = () => {
-        this.setState({alertIsOpen: true});
+        this.setState({ alertIsOpen: true });
     };
 
     handleCloseAlert = () => {
-        this.setState({alertIsOpen: false});
+        this.setState({ alertIsOpen: false });
     };
 
 
     handleChangeInput = (event) => {
-        this.setState({inputForAction: event.target.value});
-      }
-    
+        this.setState({ inputForAction: event.target.value });
+    }
 
-   
-   
 
-    render(){
-        
-        return(
-            <div className = "ActionButtons">
-                <Button sx={{color: 'white', backgroundColor: '#787878', width: 150, height: 70, "&:hover": {backgroundColor: '#999999'}}} 
-                onClick={(e) => {
-                const actionName = this.state.actionName;
-                const inputType = this.state.inputType;
 
-                if (inputType === "float"){
-                    this.handleOpenAlert()
-                }
 
-                
-                
-              }} 
+
+    render() {
+
+        return (
+            <div className="ActionButtons">
+                <Button sx={{ color: 'white', backgroundColor: '#787878', width: 150, height: 70, "&:hover": { backgroundColor: '#999999' } }}
+                    onClick={(e) => {
+                        const actionName = this.state.actionName;
+                        const inputType = this.state.inputType;
+
+                        if (inputType === "float") {
+                            this.handleOpenAlert()
+                        }
+
+
+
+                    }}
                 >
-                  {this.state.actionName}
+                    {this.state.actionName}
                 </Button>
                 <Dialog
-                  open = {this.state.alertIsOpen}
-                  onClose = {this.handleCloseAlert}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
+                    open={this.state.alertIsOpen}
+                    onClose={this.handleCloseAlert}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
                 >
                     <DialogTitle id="alert-dialog-title">
                         {this.state.actionName}
                     </DialogTitle>
                     <DialogContent>
-                        <DialogContentText id ="alert-dialog-description">
+                        <DialogContentText id="alert-dialog-description">
                             How long do you want to {this.state.actionName}?
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                    <label > 
-                      <input type="text" name="topic" value={this.state.inputForAction} onChange={this.handleChangeInput} />
-                    </label>
-                    <br/>
-                    <Button sx={{backgroundColor: '#787878', color: 'white', "&:hover": {backgroundColor: '#999999'}}} onClick={this.handleCloseAlert}>Submit</Button>
+                        <label >
+                            <input type="text" name="topic" value={this.state.inputForAction} onChange={this.handleChangeInput} />
+                        </label>
+                        <br />
+                        <Button sx={{ backgroundColor: '#787878', color: 'white', "&:hover": { backgroundColor: '#999999' } }} onClick={this.handleCloseAlert}>Submit</Button>
                     </DialogActions>
                 </Dialog>
             </div>
@@ -165,7 +170,7 @@ class ActionButtons extends React.Component{
 
 
 class Functionalities extends React.Component {
-    constructor (props){
+    constructor(props) {
         super(props);
         this.state = {
             actions: [],
@@ -173,27 +178,27 @@ class Functionalities extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState({actions: nextProps});
+        this.setState({ actions: nextProps });
     }
 
 
-    render () {
+    render() {
 
-        
-        
+
+
         var actions = this.props.actions;
         var actionList = "";
-        
 
-        if (actions !== null){
+
+        if (actions !== null) {
             actionList = actions.map((action) =>
-            actionList = 
-            <ListItem key= {action.actionName} sx={{paddingRight: 3, marginTop: -3}}>
-                <ActionButtons
-                  actionName={action.actionName}
-                  inputType={action.inputType}
-                ></ActionButtons>
-            </ListItem>
+                actionList =
+                <ListItem key={action.actionName} sx={{ paddingRight: 3, marginTop: -3 }}>
+                    <ActionButtons
+                        actionName={action.actionName}
+                        inputType={action.inputType}
+                    ></ActionButtons>
+                </ListItem>
             );
         }
 
@@ -211,31 +216,31 @@ class Functionalities extends React.Component {
     }
 }
 
-class FakeProperties extends React.Component{
-    constructor (props){
+class FakeProperties extends React.Component {
+    constructor(props) {
         super(props);
         this.state = {
             show: false,
         };
     }
 
-    componentDidMount(){
-        setTimeout(() => this.setState({show:true}), 5000)
+    componentDidMount() {
+        setTimeout(() => this.setState({ show: true }), 5000)
     }
 
-    render(){
-        return(
+    render() {
+        return (
             this.state.show &&
             <h5 style={{color:"#314448"}}>Status: ON</h5>
         )
     }
 }
 
-class DeviceProperties extends React.Component{
-    
+class DeviceProperties extends React.Component {
+
 
     render() {
-        return(
+        return (
             <div className='DeviceProperties'>
                 <h4 style={{color:"#7c9a92"}}>Current properties:</h4>
                 <FakeProperties/>
@@ -244,27 +249,27 @@ class DeviceProperties extends React.Component{
     }
 }
 
-class FakeEvents extends React.Component{
-    constructor (props){
+class FakeEvents extends React.Component {
+    constructor(props) {
         super(props);
         this.state = {
             show: false,
         };
     }
 
-    componentDidMount(){
-        setTimeout(() => this.setState({show:true}), 7000)
+    componentDidMount() {
+        setTimeout(() => this.setState({ show: true }), 7000)
     }
 
-    render(){
-        return(
+    render() {
+        return (
             this.state.show &&
             <h5 style={{color:"#314448"}}>Event: Open</h5>
         )
     }
 }
 
-class DeviceStatus extends React.Component{
+class DeviceStatus extends React.Component {
 
     render() {
         return(
@@ -277,8 +282,8 @@ class DeviceStatus extends React.Component{
     }
 }
 
-class SecurityMode extends React.Component{
-    constructor (props){
+class SecurityMode extends React.Component {
+    constructor(props) {
         super(props);
         this.state = {
             anchorEl: null,
@@ -286,52 +291,60 @@ class SecurityMode extends React.Component{
     }
 
     securityExplanationClick = (event) => {
-        this.setState({anchorEl: event.currentTarget});
+        this.setState({ anchorEl: event.currentTarget });
     };
 
     handleClose = () => {
-        this.setState({anchorEl: null});
+        this.setState({ anchorEl: null });
     };
 
     render() {
-
-        
-        
         const securityExplanationPopupOpen = Boolean(this.state.anchorEl);
         const securityExplanationPopup = securityExplanationPopupOpen ? 'simple-popover' : undefined;
-        return(
+        return (
             <div className='SecurityMode'>
-                
                 <h4 style={{color:"#7c9a92"}} > Currently used Security Mode:</h4>
                 <Button startIcon={<InfoIcon variant="outlined" />} sx={{backgroundColor:"#e0e8e5",color:"#314448", "&:hover": {backgroundColor: '#cbc3be'}}} variant="contained"  onClick={this.securityExplanationClick}>{this.props.securityMode} </Button> 
                 <Popover
-                      id={securityExplanationPopup}
-                      open={securityExplanationPopupOpen}
-                      anchorEl={this.state.anchorEl}
-                      onClose={this.handleClose}
-                      anchorOrigin={{
+                    id={securityExplanationPopup}
+                    open={securityExplanationPopupOpen}
+                    anchorEl={this.state.anchorEl}
+                    onClose={this.handleClose}
+                    anchorOrigin={{
                         vertical: 'center',
                         horizontal: 'left',
                       }}
                     >
                       <SecurityExplanation/>
                     </Popover> 
-                   
             </div>
         )
     }
 }
 
 
-class DeviceName extends React.Component {
-    
-    render (){
-        return(
-            <div className='DeviceName'>
-                <Typography variant="h3" sx={{color:"#161811"}}>{this.props.deviceName}</Typography>
-            </div>
-        )
+function DeviceName(props) {
+
+    const navigate = useNavigate();
+    const redirectToPage = () => {
+        navigate('/deviceOverview');
     }
+  
+    return (
+        <div className='DeviceName'>
+            <Typography component="h1" variant="h5" sx={{ mt: 2, alignItems: 'center', color:"#314448" }}>
+                <Button
+                    onClick={redirectToPage}
+                    variant='text'
+                    sx={{ mt: 1, width: "30px", "&:hover": { backgroundColor: '#cbc3be' } }}
+                    startIcon={<ArrowBackIosOutlinedIcon sx={{ color: '#ab9c8a', width: "100%", height: "1%" }} />}
+                >
+                </Button>
+                {props.deviceName}
+            </Typography>
+        </div>
+    )
+
 }
 
 class TextBox extends React.Component {

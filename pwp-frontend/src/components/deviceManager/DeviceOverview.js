@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './DeviceOverview.css'
 import Stack from '@mui/material/Stack';
+import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import { getDevicesByHub } from './DeviceOverviewInterface'
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 class DeviceButtons extends React.Component {
     constructor(props) {
@@ -48,79 +49,64 @@ class DeviceButtons extends React.Component {
 }
 
 
+function Devices(props) {
 
-class Devices extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            namesOfDevices: [],
-        };
+    const hubClicked = JSON.parse(localStorage.getItem('hubClicked'));
+    const [devicesArray, setDevicesArray] = useState([]);
+
+    const getDevices = (clickedHubId) => {
+        getDevicesByHub(clickedHubId)
+            .then(resolvedPromise => {
+                const devicesArrayTemp = resolvedPromise.data;
+                setDevicesArray(devicesArrayTemp);
+            })
     }
 
+    useEffect(() => {
+        getDevices(hubClicked.hubId);
+    }, []);
 
 
-    handleDeviceSelected(deviceId) {
-        console.log("ist in devices");
-    }
+    return (
+        <div className='Devices'>
+            <List component={Stack} direction="row" sx={{ float: 'left' }}>
+                {devicesArray.map((device) => (
+                    <ListItem key={device.deviceId} sx={{ paddingRight: 3 }}>
+                        <DeviceButtons
+                            deviceName={device.deviceName}
+                            deviceId={device.deviceId}
+                            handleDeviceSelected={(deviceId) => props.handleDeviceSelected(deviceId)}
+                        ></DeviceButtons>
+                    </ListItem>
+                ))}
+            </List>
+        </div>
+    )
 
-    componentDidMount() {
-
-
-        const clickedHubId = this.props.hubClicked.hubId;
-
-        getDevicesByHub(clickedHubId).then(devices => {
-            for (const device of devices.data) {
-                const namesOfDevices = this.state.namesOfDevices;
-                const addNewDevice = namesOfDevices.concat([device])
-                this.setState({ namesOfDevices: addNewDevice });
-
-            }
-        })
-
-
-
-    }
-
-
-    render() {
-
-        var namesOfDevices = this.state.namesOfDevices;
-        var deviceList = "";
-
-
-        if (namesOfDevices !== null) {
-            deviceList = namesOfDevices.map((device) =>
-                deviceList =
-                <ListItem key={device.deviceId} sx={{ paddingRight: 3 }}>
-                    <DeviceButtons
-                        deviceName={device.deviceName}
-                        deviceId={device.deviceId}
-                        handleDeviceSelected={(deviceId) => this.props.handleDeviceSelected(deviceId)}
-                    ></DeviceButtons>
-                </ListItem>
-            );
-        }
-
-
-        return (
-            <div className='Devices'>
-                <List component={Stack} direction="row" sx={{ float: 'left' }}>
-                    {deviceList}
-                </List>
-            </div>
-        )
-    }
-
+                
 }
+     
 
-class PageTitle extends React.Component {
-    render() {
-        return (
-            <Typography variant="h5"  component="div">
-                Available Devices:
-           </Typography>
-        )
+function PageTitle() {
+
+    const navigate = useNavigate();
+    const redirectToPage = () => {
+        navigate('/dashboard');
     }
+    
+    return (
+        <Typography component="h1" variant="h5" sx={{ mt: 2, alignItems: 'center' }}>
+            <Button
+                onClick={redirectToPage}
+                variant='text'
+                sx={{ mt: 1, width: "30px", "&:hover": { backgroundColor: '#cbc3be' } }}
+                startIcon={<ArrowBackIosOutlinedIcon sx={{ color: '#ab9c8a', width: "100%", height: "1%" }} />}
+            >
+            </Button>
+        Available Devices
+        </Typography>
+    )
+
 }
 
 class TextBox extends React.Component {
@@ -128,24 +114,16 @@ class TextBox extends React.Component {
 
     render() {
         return (
-           <Box>
-               
-                <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >  <PageTitle />
+            <div className='TextBox'>
+                <PageTitle />
+                <Divider />
                 <Devices
                     hubClicked={this.props.hubClicked}
                     navigate={this.props.navigate}
                     dispatch={this.props.dispatch}
                     handleDeviceSelected={(deviceId) => this.props.handleDeviceSelected(deviceId)}
                 />
-            </Box>
-            </Box>
+            </div>
         );
     }
 }
@@ -156,10 +134,15 @@ export default function DeviceOverview() {
     const hubClicked = useSelector((state) => state.hubClicked);
     const navigate = useNavigate();
 
+    if (window.performance) {
+        if (performance.navigation.type !== 1) {
+            localStorage.setItem("hubClicked", JSON.stringify(hubClicked));
+        }
+    }
+
     function handleDeviceSelected(deviceId) {
         navigate("/features", { state: deviceId });
     }
-
     return (
         <div className="DeviceOverview">
             <header className="DeviceOverview-header">

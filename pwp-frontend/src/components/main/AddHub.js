@@ -16,10 +16,9 @@ import Typography from '@mui/material/Typography';
 import { loadUsers } from '../../actions/userActions';
 import { authHeader } from '../../utilis/setToken';
 import { sortDropdown } from "../../utilis/sortDropdown";
-import DashboardCustomizeSharpIcon from '@mui/icons-material/DashboardCustomizeSharp';
+import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
 export default function AddHub() {
 
-  // Man müsste eig nur noch die user-Liste ziehen und anstatt der Dummy-Liste an die Select-Box weiterreichen und dann eben mit dem Form die createHub füttern
   const userLogin = useSelector((state) => state.userLogin);
   const { user } = userLogin;
 
@@ -111,8 +110,15 @@ export default function AddHub() {
         display: 'flex',
         flexDirection: 'column',
       }}>
-        <Typography component="h1" variant="h5"  sx={{ mt: 1, alignItems: 'center'}}>
-          Create new Hub
+              <Typography component="h1" variant="h5"  sx={{ mt: 2, alignItems: 'center'}}>
+          <Button
+            onClick={redirectToPage}
+            variant='text'
+            sx={{ mt:1 ,  width:"30px", "&:hover": {backgroundColor: '#cbc3be'}}}
+            startIcon={<ArrowBackIosOutlinedIcon sx={{ color: '#ab9c8a', width: "100%", height:"1%" }}/>}
+            >
+            </Button>
+            Create new Hub
         </Typography>
           <TextField
             required
@@ -148,7 +154,7 @@ export default function AddHub() {
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 1 }}
+            sx={{ mt: 1, bgcolor: "#3d6a66", color:"white" ,  "&:hover": { backgroundColor: '#7c9a92' }}}
             disabled={hubName.length === 0}
           >
             Create hub
@@ -157,21 +163,11 @@ export default function AddHub() {
           <Button
             onClick={cancelButtonHandler}
             fullWidth
-            variant="outlined"
-            sx={{ mt: 1 }}
+            variant="text"
+            sx={{ mt: 1 ,color:"#3d6a66", bgcolor:"#c7d3bf",  "&:hover": { backgroundColor: '#c1c9cd' }}}
           >
             Cancel
           </Button>
-          <Button
-            onClick={redirectToPage}
-            fullWidth
-            variant="outlined"
-            sx={{ mt: 1 }}
-            startIcon={<DashboardCustomizeSharpIcon/>}
-            sx={{ mt: 1 , backgroundColor: '#787878', color: 'white', "&:hover": {backgroundColor: '#999999'}}}
-            >
-            Back to Dashboard
-            </Button>
       </Box>
     </Container>
   )

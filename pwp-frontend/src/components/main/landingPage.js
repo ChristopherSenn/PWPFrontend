@@ -26,12 +26,12 @@ export default function LandingPage() {
                     </Typography>
                     <Grid container>
                         <Grid item xs>
-                            <Button fullWidth variant="contained" component={RouterLink} to="/users/login">
+                            <Button fullWidth variant="contained" sx={{backgroundColor: "#3d6a66", "&:hover": { backgroundColor: '#cbc3be' }}} component={RouterLink} to="/users/login">
                                 Login
                             </Button>
                         </Grid>
                         <Grid item xs>
-                            <Button fullWidth variant="outlined" component={RouterLink} to="/users/register">
+                            <Button fullWidth variant="outlined" component={RouterLink} sx={{ color: "#3d6a66" }} to="/users/register">
                                 Sign Up
                             </Button>
                         </Grid>

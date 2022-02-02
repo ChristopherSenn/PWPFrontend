@@ -168,7 +168,7 @@ export default function Dashboard() {
         <Button
           aria-label="delete"
           size="large"
-          sx={{ color: 'white', "&:hover": { backgroundColor: '#999999' } }}
+          sx={{ color: 'white', "&:hover": { backgroundColor: '#999999' }, marginLeft: '15px' }}
           variant="contained"
           component={RouterLink}
           to="/add-hub"
@@ -183,7 +183,7 @@ export default function Dashboard() {
             alignItems: 'center',
           }}
         ></Box>
-        <span>
+        <span style={{ marginLeft: '15px' }}>
           Hubs you own:
         </span>
         <Box
@@ -249,7 +249,7 @@ export default function Dashboard() {
             alignItems: 'center',
           }}
         ></Box>
-        <span>
+        <span style={{ marginLeft: '15px' }}>
           Hubs you are a member of:
         </span>
         <Box
@@ -312,7 +312,7 @@ export default function Dashboard() {
         <Button
           aria-label="delete"
           size="large"
-          sx={{ color: 'white', "&:hover": { backgroundColor: '#999999' } }}
+          sx={{ color: 'white', "&:hover": { backgroundColor: '#999999' }, marginLeft: '15px' }}
           variant="contained"
           component={RouterLink}
           to="/add-hub"
@@ -327,7 +327,7 @@ export default function Dashboard() {
             alignItems: 'center',
           }}
         ></Box>
-        <span>
+        <span style={{ marginLeft: '15px' }}>
           Hubs you own:
         </span>
         <Box
@@ -396,7 +396,7 @@ export default function Dashboard() {
         <Button
           aria-label="delete"
           size="large"
-          sx={{ color: 'white', "&:hover": { backgroundColor: '#999999' } }}
+          sx={{ color: 'white', "&:hover": { backgroundColor: '#999999' }, marginLeft: '15px' }}
           variant="contained"
           component={RouterLink}
           to="/add-hub"
@@ -423,7 +423,7 @@ export default function Dashboard() {
             alignItems: 'center',
           }}
         ></Box>
-        <span>
+        <span style={{ marginLeft: '15px' }}>
           Hubs you are a member of:
         </span>
         <Box
@@ -488,7 +488,7 @@ export default function Dashboard() {
         <Button
           aria-label="delete"
           size="large"
-          sx={{ color: 'white', "&:hover": { backgroundColor: '#999999' } }}
+          sx={{ color: 'white', "&:hover": { backgroundColor: '#999999' }, marginLeft: '15px' }}
           variant="contained"
           component={RouterLink}
           to="/add-hub"

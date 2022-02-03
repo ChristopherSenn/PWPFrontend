@@ -174,6 +174,17 @@ export class DeviceController extends Controller {
   }
 
   @Security('jwt', ['customer'])
+  @Get('getDevices')
+  @SuccessResponse('200', 'OK')
+  @Response<IError>(400, 'Bad Request', {
+    message: 'Database Error',
+  })
+  public async getDevices(): Promise<IDevice[]> {
+    const response = await new DeviceService().getDevices();
+    return response;
+  }
+
+  @Security('jwt', ['customer'])
   // Request to get Device By HubId
   @Get('getDeviceByHub')
   @SuccessResponse('200', 'OK')

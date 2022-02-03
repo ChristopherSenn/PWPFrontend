@@ -10,18 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { authHeader } from '../../utilis/setToken';
 import axios from 'axios'
 
-export const getAllDevices = async () => {
-    try {
-        const requestHeader = {
-            headers: authHeader()
-        };
-        return await axios.get('http://localhost:4500/devices/getDevices',
-        requestHeader
-        )
-    } catch(error){
-        console.log(error.message)
-      }
-}
+
 
 class DeviceButtons extends React.Component {
     constructor(props) {
@@ -55,6 +44,19 @@ class DeviceButtons extends React.Component {
 
 function Devices(props) {
     const [devicesArray, setDevicesArray] = useState([]);
+
+    const getAllDevices = async () => {
+        try {
+            const requestHeader = {
+                headers: authHeader()
+            };
+            return await axios.get('http://localhost:4500/devices/getDevices',
+            requestHeader
+            )
+        } catch(error){
+            console.log(error.message)
+          }
+    }
 
     const getDevices = () => {
         getAllDevices()

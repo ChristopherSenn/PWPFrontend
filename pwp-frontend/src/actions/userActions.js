@@ -18,13 +18,11 @@ import {
       const config = {
         headers: {
           "Content-type": "application/json",
-          "Access-Control-Allow-Origin": "*", 
-          "Access-Control-Allow-Credentials": true 
         },
       };
   
       const { data } = await axios.post(
-        'https://pwp21.medien.ifi.lmu.de:4500/users/login',
+        'http://pwp21.medien.ifi.lmu.de:4500/users/login',
         { username, password },
         config
       );
@@ -56,7 +54,7 @@ import {
       };
   
       const { data } = await axios.post(
-        "https://pwp21.medien.ifi.lmu.de:4500/users/register",
+        "http://pwp21.medien.ifi.lmu.de:4500/users/register",
         { username, email, password, roles },
         config
       );
@@ -88,7 +86,7 @@ import {
       const requestOptions = {
         headers: authHeader()
       };
-      return await axios.get('https://pwp21.medien.ifi.lmu.de:4500/users', requestOptions)
+      return await axios.get('http://pwp21.medien.ifi.lmu.de:4500/users', requestOptions)
     } catch(error){
       console.log(error.message)
     }

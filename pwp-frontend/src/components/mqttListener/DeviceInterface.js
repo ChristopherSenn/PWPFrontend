@@ -8,7 +8,7 @@ export const getDeviceDetails = async (deviceId) => {
         const requestHeader = {
             headers: authHeader()
         };
-        return await axios.get('http://pwp21.medien.ifi.lmu.de/devices/getDeviceDetails?deviceId=' + deviceId,
+        return await axios.get('http://pwp21.medien.ifi.lmu.de:4500/devices/getDeviceDetails?deviceId=' + deviceId,
         requestHeader
         )
     }catch(error){
@@ -23,7 +23,7 @@ export const deleteDevice = async (deviceId) => {
         const requestHeader = {
             headers: authHeader()
         };
-        return await axios.delete('http://pwp21.medien.ifi.lmu.de/devices/deleteDevice?deviceId=' + deviceId,
+        return await axios.delete('http://pwp21.medien.ifi.lmu.de:4500/devices/deleteDevice?deviceId=' + deviceId,
         requestHeader
         )
     }catch(error){
@@ -39,7 +39,7 @@ export const getHubPassword = async (hubId) => {
         const requestHeader = {
             headers: authHeader()
         };
-        return await axios.get('http://pwp21.medien.ifi.lmu.de/hubs/password?hubId=' + hubId,
+        return await axios.get('http://pwp21.medien.ifi.lmu.de:4500/hubs/password?hubId=' + hubId,
         requestHeader
         )
     }catch(error){

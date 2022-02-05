@@ -68,7 +68,7 @@ export default function AddHub() {
         headers: authHeader()
       };
         await axios.post(
-        'http://localhost:4500/hubs/createHub',
+        'https://pwp21.medien.ifi.lmu.de/hubs/createHub',
         createdHubInfos, config
         )
         navigate('/dashboard');

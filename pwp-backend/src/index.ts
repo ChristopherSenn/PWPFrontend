@@ -13,16 +13,17 @@ import { connectMqttClient } from './mqtt/mqtt';
 
 export const app = express(); // Init express
 
-const allowedOrigins = ['http://localhost:3000', 'https://pwp21.medien.ifi.lmu.de/', 'http://pwp21.medien.ifi.lmu.de/']; // Define allowed origins
+/* const allowedOrigins = ['http://localhost:3000', 'https://pwp21.medien.ifi.lmu.de/', 'http://pwp21.medien.ifi.lmu.de/']; // Define allowed origins
 
 // Setup cors with allowed origins
 const corsOptions: cors.CorsOptions = {
   origin: allowedOrigins,
-};
+}; */
 
 const port = process.env.PORT || 4500; // Set port
 
-app.use(cors(corsOptions)); // Use cors settings
+// app.use(cors(corsOptions)); // Use cors settings
+app.use(cors());
 app.use(morgan('tiny')); // Request logging
 
 app.use(bodyParser.urlencoded({ extended: true }));

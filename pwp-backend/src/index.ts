@@ -13,7 +13,7 @@ import { connectMqttClient } from './mqtt/mqtt';
 
 export const app = express(); // Init express
 
-const allowedOrigins = ['http://localhost:3000']; // Define allowed origins
+const allowedOrigins = ['http://localhost:3000', 'https://pwp21.medien.ifi.lmu.de:4500']; // Define allowed origins
 
 // Setup cors with allowed origins
 const corsOptions: cors.CorsOptions = {

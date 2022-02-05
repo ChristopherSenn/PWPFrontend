@@ -54,7 +54,7 @@ import {
       };
   
       const { data } = await axios.post(
-        "http://localhost:4500/users/register",
+        "https://pwp21.medien.ifi.lmu.de/users/register",
         { username, email, password, roles },
         config
       );
@@ -86,7 +86,7 @@ import {
       const requestOptions = {
         headers: authHeader()
       };
-      return await axios.get('http://localhost:4500/users', requestOptions)
+      return await axios.get('https://pwp21.medien.ifi.lmu.de/users', requestOptions)
     } catch(error){
       console.log(error.message)
     }

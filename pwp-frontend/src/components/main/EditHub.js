@@ -141,7 +141,7 @@ export default function EditHub() {
       }
       try {
         await axios.patch(
-          'http://localhost:4500/hubs/removeUser',
+          'https://pwp21.medien.ifi.lmu.de/hubs/removeUser',
           removedUser, config
         )
       } catch (error) {
@@ -195,7 +195,7 @@ export default function EditHub() {
     
         try {
             await axios.patch(
-            'http://localhost:4500/hubs/addUser',
+            'https://pwp21.medien.ifi.lmu.de/hubs/addUser',
             createdAddMemberInfo, config
             )
             navigate('/dashboard');

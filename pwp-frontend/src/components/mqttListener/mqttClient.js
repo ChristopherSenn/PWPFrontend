@@ -1,70 +1,19 @@
 import React from "react";
 import mqtt from "mqtt";
 import TextBox from '../deviceFeatures/Features';
-import keyFile from './client_frontend.key';
-import certFile from './client_frontend.pem'
-import {getDeviceDetails} from './DeviceInterface'
+import {getDeviceDetails} from './DeviceInterface';
 import { useLocation } from "react-router-dom";
-
-
-
-
-
-
-
-let key = "";
-let cert="";
-
-function readKeyFile(){
-    var rawFile = new XMLHttpRequest();
-    rawFile.open("GET", keyFile, false);
-    rawFile.onreadystatechange = function ()
-    {
-        if(rawFile.readyState === 4)
-        {
-            if(rawFile.status === 200 || rawFile.status == 0)
-            {
-                var allText = rawFile.responseText;
-                key = allText;
-                
-            }
-        }
-    }
-    rawFile.send(null);}
-
-    function readCertFile(){
-      var rawFile = new XMLHttpRequest();
-      rawFile.open("GET", certFile, false);
-      rawFile.onreadystatechange = function ()
-      {
-          if(rawFile.readyState === 4)
-          {
-              if(rawFile.status === 200 || rawFile.status == 0)
-              {
-                  var allText = rawFile.responseText;
-                  cert = allText;
-                  
-              }
-          }
-      }
-      rawFile.send(null);}
-
-readKeyFile();
-readCertFile();
-
-
-
-
-
-
-
+import {getHubPassword} from './DeviceInterface';
 
 
 class MQTTClient extends React.Component {
+
     constructor (props){
         super(props);
         this.state = {
             client:null,
+            username: "",
+            password: "",
             connectionStatus: "Disconnected",
             data: [],
             deviceId:"",
@@ -76,96 +25,28 @@ class MQTTClient extends React.Component {
         };
     }
 
-    getDeviceName(data){
+    //connect to the broker for communication
+    connect(){
 
-      const deviceName = data.deviceName;
-      this.setState({deviceName: deviceName});
-      
-    };
-
-    getSecurityMode(data){
-
-      
-      const properties = data.properties;
-      for (const property of properties){
-        if (property.name === "acessmode"){
-           const securityMode = property.dataValue;
-           this.setState({securityMode: securityMode});
-        }
-      }
-
-
-    };
-
-    getActions(data){
-
-      const actions = data.actions;
-
-      console.log(actions);
-
-      
-
-      for (const action of actions){
-        const actionName = action.name;
-        const inputType = action.inputType;
-        const payload = {actionName, inputType};
-        const actionsInState = this.state.actions;
-        const newActionsInState = actionsInState.concat([payload]);
-        this.setState({actions: newActionsInState})
-
-      }
-
-      const test = this.state.actions;
-      console.log(test);
-
-    
-
-    };
-
-
-    
-
-    componentDidMount() {
-
-      const deviceId = this.props.deviceClicked;
-      this.setState({deviceId: deviceId});
-
-
-
-       getDeviceDetails(deviceId).then(deviceDetails => {
-        const data = deviceDetails.data;
-
-        
-
-        this.getDeviceName(data);
-        this.getSecurityMode(data);
-        this.getActions(data);
-        
-      });
-      
-      
-     
-
-      //hubId : username
-      //password: /gethub 
-      
+      //get username and password which are needed for the connection authentification
+      const username = JSON.parse(localStorage.getItem('hubClicked'));
+      const password = this.state.password;
 
       const connectionOptions = {
         port: 8091,
         clientId: 'PWP_PUBLIC_FRONTEND_CLIENT ' + Math.random().toString(16).substr(2, 8),
         clean: true,
-        key: key,
-        cert: cert,
+        username: username,
+        password: password,
         connectTimeout: 4000,
         reconnectPeriod: 1000,
       };
 
+        //connect to Broker
         this.client = mqtt.connect('wss://pwp21.medien.ifi.lmu.de:8091', connectionOptions);
 
-
-        
     
-        //the connection was successful 
+        //the connection was successfull
         if(this.client != null){
           this.client.on("connect", () => {
             console.log("Connected");
@@ -174,35 +55,189 @@ class MQTTClient extends React.Component {
             });
           });
 
-          const topic = "actions"
 
+          //subscribe to all topics on which the broker will publish 
+          const baseTopic = "#"
           if (this.client) {
-            this.client.subscribe(topic); 
+            this.client.subscribe(baseTopic); 
         }
 
 
-        //check: deviceId, properties, events, actions
+        const deviceId = this.state.deviceId;
+
           //client receives a message 
           this.client.on("message", (topic, message) => {
-            console.log("gotmessage")
-            console.log(topic);
-            console.log(message);
-            // if (topic === "actions"){
-            //     const actions = this.state.actions;
-            //     const action = message.toString();
-            //     const newactions = actions.concat([action]);
-            //     this.setState({actions: newactions});
-            // }
-            const data = this.state.data;
-            const payload = {topic, message: message.toString()};
-            if (payload.topic) {
-              const newData = data.concat([payload]);
-              this.setState({data: newData})
-    
+            const splittedTopic = topic.split("/");
+            const updatedDeviceId = splittedTopic[2];
+            //check if the selected device equals the deviceId which was sent by the broker (if not ignore the message)
+            if (updatedDeviceId === deviceId){
+
+              //a property update
+              if (splittedTopic[3] === "properties"){
+                const property = splittedTopic[4];
+
+                //an updated accessmode 
+                if (property === "accessmode"){
+                  const updatedSecurityMode = this.checkSecurityMode(message.toString());
+                  this.setState({securityMode: updatedSecurityMode});
+                } else {
+                  const propertyPayload = {property, message: message.toString()};
+                  const properties = this.state.properties;
+                  properties[0] = propertyPayload;
+                  this.setState({properties: properties})
+                }
+
+              //an action update
+              } else if(splittedTopic[3] === "actions"){
+                  const event = splittedTopic[4];
+                  const actionPayload = {event, message: message.toString()};
+                  const events = this.state.events;
+                  events[0] = actionPayload;
+                  this.setState({events: events})
+
+              //an event update
+              } else if(splittedTopic[3] === "events"){
+                  const event = splittedTopic[4];
+                  const eventPayload = {event, message: message.toString()};
+                  const events = this.state.events;
+                  events[0] = eventPayload;
+                  this.setState({events: events})
+              }
             }
+           
           });
         }
       };
+
+    //process device name
+    getDeviceName(data){
+
+      const deviceName = data.deviceName;
+      this.setState({deviceName: deviceName});
+      
+    };
+
+    //process security mode/state
+    getSecurityMode(data){
+
+      
+      const properties = data.properties;
+      for (const property of properties){
+        if (property.name === "accessmode"){
+           const securityMode = this.checkSecurityMode(property.dataValue);
+           this.setState({securityMode: securityMode});
+        }
+      }
+    };
+
+    //get the right input string for each security mode
+    checkSecurityMode(securityMode){
+
+      let updatedSecurityMode = "";
+
+      if (securityMode === "MODE_OFFLINE"){
+        updatedSecurityMode = "No Connection";
+      } else if (securityMode === "MODE_AP_ONLY"){
+        updatedSecurityMode = "Access Point";
+      } else if (securityMode === "MODE_HUB_LOCAL"){
+        updatedSecurityMode = "Local Network";
+      } else if (securityMode === "MODE_HUB_INTERNET"){
+        updatedSecurityMode = "Full Internet Access";
+      } else {
+        updatedSecurityMode = securityMode;
+      }
+      return(updatedSecurityMode);
+    };
+
+    //process actions
+    getActions(data){
+
+      const actions = data.actions;
+
+      for (const action of actions){
+        const actionName = action.name;
+        const inputType = action.inputType;
+        const href = this.getHref(action.href);
+        const payload = {actionName, inputType, href};
+        const actionsInState = this.state.actions;
+        const newActionsInState = actionsInState.concat([payload]);
+        this.setState({actions: newActionsInState})
+
+      }
+
+    };
+
+    //process href 
+    //href is the topic on which a message will be sent to the broker in case of an clicked device
+    getHref(href){
+
+      const splittedHref = href.split("/");
+      let hrefTopic = "";
+      for (var i = 3; i < splittedHref.length - 1; i++){
+        hrefTopic = hrefTopic + splittedHref[i] + "/";
+      }
+      hrefTopic = hrefTopic + splittedHref[splittedHref.length -1];
+      return(hrefTopic);
+
+    }
+
+    //process password for authetification
+    getPassword(hubPassword){
+
+      const hubId = JSON.parse(localStorage.getItem('hubClicked'));
+      this.setState({username: hubId});
+      this.setState({password: hubPassword});
+
+      this.connect();
+    }
+
+    //publish a message on a specific topic
+    publishAction(topic, message){
+      if (this.client) {
+        this.client.publish(topic, message); 
+    }
+    }
+
+    //disconneczt from the broker
+    handleDisconnection = () => {
+      if (this.client) {
+        this.client.end( () => {
+          this.setState({
+            client: null,
+            connectionStatus: "Disconnected"
+          });
+        });
+      }
+    };
+    
+
+    componentDidMount() {
+
+      const deviceId = this.props.deviceClicked;
+      this.setState({deviceId: deviceId});
+
+
+      //get all device details for the selected device
+       getDeviceDetails(deviceId).then(deviceDetails => {
+        const data = deviceDetails.data;
+        this.getDeviceName(data);
+        this.getSecurityMode(data);
+        this.getActions(data);
+        
+      });
+      
+      const hubId = JSON.parse(localStorage.getItem('hubClicked'));
+      this.setState({username: hubId});
+
+      //get the password for the connection
+      getHubPassword(hubId).then(hubPassword => {
+        const password = hubPassword.data;
+
+        this.getPassword(password);
+        
+      }) 
+
+    }
 
       render(){
           return(
@@ -213,6 +248,10 @@ class MQTTClient extends React.Component {
                     securityMode = {this.state.securityMode} 
                     actions = {this.state.actions}
                     deviceId = {this.state.deviceId}
+                    properties = {this.state.properties}
+                    events = {this.state.events}
+                    publishAction = {(topic, message) => this.publishAction(topic, message)}
+                    handleDisconnection = {() => this.handleDisconnection()}
                   ></TextBox>
                 </header>
               </div>
@@ -222,7 +261,7 @@ class MQTTClient extends React.Component {
 
 export default function Features() {
 
-
+//deviceId of the selected device 
 const { state } = useLocation();
 
     return(

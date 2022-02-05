@@ -1,8 +1,11 @@
 import axios from 'axios'
 import { authHeader } from '../../utilis/setToken';
 
+
+//get all the devices contained in the selected hub from the database
 export const getDevicesByHub = async (selectedHubId) => {
     try{
+        //authorize for the request with the specific user token 
         const requestHeader = {
             headers: authHeader()
         };

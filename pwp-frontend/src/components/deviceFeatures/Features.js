@@ -3,8 +3,6 @@ import './Features.css'
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faInfo } from '@fortawesome/free-solid-svg-icons/faInfo';
 import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
@@ -19,11 +17,10 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Popover from '@mui/material/Popover';
 import SecurityExplanation from '../main/securityExplanation';
 import InfoIcon from '@mui/icons-material/Info';
-import Box from '@mui/material/Box';
 import { deleteDevice } from '../mqttListener/DeviceInterface';
-import { useNavigate } from "react-router-dom";
 import { Navigate } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
+
 
 class Delete extends React.Component {
 
@@ -45,6 +42,7 @@ class Delete extends React.Component {
     };
 
 
+    //delete device and handle redirection to device overview
     handleDelete = () => {
         this.handleCloseAlert();
         const deviceId = this.props.deviceId;
@@ -93,6 +91,7 @@ class ActionButtons extends React.Component {
         this.state = {
             actionName: "",
             inputType: "",
+            href: "",
             alertIsOpen: false,
             inputForAction: "",
         };
@@ -101,6 +100,7 @@ class ActionButtons extends React.Component {
     componentDidMount() {
         this.setState({ actionName: this.props.actionName });
         this.setState({ inputType: this.props.inputType })
+        this.setState({ href: this.props.href })
     }
 
 
@@ -119,23 +119,23 @@ class ActionButtons extends React.Component {
 
 
 
-
-
     render() {
 
         return (
             <div className="ActionButtons">
                 <Button sx={{ color: 'white', backgroundColor: '#314448', width: 140, height: 40, "&:hover": {backgroundColor: '#cbc3be'} }}
                     onClick={(e) => {
-                        const actionName = this.state.actionName;
                         const inputType = this.state.inputType;
 
+                        //if return type is float: user needs to input a value that is sent to the broker
+                        //else: the actionName is sent to the broker
                         if (inputType === "float") {
                             this.handleOpenAlert()
+                        } else {
+                            const href = this.state.href;
+                            const message = this.state.actionName;
+                            this.props.publishAction(href, message);
                         }
-
-
-
                     }}
                 >
                     {this.state.actionName}
@@ -160,7 +160,18 @@ class ActionButtons extends React.Component {
                          <div>
                              <br/>
                              <Button sx={{ backgroundColor: '#c6c3b3', color: 'black', "&:hover": { backgroundColor: '#cbc3be' } }} onClick={this.handleCloseAlert}>Cancel</Button>
-                            <Button sx={{marginLeft:"12px",  backgroundColor: '#3b4834', color: 'white', "&:hover": { backgroundColor: '#cbc3be' } }} onClick={this.handleCloseAlert}>Submit</Button>
+                            <Button sx={{marginLeft:"12px",  backgroundColor: '#3b4834', color: 'white', "&:hover": { backgroundColor: '#cbc3be' } }} 
+                            onClick={(e) => {
+                                this.handleCloseAlert();
+                                const href = this.state.href;
+                                const message = this.state.inputForAction;
+
+                                //check if input is a number
+                                var numbers = /^[0-9]+$/;
+                                if(message.match(numbers)){
+                                    this.props.publishAction(href, message);
+
+                            }}}>Submit</Button>
                             </div>
                             </div>
                     </DialogActions>
@@ -181,19 +192,12 @@ class Functionalities extends React.Component {
         };
     }
 
-    componentWillReceiveProps(nextProps) {
-        this.setState({ actions: nextProps });
-    }
-
-
     render() {
-
-
-
         var actions = this.props.actions;
         var actionList = "";
 
 
+        //create a personalized button for each action of the device
         if (actions !== null) {
             actionList = actions.map((action) =>
                 actionList =
@@ -201,6 +205,8 @@ class Functionalities extends React.Component {
                     <ActionButtons
                         actionName={action.actionName}
                         inputType={action.inputType}
+                        href={action.href}
+                        publishAction = {(topic, message) => this.props.publishAction(topic, message)}
                     ></ActionButtons>
                 </ListItem>
             );
@@ -208,7 +214,7 @@ class Functionalities extends React.Component {
 
 
         return(
-            <div>
+            <div className='Functionalities'>
                 <h4 style={{color:"#7c9a92", textAlign:"left"}}>Functionalities:</h4>
                 <List component={Stack} direction="row" sx={{float: 'left'}}>
                   {actionList}
@@ -220,66 +226,65 @@ class Functionalities extends React.Component {
     }
 }
 
-class FakeProperties extends React.Component {
+
+
+class DeviceProperties extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            show: false,
+            properties: [],
         };
     }
 
-    componentDidMount() {
-        setTimeout(() => this.setState({ show: true }), 5000)
-    }
 
     render() {
-        return (
-            this.state.show &&
-            <h5 style={{color:"#314448"}}>Status: ON</h5>
-        )
-    }
-}
+        const updatedPropertyArray = this.props.properties;
+        let propertyName = "";
+        let propertyValue = "";
+        
+        //got a current updated property by the broker
+        if (updatedPropertyArray.length > 0){
+            const updatedProperty = updatedPropertyArray[0];
+            propertyName = updatedProperty.property + ":";
+            propertyValue = updatedProperty.message;
+        }
 
-class DeviceProperties extends React.Component {
-
-
-    render() {
         return (
             <div className='DeviceProperties'>
                 <h4 style={{color:"#7c9a92"}}>Current properties:</h4>
-                <FakeProperties/>
+                <h5 style={{color:"#314448"}}>{propertyName} {propertyValue}</h5>
             </div>
         )
     }
 }
 
-class FakeEvents extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            show: false,
-        };
-    }
 
-    componentDidMount() {
-        setTimeout(() => this.setState({ show: true }), 7000)
-    }
-
-    render() {
-        return (
-            this.state.show &&
-            <h5 style={{color:"#314448"}}>Event: Open</h5>
-        )
-    }
-}
 
 class DeviceStatus extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            events: [],
+        };
+    }
+
+
     render() {
+        const updatedEventArray = this.props.events;
+        let eventName = "";
+        let eventValue = "";
+        
+        //got a current updated event/action by the broker
+        if (updatedEventArray.length > 0){
+            const updatedEvent = updatedEventArray[0];
+            eventName = updatedEvent.event + ":";
+            eventValue = updatedEvent.message;
+        }
         return(
-            <div className='DeviceProperties'>
+            <div className='DeviceStatus'>
             <h4 style={{color:"#7c9a92"}}>Current events:</h4>
-            <FakeEvents/>
+            <h5 style={{color:"#314448"}}>{eventName} {eventValue}</h5>
         </div>
         
         )
@@ -326,28 +331,49 @@ class SecurityMode extends React.Component {
     }
 }
 
-
-function DeviceName(props) {
-
-    const navigate = useNavigate();
-    const redirectToPage = () => {
-        navigate('/deviceOverview');
+class DeviceName extends React.Component {
+    
+    render (){
+        return (
+            <div className='DeviceName'>
+                <Typography component="h1" variant="h5" sx={{ mt: 2, alignItems: 'center', color:"#314448" }}>
+                    <RedirectButton
+                        handleDisconnection = {() => this.props.handleDisconnection()}
+                    />
+                    {this.props.deviceName}
+                </Typography>
+            </div>
+        )
     }
-  
-    return (
-        <div className='DeviceName'>
-            <Typography component="h1" variant="h5" sx={{ mt: 2, alignItems: 'center', color:"#314448" }}>
+}
+
+class RedirectButton extends React.Component {
+    constructor (props){
+        super(props);
+        this.state = {
+            redirect: false,
+        };
+    }
+
+    render () {
+        //navigate to device overview if back button was clicked
+        const { redirect } = this.state;
+        if(redirect) {
+            return <Navigate to='/deviceOverview'/>;
+        }
+        return (
                 <Button
-                    onClick={redirectToPage}
+                    onClick={(e) => {
+                        this.props.handleDisconnection();
+                        this.setState({redirect: true})
+                    }}
                     variant='text'
                     sx={{ mt: 1, width: "30px", "&:hover": { backgroundColor: '#cbc3be' } }}
                     startIcon={<ArrowBackIosOutlinedIcon sx={{ color: '#ab9c8a', width: "100%", height: "1%" }} />}
                 >
                 </Button>
-                {props.deviceName}
-            </Typography>
-        </div>
-    )
+        )
+    }
 
 }
 
@@ -359,6 +385,7 @@ class TextBox extends React.Component {
            <div className='TextBox'>
                <DeviceName
                  deviceName = {this.props.deviceName}
+                 handleDisconnection = {() => this.props.handleDisconnection()}
                ></DeviceName>
                <Divider />
                <List component={Stack} direction="row" sx={{marginTop: -3, marginLeft: -2,  display: 'absolute'}} >
@@ -369,16 +396,21 @@ class TextBox extends React.Component {
                </SecurityMode>
                </ListItem>
                <ListItem key= 'DeviceStatus' >
-               <DeviceStatus/>
+               <DeviceStatus
+                 events = {this.props.events}
+               ></DeviceStatus>
                </ListItem>
                <ListItem key ="DeviceProperties">
-                   <DeviceProperties></DeviceProperties>
+                   <DeviceProperties
+                     properties = {this.props.properties}
+                   ></DeviceProperties>
                </ListItem>
                </List>
                <Divider />
                
                <Functionalities
                  actions={this.props.actions}
+                 publishAction = {(topic, message) => this.props.publishAction(topic, message)}
                ></Functionalities>
                <br/>
                <br/>

@@ -7,7 +7,7 @@ export const getAllHubsFromDB = async () => {
     const requestOptions = {
       headers: authHeader()
     };
-    return await axios.get('https://pwp21.medien.ifi.lmu.de/hubs', requestOptions)
+    return await axios.get('http://pwp21.medien.ifi.lmu.de/hubs', requestOptions)
   } catch(error){
     console.log(error.message)
   }
@@ -15,7 +15,7 @@ export const getAllHubsFromDB = async () => {
 
 export const deleteHub = async (hubId) => {
   try{
-    return await axios.delete('https://pwp21.medien.ifi.lmu.de/hubs/deleteHub', {
+    return await axios.delete('http://pwp21.medien.ifi.lmu.de/hubs/deleteHub', {
       headers: authHeader(),
       data: {
         "hubId": hubId

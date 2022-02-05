@@ -26,7 +26,7 @@ const connectionOptions: mqtt.IClientOptions = {
  * This method setups an mqtt broker, that listens to any incoming events or properties, and updates their values in the database
  */
 function connectMqttClient() {
-  client = mqtt.connect('mqtt://pwp21.medien.ifi.lmu.de:1883', connectionOptions); // Connect to public broker with given options
+  client = mqtt.connect('mqtt://pwp21.medien.ifi.lmu.de', connectionOptions); // Connect to public broker with given options
 
   // On connect, subscribe to the base topic and print a success message
   client.on('connect', () => {

@@ -106,6 +106,33 @@ export class DeviceService {
     });
   }
 
+  public async getDevices(): Promise<IDevice[]> {
+    return new Promise<IDevice[]>((resolve, reject) => {
+      Device.find().exec((err, result) => {
+        if (err) {
+          reject(new StatusError('Database error', 400));
+        } else {
+          const devices: IDevice[] = [];
+          result.forEach((d) => {
+            const device: IDevice = {
+              id: d._id,
+              thingDescription: d.thingDescription,
+              deviceId: d.deviceId,
+              hubIds: d.hubIds,
+              deviceName: d.deviceName,
+              actions: d.actions,
+              events: d.events,
+              properties: d.properties,
+            };
+            // push properties to array of IDevice
+            devices.push(device);
+          });
+          resolve(devices);
+        }
+      });
+    });
+  }
+
   // Get All Properties of a specific Device by HubId
   public async getDevice(hubId: string): Promise<IDevice[]> {
     return new Promise<IDevice[]>((resolve, reject) => {

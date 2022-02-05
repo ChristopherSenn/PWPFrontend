@@ -23,15 +23,15 @@ import Typography from '@mui/material/Typography';
 import CssBaseline from '@mui/material/CssBaseline';
 
 const theme = createTheme({
-  
+
   components: {
     MuiCssBaseline: {
-      styleOverrides: 
+      styleOverrides:
         `@font-face {
           font-family: 'Arial';
           font-style: normal;
         }`,
-      
+
     },
     MuiButton: {
       styleOverrides: {
@@ -40,33 +40,33 @@ const theme = createTheme({
         },
       },
     },
-   MuiTypography:{
-     styleOverrides:{
-       root:{
-         textAlign: 'center',
-         marginTop: '30px'
-       },
-     },
-   },
+    MuiTypography: {
+      styleOverrides: {
+        root: {
+          textAlign: 'center',
+          marginTop: '30px'
+        },
+      },
+    },
   },
 })
- // Styling of items in which each hub is displayed
- const Item1 = styled(Paper)(({ theme }) => ({
+// Styling of items in which each hub is displayed
+const Item1 = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(2),
   textAlign: 'center',
   cursor: 'pointer',
   backgroundColor: '#69849b',
   color: 'white'
-  }));
-   // Styling of items in which each hub is displayed
- const Item2 = styled(Paper)(({ theme }) => ({
+}));
+// Styling of items in which each hub is displayed
+const Item2 = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(2),
   textAlign: 'center',
   cursor: 'pointer',
   backgroundColor: '#a8c7cb',
-  }));
+}));
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -84,7 +84,9 @@ export default function Dashboard() {
   //get users own hubs
   const [ownerHubs, setOwnerHubs] = useState([]);
   //get hubs, where user is a only a member
-  const [userMemberHubs, setUserMemberHubs] = useState([])
+  const [userMemberHubs, setUserMemberHubs] = useState([]);
+  const [cssVisibilityItem1, setCssVisibilityItem1] = useState('none');
+  const [cssVisibilityItem2, setCssVisibilityItem2] = useState('none');
   // get all information about logged user (single)
   const userLogin = useSelector((state) => state.userLogin);
   const { isAuth, user } = userLogin;
@@ -98,10 +100,6 @@ export default function Dashboard() {
 
     setOpen(false);
   };
-
-
-  // hubCLicked contains the id of the hub that was clicked
-  const hubClicked = useSelector((state) => state.hubClicked)
 
   //users own hubs
   const showHubs = () => {
@@ -123,6 +121,21 @@ export default function Dashboard() {
         })
       })
       setUserMemberHubs(memberHubsArray)
+
+      // Change css classes to update the displayed headings accordingly
+      if (ownerHubsArray.length > 0 && memberHubsArray.length > 0) {
+        setCssVisibilityItem1('block');
+        setCssVisibilityItem2('block');
+      } else if (ownerHubsArray.length > 0 && memberHubsArray.length === 0) {
+        setCssVisibilityItem1('block');
+        setCssVisibilityItem2('none');
+      } else if (ownerHubsArray.length === 0 && memberHubsArray.length > 0) {
+        setCssVisibilityItem1('none');
+        setCssVisibilityItem2('block');
+      } else if (ownerHubsArray.length === 0 && memberHubsArray.length === 0) {
+        setCssVisibilityItem1('none');
+        setCssVisibilityItem2('none');
+      }
     });
   }
 
@@ -148,6 +161,13 @@ export default function Dashboard() {
     })
     setOwnerHubs(tempHubArr);
     setOpen(true);
+
+    // Change css classes to update the displayed headings accordingly
+    if (tempHubArr.length > 0) {
+      setCssVisibilityItem1('block');
+    } else {
+      setCssVisibilityItem1('none');
+    }
   }
 
   const onEdit = (e, hub) => {
@@ -155,376 +175,154 @@ export default function Dashboard() {
     navigate('/edit-hub', { state: hub });
   }
 
- 
 
 
-  
-  if(ownerHubs.length > 0 && userMemberHubs.length > 0) {
-    return (
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Typography variant="h4"  component="div">
-       Hi, {userName}!
+
+
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Typography variant="h4" component="div">
+        Hi, {userName}!
       </Typography>
-        <Button
-          aria-label="delete"
-          size="large"
-          sx={{ color: 'white', "&:hover": { backgroundColor: '#999999' }, marginLeft: '15px' }}
-          variant="contained"
-          component={RouterLink}
-          to="/add-hub"
-          startIcon={<AddIcon fontSize="inherit" />}>
-          hub
-        </Button>
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        ></Box>
-        <Typography  variant="h5" style={{  marginLeft: '14px', marginRight: '89%', color: '#69849b', fontWeight: "bolder"}}>
-          Hubs you own:
-        </Typography>
-        <Box
-          sx={{
-            marginTop: 3,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        ></Box>
-
-        <Box sx={{
+      <Button
+        aria-label="delete"
+        size="large"
+        sx={{ color: 'white', "&:hover": { backgroundColor: '#999999' }, marginLeft: '15px' }}
+        variant="contained"
+        component={RouterLink}
+        to="/add-hub"
+        startIcon={<AddIcon fontSize="inherit" />}>
+        hub
+      </Button>
+      <Box
+        sx={{
+          marginTop: 8,
           display: 'flex',
-          justifyContent: 'center',
-          p: 1,
-          m: 1,
-          borderRadius: 1,
-        }}>
-          <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+          flexDirection: 'column',
+          alignItems: 'center',
+          display: `${cssVisibilityItem1}`,
+        }}
+      ></Box>
+      <Typography variant="h5" sx={{ marginLeft: '14px', marginRight: '89%', color: '#69849b', fontWeight: "bolder", display: `${cssVisibilityItem1}` }}>
+        Hubs you own:
+      </Typography>
+      <Box
+        sx={{
+          marginTop: 3,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          display: `${cssVisibilityItem1}`,
+        }}
+      ></Box>
 
-            {ownerHubs.map((hub, index) => (
-              <Grid item xs={2} sm={4} md={4} key={index}>
-                <Box sx={{ textAlign: 'right' }}>
-                  <IconButton onClick={(e) => onEdit(e, hub)} >
-                    <GroupAddIcon />
-                  </IconButton>
-                  <IconButton aria-label="delete" onClick={(e) => onDelete(e, hub)}>
-                    <DeleteIcon />
-                  </IconButton>
-                  <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
-                    <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-                      Hub was successfully deleted
-                    </Alert>
-                  </Snackbar>
-                </Box>
-                <Item1 onClick={(e) => {
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        p: 1,
+        m: 1,
+        borderRadius: 1,
+      }}>
+        <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+
+          {ownerHubs.map((hub, index) => (
+            <Grid item xs={2} sm={4} md={4} key={index}>
+              <Box sx={{ textAlign: 'right' }}>
+                <IconButton onClick={(e) => onEdit(e, hub)} >
+                  <GroupAddIcon />
+                </IconButton>
+                <IconButton aria-label="delete" onClick={(e) => onDelete(e, hub)}>
+                  <DeleteIcon />
+                </IconButton>
+                <Snackbar open={open} autoHideDuration={5000} onClose={handleClose}>
+                  <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                    Hub was successfully deleted
+                  </Alert>
+                </Snackbar>
+              </Box>
+              <Item1 onClick={(e) => {
+                navigate('/deviceOverview');
+                dispatch({ type: HUB_CLICKED, payload: hub.hubId });
+                localStorage.setItem("hubClicked", JSON.stringify(hub.hubId));
+              }}>
+                <span>{hub.hubName}</span>
+              </Item1>
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+
+      <Box
+        sx={{
+          marginTop: 3,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      ></Box>
+
+      <Divider style={{ display: `${cssVisibilityItem1}` }} />
+
+      <Box
+        sx={{
+          marginTop: 8,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      ></Box>
+      <Typography variant="h5" style={{ marginLeft: '15px', marginRight: '82%', color: '#a8c7cb', fontWeight: "bolder", display: `${cssVisibilityItem2}` }}>
+        Hubs you are a member of:
+      </Typography>
+      <Box
+        sx={{
+          marginTop: 3,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}
+      ></Box>
+
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        p: 1,
+        m: 1,
+        borderRadius: 1,
+      }}>
+        <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+          {userMemberHubs.map((hub, index) => (
+            <Grid item xs={2} sm={4} md={4} key={hub.hubId}>
+
+              <Item2
+                onClick={(e) => {
                   navigate('/deviceOverview');
-                  dispatch({ type: HUB_CLICKED, payload: hub.hubId })
+                  dispatch({ type: HUB_CLICKED, payload: hub.hubId });
                   localStorage.setItem("hubClicked", JSON.stringify(hub.hubId));
+
                 }}>
-                  <span>{hub.hubName}</span>
-                </Item1>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
+                <span>{hub.hubName}</span>
+              </Item2>
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
 
-        <Box
-          sx={{
-            marginTop: 3,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        ></Box>
-
-        <Divider />
-
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        ></Box>
-       <Typography  variant="h5" style={{ marginLeft: '15px', marginRight: '82%', color: '#a8c7cb', fontWeight: "bolder"}}>
-          Hubs you are a member of :
-        </Typography>
-        <Box
-          sx={{
-            marginTop: 3,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        ></Box>
-
-        <Box sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          p: 1,
-          m: 1,
-          borderRadius: 1,
-        }}>
-          <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-            {userMemberHubs.map((hub, index) => (
-              <Grid item xs={2} sm={4} md={4} key={hub.hubId}>
-
-                <Item2
-                  onClick={(e) => {
-                    navigate('/deviceOverview');
-                    dispatch({ type: HUB_CLICKED, payload: hub.hubId })
-                    localStorage.setItem("hubClicked", JSON.stringify(hub.hubId));
-
-                  }}>
-                  <span>{hub.hubName}</span>
-                </Item2>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-
-        <div className='logoutButton' style={{
-          position: "fixed",
-          left: "94%",
-          top: "20px"
-        }}>
-          <Button
-            sx={{ backgroundColor: 'gray', color: 'white', "&:hover": { backgroundColor: '#999999' } }}
-            variant="contained"
-            component={RouterLink}
-            to="/users/login"
-            onClick={logoutHandler}
-            startIcon={<LogoutIcon />}>
-          </Button>
-        </div>
-
-      </ThemeProvider>
-    )
-  } else if (ownerHubs.length > 0 && userMemberHubs.length === 0) {
-    return (
-      <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Typography variant="h5"  component="div">
-     Hi, {userName}!
-    </Typography>
+      <div className='logoutButton' style={{
+        position: "fixed",
+        left: "94%",
+        top: "20px"
+      }}>
         <Button
-          aria-label="delete"
-          size="large"
-          sx={{ color: 'white', "&:hover": { backgroundColor: '#999999' }, marginLeft: '15px' }}
+          sx={{ backgroundColor: 'gray', color: 'white', "&:hover": { backgroundColor: '#999999' } }}
           variant="contained"
           component={RouterLink}
-          to="/add-hub"
-          startIcon={<AddIcon fontSize="inherit" />}>
-          hub
+          to="/users/login"
+          onClick={logoutHandler}
+          startIcon={<LogoutIcon />}>
         </Button>
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        ></Box>
-          <Typography  variant="h5" style={{  marginLeft: '14px', marginRight: '89%', color: '#69849b', fontWeight: "bolder"}}>
-          Hubs you own:
-        </Typography>
-        <Box
-          sx={{
-            marginTop: 3,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        ></Box>
-
-        <Box sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          p: 1,
-          m: 1,
-          borderRadius: 1,
-        }}>
-          <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-
-            {ownerHubs.map((hub, index) => (
-              <Grid item xs={2} sm={4} md={4} key={index}>
-                <Box sx={{ textAlign: 'right' }}>
-                  <IconButton onClick={(e) => onEdit(e, hub)} >
-                    <GroupAddIcon />
-                  </IconButton>
-                  <IconButton onClick={(e) => onDelete(e, hub)} >
-                    <DeleteIcon />
-                  </IconButton>
-                </Box>
-                <Item1 onClick={(e) => {
-                  navigate('/deviceOverview');
-                  dispatch({ type: HUB_CLICKED, payload: hub.hubId })
-                  localStorage.setItem("hubClicked", JSON.stringify(hub.hubId));
-                }}
-                  >
-                  <span>{hub.hubName}</span>
-                </Item1>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-        <div className='logoutButton' style={{
-          position: "fixed",
-          left: "94%",
-          top: "20px"
-        }}>
-          <Button
-            sx={{ backgroundColor: 'gray', color: 'white', "&:hover": { backgroundColor: '#999999' } }}
-            variant="contained"
-            component={RouterLink}
-            to="/users/login"
-            onClick={logoutHandler}
-            startIcon={<LogoutIcon />}>
-          </Button>
-        </div>
-      </ThemeProvider>
-    )
-  }
-  else if (ownerHubs.length === 0 && userMemberHubs.length > 0) {
-    return (
-      <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Typography variant="h5"  component="div">
-     Hi, {userName}!
-    </Typography>
-        <Button
-          aria-label="delete"
-          size="large"
-          sx={{ color: 'white', "&:hover": { backgroundColor: '#999999' }, marginLeft: '15px' }}
-          variant="contained"
-          component={RouterLink}
-          to="/add-hub"
-          startIcon={<AddIcon fontSize="inherit" />}>
-          hub
-        </Button>
-
-        <Box
-          sx={{
-            marginTop: 3,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        ></Box>
-
-        <Divider />
-
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        ></Box>
-          <Typography  variant="h5" style={{ marginLeft: '15px', marginRight: '82%', color: '#a8c7cb', fontWeight: "bolder"}}>
-          Hubs you are a member of :
-        </Typography>
-        <Box
-          sx={{
-            marginTop: 3,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        ></Box>
-
-        <Box sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          p: 1,
-          m: 1,
-          borderRadius: 1,
-        }}>
-          <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-            {userMemberHubs.map((hub, index) => (
-              <Grid item xs={2} sm={4} md={4} key={hub.hubId}>
-
-                <Item2
-                  onClick={(e) => {
-                    navigate('/deviceOverview');
-                    dispatch({ type: HUB_CLICKED, payload: hub.hubId })
-                    localStorage.setItem("hubClicked", JSON.stringify(hub.hubId));
-
-                  }}
-                  sx={{ backgroundColor: 'lightgrey' }}>
-                  <span>{hub.hubName}</span>
-                </Item2>
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-
-        <div className='logoutButton' style={{
-          position: "fixed",
-          left: "94%",
-          top: "20px"
-        }}>
-          <Button
-            sx={{ backgroundColor: 'gray', color: 'white', "&:hover": { backgroundColor: '#999999' } }}
-            variant="contained"
-            component={RouterLink}
-            to="/users/login"
-            onClick={logoutHandler}
-            startIcon={<LogoutIcon />}>
-          </Button>
-        </div>
-
-      </ThemeProvider>
-    )
-  }
-  else {
-    return (
-      <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Typography variant="h5"  component="div">
-     Hi, {userName}!
-    </Typography>
-        <Button
-          aria-label="delete"
-          size="large"
-          sx={{ color: 'white', "&:hover": { backgroundColor: '#999999' }, marginLeft: '15px' }}
-          variant="contained"
-          component={RouterLink}
-          to="/add-hub"
-          startIcon={<AddIcon fontSize="inherit" />}>
-          hub
-        </Button>
-
-        <Box
-          sx={{
-            marginTop: 3,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        ></Box>
-        <div className='logoutButton' style={{
-          position: "fixed",
-          left: "94%",
-          top: "20px"
-        }}>
-          <Button
-            sx={{ backgroundColor: 'gray', color: 'white', "&:hover": { backgroundColor: '#999999' } }}
-            variant="contained"
-            component={RouterLink}
-            to="/users/login"
-            onClick={logoutHandler}
-            startIcon={<LogoutIcon />}>
-          </Button>
-        </div>
-
-      </ThemeProvider>
-    )
-  }
+      </div>
+    </ThemeProvider>
+  )
 }

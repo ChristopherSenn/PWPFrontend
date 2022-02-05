@@ -37,6 +37,7 @@ export class MqttService {
     } else if (topicSplit[3] === CategoryTypes.Properties) {
       passedCategory = CategoryTypes.Properties;
     }
+    // wot_hubs/<hub-id>/<device-id>/properties/property
 
     // Catch invalid category input
     if (passedCategory === CategoryTypes.Undefined) {

@@ -22,7 +22,7 @@ import {
       };
   
       const { data } = await axios.post(
-        'http://pwp21.medien.ifi.lmu.de:4500/users/login',
+        'http://localhost:4500/users/login',
         { username, password },
         config
       );
@@ -54,7 +54,7 @@ import {
       };
   
       const { data } = await axios.post(
-        "http://pwp21.medien.ifi.lmu.de:4500/users/register",
+        "http://localhost:4500/users/register",
         { username, email, password, roles },
         config
       );
@@ -86,7 +86,7 @@ import {
       const requestOptions = {
         headers: authHeader()
       };
-      return await axios.get('http://pwp21.medien.ifi.lmu.de:4500/users', requestOptions)
+      return await axios.get('http://localhost:4500/users', requestOptions)
     } catch(error){
       console.log(error.message)
     }

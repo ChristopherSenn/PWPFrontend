@@ -9,7 +9,7 @@ export const getDevicesByHub = async (selectedHubId) => {
         const requestHeader = {
             headers: authHeader()
         };
-        return await axios.get('http://localhost:4500/devices/getDeviceByHub?hubId=' + selectedHubId,
+        return await axios.get('http://pwp21.medien.ifi.lmu.de:4500/devices/getDeviceByHub?hubId=' + selectedHubId,
         requestHeader
         )
     }catch(error){

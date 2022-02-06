@@ -20,7 +20,6 @@ export class MqttService {
   }
 
   public async processThingDescription(topicSplit: string[], text: string) {
-    console.log('Thing description tbd');
     const params: DeviceCreateParams = {
       thingDescription: JSON.parse(text),
       hubIds: [topicSplit[1]],

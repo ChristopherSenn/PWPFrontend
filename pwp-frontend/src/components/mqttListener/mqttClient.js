@@ -18,9 +18,6 @@ class MQTTClient extends React.Component {
             data: [],
             deviceId:"",
             deviceName: 'Your Device',
-            possibleEvents: [],
-            possibleProperties: [],
-            possibleActions:[],
             events: [],
             properties: [],
             securityMode: "",
@@ -68,12 +65,6 @@ class MQTTClient extends React.Component {
 
         const deviceId = this.state.deviceId;
 
-        const possibleProperties = this.state.possibleProperties;
-        const possibleActions = this.state.possibleActions;
-        const possibleEvents = this.state.possibleEvents;
-
-
-
           //client receives a message 
           this.client.on("message", (topic, message) => {
             const splittedTopic = topic.split("/");
@@ -89,8 +80,7 @@ class MQTTClient extends React.Component {
                 if (property === "accessmode"){
                   const updatedSecurityMode = this.checkSecurityMode(message.toString());
                   this.setState({securityMode: updatedSecurityMode});
-                //check if the incoming property is valid for the device
-                } else if (possibleProperties.includes(property)){
+                } else {
                   const propertyPayload = {property, message: message.toString()};
                   const properties = this.state.properties;
                   properties[0] = propertyPayload;
@@ -100,25 +90,18 @@ class MQTTClient extends React.Component {
               //an action update
               } else if(splittedTopic[3] === "actions"){
                   const event = splittedTopic[4];
-                  //check if the incoming action is valid for the device
-                  if (possibleActions.includes(event)){
-                    const actionPayload = {event, message: message.toString()};
-                    const events = this.state.events;
-                    events[0] = actionPayload;
-                    this.setState({events: events})
-                  }
-
+                  const actionPayload = {event, message: message.toString()};
+                  const events = this.state.events;
+                  events[0] = actionPayload;
+                  this.setState({events: events})
 
               //an event update
               } else if(splittedTopic[3] === "events"){
                   const event = splittedTopic[4];
-                  //check if the incoming event is valid for the device
-                  if (possibleEvents.includes(event)){
-                    const eventPayload = {event, message: message.toString()};
-                    const events = this.state.events;
-                    events[0] = eventPayload;
-                    this.setState({events: events})
-                  }
+                  const eventPayload = {event, message: message.toString()};
+                  const events = this.state.events;
+                  events[0] = eventPayload;
+                  this.setState({events: events})
               }
             }
            
@@ -177,42 +160,12 @@ class MQTTClient extends React.Component {
         const href = this.getHref(action.href);
         const payload = {actionName, inputType, href};
         const actionsInState = this.state.actions;
-        const possibleActions = this.state.possibleActions;
         const newActionsInState = actionsInState.concat([payload]);
-        const newPossibleAction = possibleActions.concat([actionName]);
-        this.setState({actions: newActionsInState, possibleActions: newPossibleAction});
+        this.setState({actions: newActionsInState})
 
       }
 
     };
-
-
-    //process events
-    getEvents(data){
-      
-      const events = data.events;
-      
-      for (const event of events){
-        const eventName = event.name;
-        const possibleEvents = this.state.possibleEvents;
-        const newPossibleEvent = possibleEvents.concat([eventName]);
-        this.setState({possibleEvents: newPossibleEvent});
-      }
-    }
-
-    //process properties
-    getPorperties(data){
-      
-      const properties = data.properties;
-      
-      for (const property of properties){
-        const propertyName = property.name;
-        const possibleProperties = this.state.possibleProperties;
-        if (propertyName !== "access_mode"){
-          const newPossibleProperty = possibleProperties.concat([propertyName]);
-          this.setState({possibleProperties: newPossibleProperty});
-      }}
-    }
 
     //process href 
     //href is the topic on which a message will be sent to the broker in case of an clicked device
@@ -260,7 +213,6 @@ class MQTTClient extends React.Component {
 
     componentDidMount() {
 
-
       const deviceId = this.props.deviceClicked;
       this.setState({deviceId: deviceId});
 
@@ -271,8 +223,6 @@ class MQTTClient extends React.Component {
         this.getDeviceName(data);
         this.getSecurityMode(data);
         this.getActions(data);
-        this.getEvents(data);
-        this.getPorperties(data);
         
       });
       

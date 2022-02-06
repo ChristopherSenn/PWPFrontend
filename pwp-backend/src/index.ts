@@ -2,6 +2,11 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import morgan from 'morgan';
+// import https from 'https';
+// import http from 'http';
+import fs from 'fs';
+import path from 'path';
+import httpolyglot from 'httpolyglot';
 
 import { RegisterRoutes } from './routes';
 
@@ -29,27 +34,77 @@ app.use(morgan('tiny')); // Request logging
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-
-  // intercepts OPTIONS method
-  if (req.method === 'OPTIONS') {
-    // respond with 200
-    res.send(200);
-  } else {
-    // move on
-    next();
-  }
-});
-
 // Autoregister routes from controller, setup Swagger UI
 RegisterRoutes(app);
 app.use(['/docs'], swaggerUI.serve, swaggerUI.setup(swaggerJson));
 
+const clientKeyPath = path.join(__dirname, './', 'mqtt', 'certificates', 'client.key'); // Get client CA Certificate Key File
+const clientPemPath = path.join(__dirname, './', 'mqtt', 'certificates', 'client.pem'); // Get client CA Certificate Pem File
+
+httpolyglot
+  .createServer(
+    {
+      key: fs.readFileSync(clientKeyPath, 'utf8'), // Set CA Key
+      cert: fs.readFileSync(clientPemPath, 'utf8'), // Set CA Pem File
+      // key: fs.readFileSync('/etc/letsencrypt/live/pwp21.medien.ifi.lmu.de/fullchain.pem'),
+      // cert: fs.readFileSync('/etc/letsencrypt/live/pwp21.medien.ifi.lmu.de/privkey.pem'),
+    },
+    app
+  )
+  .listen(port, async () => {
+    console.log('Connecting to database...');
+    await connectToDatabase();
+    console.log('Connected to database!');
+    console.log(`Https server listening at https://localhost:${port}`);
+    console.log(`Http server listening at http://localhost:${port}`);
+    console.log('');
+    console.log(`API Documentation at https://localhost:${port}/docs or http://localhost:${port}/docs`);
+
+    console.log('Connecting MQTT Client...');
+    connectMqttClient(); // Connect the mqtt client
+  });
+
+/* const httpsServer = https.createServer(
+  {
+    key: fs.readFileSync(clientKeyPath, 'utf8'), // Set CA Key
+    cert: fs.readFileSync(clientPemPath, 'utf8'), // Set CA Pem File
+    // key: fs.readFileSync('/etc/letsencrypt/live/pwp21.medien.ifi.lmu.de/fullchain.pem'),
+    // cert: fs.readFileSync('/etc/letsencrypt/live/pwp21.medien.ifi.lmu.de/privkey.pem'),
+  },
+  app
+);
+
+httpsServer.listen(port, async () => {
+  console.log('Connecting to database...');
+  await connectToDatabase();
+  console.log('Connected to database!');
+  console.log(`Https server listening at https://localhost:${port}`);
+  console.log(`API Documentation at https://localhost:${port}/docs`);
+
+  console.log('Connecting MQTT Client...');
+  connectMqttClient(); // Connect the mqtt client
+}); */
+
+/* const httpServer = http.createServer(app);
+httpServer.listen(4501, async () => {
+  console.log('Connecting to database...');
+  await connectToDatabase();
+  console.log('Connected to database!');
+  console.log(`Http server listening at http://localhost:${port}`);
+  console.log(`API Documentation at http://localhost:${port}/docs`);
+
+  console.log('Connecting MQTT Client...');
+  connectMqttClient(); // Connect the mqtt client
+}); */
+
+/* http
+  .createServer(function (req, res) {
+    res.writeHead(301, { Location: 'https://' + req.headers.host + req.url });
+    res.end();
+  })
+  .listen(80); */
 // Start Server
-app.listen(port, async () => {
+/* app.listen(port, async () => {
   console.log('Connecting to database...');
   await connectToDatabase();
   console.log('Connected to database!');
@@ -58,7 +113,7 @@ app.listen(port, async () => {
 
   console.log('Connecting MQTT Client...');
   connectMqttClient(); // Connect the mqtt client
-});
+}); */
 
 // Register error handler
 app.use(errorHandler);

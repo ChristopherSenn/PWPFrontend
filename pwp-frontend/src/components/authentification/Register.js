@@ -13,32 +13,36 @@ import Grid from '@mui/material/Grid';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { ErrorMessage, SuccesMessage } from '../../utilis/messages';
 import Loading from '../../utilis/loading';
+// Create Material UI theme
 const theme = createTheme();
 
 export default function Register() {
-    // formData saves the inputs of users
+    // State for username, email and password. Sets the customer role per default
     const [formData, setFormData] = useState({
         email: "",
         username: "",
         password: "",
         roles: "customer"
     });
-    // state for succesfully messages
+    // State for message after successful registration
     const [messageSucces, setMessageSuccess] = useState(null)
     const { email, username, password } = formData;
 
+    // Use dispatch to be able to update global state
     const dispatch = useDispatch();
-    //state with the registered user
+    //State with the registered user
     const userRegister = useSelector((state) => state.userRegister);
 
-    //error saved the erorr messages; 
-    // loading:bool is an is for progressBar 
+    // error saved the erorr messages; 
+    // loading:bool is for progressBar 
     const { loading, error } = userRegister;
 
+    // Update state with the user's input in the text field 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
 
+    // Function which is executed when user clicks on button to register after entering username, email and password
     const onSubmit = async (e) => {
         e.preventDefault();
         if (!loading) {
@@ -47,6 +51,8 @@ export default function Register() {
         }
 
     };
+
+    // Alert message to provide user with feedback if registration was successful or not
     const setAlertMessage = () => {
         if (error) {
             return <ErrorMessage>{error}</ErrorMessage>

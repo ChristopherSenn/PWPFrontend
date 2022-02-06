@@ -25,36 +25,41 @@ import MuiAlert from '@mui/material/Alert';
 import InfoIcon from '@mui/icons-material/Info';
 import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
 
+// Alert for further information about the hub
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
 
 export default function EditHub() {
+    // Instantiate React navigate to easily navigate between the different pages
     const navigate = useNavigate();
-    
+
     // @state contains the information about the hub that was clicked. It gets passed via navigate() in Dashboard.js
     const { state } = useLocation();
 
-    // saving the members of the clicked hubs as an array
+    // Saving the members of the clicked hub as an array
     const memberIdsProps = state.memberIds; 
-
+    // userLogin = information of user that is currenty loggedin
     const userLogin = useSelector((state) => state.userLogin);
     const { user } = userLogin; // information of logged in user
  
-    const [selectedMemberNames, setSelectedMemberNames] = useState([]); // names of memebers that are selected
-    const [dropDownMembersArray, setdropDownMembersArray] = useState([]); // list of all users
-    const [membersOfHub, setMembersOfHub] = useState([]) // contains Member names and ids of hub 
+    // State for users are selected as members for the edited hub in the dropdown
+    const [selectedMemberNames, setSelectedMemberNames] = useState([]); 
+    // State for the users to select from in the dropdown
+    const [dropDownMembersArray, setdropDownMembersArray] = useState([]); 
+    // State for the users that are already members of the opened hub
+    const [membersOfHub, setMembersOfHub] = useState([]) 
+    // State for the dialog (further information about the hub)
     const [openDialog, setOpenDialog] = useState();
-
-
+    // State for showing alert when member was successfully deleted 
     const [open, setOpen] = useState(false);
 
+    // To close the alert when a member was successfully deleted
     const handleClose = (event, reason) => {
       if (reason === 'clickaway') {
         return;
       }
-  
       setOpen(false);
     };
   
@@ -66,12 +71,13 @@ export default function EditHub() {
             .then(users => { // Loading all users from DB
                 const usersObjectArray = []; // contains id and username of all users 
 
+                // Pushes information about all users except the logged in one into an array
                 for (const item of users.data){
                     if(user.id !== item.id ){
                         usersObjectArray.push({id: item.id, username: item.username});
                     }
                 } 
-                return usersObjectArray; // returns an array containing objects with information about every user
+                return usersObjectArray; // returns an array containing objects with information about every user except the one logged in
             })
             .then((users) => { // @users is the value from the previous then()
                 const listOfMembersToShow = []; 
@@ -85,7 +91,7 @@ export default function EditHub() {
                         } 
                     })
                 })
-                // Setting state with the members that are shown in the members list
+                // Setting state with the members that are shown as members. Ordered alphabetically
                 setMembersOfHub(sortDropdown(listOfMembersToShow))
                 return { allUsers: users, listForMemberSection: listOfMembersToShow };
             })
@@ -105,19 +111,22 @@ export default function EditHub() {
             })
      }
     
-     useEffect(() => {
-        getMembersOfEditedHub()
-      }, []);
 
-    // redirect to dashboard
+    useEffect(() => {
+        getMembersOfEditedHub()
+    }, []);
+
+    // Redirect to dashboard
     const redirectToPage = () => {
         navigate('/dashboard');
     }
+
+    // Excecuted when logged in user cancels hub editing process
     const cancelMembers = () => {
       setSelectedMemberNames([])
   }
     
-    // select a member from membersList
+    // Select a user from from the dropdown
     const selectChange = (event) => {
         const {
           target: { value },
@@ -127,6 +136,7 @@ export default function EditHub() {
         );
       };
 
+    // Removes member from hub in frontend and in DB
     const removeMember = async (e, member) =>{
       e.preventDefault();
 
@@ -150,7 +160,7 @@ export default function EditHub() {
       
 
       /* For some reason setState isn't executed in time, 
-      therefore we need a promise to update the member's list and the dropdown.
+      therefore we need a promise to update the displayed members and the dropdown with remaining users to choose from.
       Both happens in the code below. */
       new Promise((resolve) => {
           const tempHubMembers = [];
@@ -159,7 +169,6 @@ export default function EditHub() {
                   tempHubMembers.push(item)
               }
           })
-
           const tempDropDownMembersArray = dropDownMembersArray;
           tempDropDownMembersArray.push({ id: member.id, username: member.username});
           resolve({tempHubMembers: tempHubMembers, tempDropdown: sortDropdown(tempDropDownMembersArray)});
@@ -171,7 +180,7 @@ export default function EditHub() {
       setOpen(true);
     }
 
-    // add new members to hub
+    // Add new members to hub
     const onSubmit = async (e) => {
         e.preventDefault();
         const idsOfSelectedMembers = [];
@@ -193,6 +202,7 @@ export default function EditHub() {
           "hubId" : state.hubId
         }
     
+        // Edit hub in the DB so it contains the newly selected users
         try {
             await axios.patch(
             'http://localhost:4500/hubs/addUser',

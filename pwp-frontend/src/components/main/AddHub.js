@@ -19,20 +19,25 @@ import { sortDropdown } from "../../utilis/sortDropdown";
 import ArrowBackIosOutlinedIcon from '@mui/icons-material/ArrowBackIosOutlined';
 export default function AddHub() {
 
+  // userLogin = information of user that is currenty loggedin
   const userLogin = useSelector((state) => state.userLogin);
   const { user } = userLogin;
 
+  // Introduce state for the hubname (name of the hub created), the members that are selected for the hub and for all members (all user that exist in DB)
   const [hubName, setHubName] = useState('');
   const [selectedMemberNames, setSelectedMemberNames] = useState([]);
   const [allMembersObject, setAllMembersObject] = useState([]);
+  // Instantiate React navigate to easily navigate between the different pages
   const navigate = useNavigate();
 
   const listOfUsersObject = [];
 
+  // When component mounted get all users from DB
   useEffect(() => {
     getAllUsers()
   }, []);
 
+  // Get all users from DB, sort them alphabetically and put them into state
   const getAllUsers = async () => {
     loadUsers().then(users =>{
       for (const item of users.data){
@@ -44,11 +49,13 @@ export default function AddHub() {
   }
 
 
+  // Function executed when "Add members" is clicked
   const onSubmit = async (e) => {
     e.preventDefault();
   
     const idsOfSelectedMembers = [];
 
+    // Get the IDs of the members which are selected in the dropdown
     allMembersObject.forEach(member => {
         selectedMemberNames.forEach(selectedMember => {
             if(member.username === selectedMember) {
@@ -63,6 +70,7 @@ export default function AddHub() {
       "memberIds": idsOfSelectedMembers
     }
 
+    // Post all needed information about the hub to save the hub created/updated to the DB
     try {
       const config = {
         headers: authHeader()
@@ -79,6 +87,7 @@ export default function AddHub() {
     } 
   };
 
+  // Display selected user in the text field of the dropdown
   const selectChange = (event) => {
     const {
       target: { value },
@@ -92,6 +101,7 @@ export default function AddHub() {
     setHubName(e.target.value)
   }
 
+  // Function when cancelling "Add member" 
   const cancelButtonHandler = () => {
       setHubName('');
     if(selectedMemberNames.length > 0){

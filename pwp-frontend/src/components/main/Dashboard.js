@@ -22,8 +22,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import CssBaseline from '@mui/material/CssBaseline';
 
+// Create Material UI theme
 const theme = createTheme({
-
   components: {
     MuiCssBaseline: {
       styleOverrides:
@@ -50,7 +50,7 @@ const theme = createTheme({
     },
   },
 })
-// Styling of items in which each hub is displayed
+// Styling of items in which each owner hub is displayed
 const Item1 = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(2),
@@ -59,7 +59,7 @@ const Item1 = styled(Paper)(({ theme }) => ({
   backgroundColor: '#69849b',
   color: 'white'
 }));
-// Styling of items in which each hub is displayed
+// Styling of items in which each member hub is displayed
 const Item2 = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
   padding: theme.spacing(2),
@@ -68,52 +68,55 @@ const Item2 = styled(Paper)(({ theme }) => ({
   backgroundColor: '#a8c7cb',
 }));
 
+// Alert for when deleting a hub
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
 
 export default function Dashboard() {
-
+  // Instantiate React navigate to easily navigate between the different pages
   const navigate = useNavigate();
-
+  // Use dispatch to be able to update global state
   const dispatch = useDispatch();
 
-  // get user name
+  // Introduce state for the logged in user, for the hubs the user owns and for the hubs he/she is a member of
   const [userName, setUserName] = useState("");
-  //get users own hubs
   const [ownerHubs, setOwnerHubs] = useState([]);
-  //get hubs, where user is a only a member
   const [userMemberHubs, setUserMemberHubs] = useState([]);
+
+  // State for pop up "Hub was successfully deleted"
+  const [open, setOpen] = useState(false);
+
+  // Introduce state for displaying the owner and member hubs differently
   const [cssVisibilityItem1, setCssVisibilityItem1] = useState('none');
   const [cssVisibilityItem2, setCssVisibilityItem2] = useState('none');
-  // get all information about logged user (single)
+  // userLogin = information of user that is currenty loggedin
   const userLogin = useSelector((state) => state.userLogin);
   const { isAuth, user } = userLogin;
 
-  const [open, setOpen] = useState(false);
-
+  // Function to close pop up "Hub was successfully deleted"
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
-
     setOpen(false);
   };
 
-  //users own hubs
+  // Shows hubs which users owns on his/her dashboard
   const showHubs = () => {
 
     let ownerHubsArray = [];
     let memberHubsArray = [];
 
     getAllHubsFromDB().then(hubs => {
-
+      // Gather all the hubs the logged in user owns, in state
       hubs.data.forEach((hub, i) => {
         if (hub.ownerId === user.id) {
           ownerHubsArray.push({ hubId: hub.hubId, hubName: hub.hubName, memberIds: hub.memberIds, ownerId: hub.ownerId, password: hub.password });
         }
         setOwnerHubs(ownerHubsArray)
+        // Gather all the hubs the logged in user is a member of in state
         hub.memberIds.forEach(member => {
           if (member === user.id && hub.ownerId !== user.id) {
             memberHubsArray.push({ hubId: hub.hubId, hubName: hub.hubName });
@@ -122,7 +125,7 @@ export default function Dashboard() {
       })
       setUserMemberHubs(memberHubsArray)
 
-      // Change css classes to update the displayed headings accordingly
+      // Change CSS classes to update the displayed headings accordingly
       if (ownerHubsArray.length > 0 && memberHubsArray.length > 0) {
         setCssVisibilityItem1('block');
         setCssVisibilityItem2('block');
@@ -139,20 +142,24 @@ export default function Dashboard() {
     });
   }
 
+  // When component mounted, updates state of logged in username and executes showHubs()
   useEffect(() => {
-    if (user && isAuth) { //stellt sicher, dass geladen
+    if (user && isAuth) { 
       setUserName(user.username)
       showHubs()
     }
   }, [user])
 
+  // Function execute when user clicks on logout item; updates global state
   const logoutHandler = () => {
     dispatch(logout());
   };
 
+  // Function for deleting a hub
   const onDelete = (e, hub) => {
     deleteHub(hub.hubId);
 
+    // Updates the hubs the user owns in state and updates the state of the deleted alert
     const tempHubArr = [];
     ownerHubs.forEach(elem => {
       if (elem !== hub) {
@@ -170,6 +177,7 @@ export default function Dashboard() {
     }
   }
 
+  // Executed when clicking on the "add people icon"
   const onEdit = (e, hub) => {
     // navigates to edit-hub and passes information about which hub was clicked
     navigate('/edit-hub', { state: hub });

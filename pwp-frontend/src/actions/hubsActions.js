@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { authHeader } from "../utilis/setToken";
 
-
+// Request and return all hubs which are saved in the DB
 export const getAllHubsFromDB = async () => {
   try{
     const requestOptions = {
@@ -13,6 +13,7 @@ export const getAllHubsFromDB = async () => {
   }
 } 
 
+// Delete hub from DB
 export const deleteHub = async (hubId) => {
   try{
     return await axios.delete('http://localhost:4500/hubs/deleteHub', {

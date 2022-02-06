@@ -15,35 +15,45 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Loading from '../../utilis/loading';
 import {ErrorMessage} from '../../utilis/messages';
 
+
+// Create Material UI theme
 const theme = createTheme();
 
 export default function Login() {
 
+    // Instantiate React navigate to easily navigate between the different pages
     const navigate = useNavigate()
-    // formData saves the inputs of users
+
+    // State for username and password 
     const [formData, setFormData] = useState({
         username: "",
         password: "",
 
     });
     const { username, password, } = formData;
+
+    // Use dispatch to be able to update global state
     const dispatch = useDispatch();
-    // userLogin = information of user that are currenty loggedin
+
+    // userLogin = information of user that is currenty loggedin
     const userLogin = useSelector((state) => state.userLogin);
     const { loadingBar, error, isAuth} = userLogin;
-    // state for submittButton (if the button was clicked)
+    // State of submitt button (if the button was clicked)
     const [submittButton, setSubmittButton] =useState(null)
 
+    // Navigate to dashboard when submit button of login function was clicked
     useEffect(() => {
         if (isAuth && submittButton ) {
           navigate('/dashboard');
         }
       }, [isAuth]);
-    // update state with userinputs
+
+    // Update state with the user's input in the text field 
     const onChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
 
+    // Function which is executed when user clicks on button to login after entering username and password
     const onSubmit = async (e) => {
         e.preventDefault();
         dispatch(login(username, password));

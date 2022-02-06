@@ -1,4 +1,4 @@
-// Sorts array with user objects in alphabetical order
+// Sorts array with users in alphabetical order
 export function sortDropdown(listToSort) {
     listToSort.sort((userA, userB) => {
         if(userA.username.toUpperCase() < userB.username.toUpperCase()){ 

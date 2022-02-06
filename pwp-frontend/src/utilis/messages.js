@@ -1,7 +1,7 @@
 import React from 'react'
 import Alert from '@mui/material/Alert';
 
-// functions to print an allert message
+// Functions for alert messages
 
 // for errors
 export const ErrorMessage = ({children}) => {

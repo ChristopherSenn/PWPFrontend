@@ -38,14 +38,18 @@ app.use(bodyParser.json());
 RegisterRoutes(app);
 app.use(['/docs'], swaggerUI.serve, swaggerUI.setup(swaggerJson));
 
+// This is only used for local testing of https, remove in production
 const clientKeyPath = path.join(__dirname, './', 'mqtt', 'certificates', 'client.key'); // Get client CA Certificate Key File
 const clientPemPath = path.join(__dirname, './', 'mqtt', 'certificates', 'client.pem'); // Get client CA Certificate Pem File
 
+// Setup server to run over http and https with the same port
 httpolyglot
   .createServer(
     {
+      // Test Certificate
       key: fs.readFileSync(clientKeyPath, 'utf8'), // Set CA Key
       cert: fs.readFileSync(clientPemPath, 'utf8'), // Set CA Pem File
+      // Production certificate
       // key: fs.readFileSync('/etc/letsencrypt/live/pwp21.medien.ifi.lmu.de/fullchain.pem'),
       // cert: fs.readFileSync('/etc/letsencrypt/live/pwp21.medien.ifi.lmu.de/privkey.pem'),
     },
@@ -64,6 +68,7 @@ httpolyglot
     connectMqttClient(); // Connect the mqtt client
   });
 
+// Setup server to run over https on a dedicated port. Can be used if server should only support https or if https and http should be on different ports
 /* const httpsServer = https.createServer(
   {
     key: fs.readFileSync(clientKeyPath, 'utf8'), // Set CA Key
@@ -85,6 +90,7 @@ httpsServer.listen(port, async () => {
   connectMqttClient(); // Connect the mqtt client
 }); */
 
+// Setup server to run over http on a dedicated port. Can be used if https and http should be on different ports
 /* const httpServer = http.createServer(app);
 httpServer.listen(4501, async () => {
   console.log('Connecting to database...');
@@ -97,13 +103,7 @@ httpServer.listen(4501, async () => {
   connectMqttClient(); // Connect the mqtt client
 }); */
 
-/* http
-  .createServer(function (req, res) {
-    res.writeHead(301, { Location: 'https://' + req.headers.host + req.url });
-    res.end();
-  })
-  .listen(80); */
-// Start Server
+// Start Server over http only
 /* app.listen(port, async () => {
   console.log('Connecting to database...');
   await connectToDatabase();

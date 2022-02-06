@@ -38,6 +38,7 @@ function connectMqttClient() {
   client.on('message', async (topic, text) => {
     const topicSplit: string[] = topic.split('/'); // Split by /
 
+    // Do the correct task depending on the topic
     if (topic.endsWith('/thing_description')) {
       new MqttService().processThingDescription(topicSplit, text.toString());
     } else if ((topic.match(/\//g) || []).length === 4) {
@@ -50,6 +51,7 @@ function connectMqttClient() {
   });
 }
 
+// Create a mqtt account for a new hub
 function addAccount(username: string, password: string) {
   client.publish(
     'user_management/add',
@@ -63,6 +65,7 @@ function addAccount(username: string, password: string) {
   );
 }
 
+// Remove a mqtt account
 function removeAccount(username: string) {
   client.publish('user_management/remove', username, { qos: 0, retain: false }, (error) => {
     if (error) {

@@ -16,8 +16,8 @@ const connectionOptions: mqtt.IClientOptions = {
   clean: true, // Broker doesn't store any info for the client
   key: fs.readFileSync(clientKeyPath, 'utf8'), // Set CA Key
   cert: fs.readFileSync(clientPemPath, 'utf8'), // Set CA Pem File
-  username: 'backend_client',
-  password: '5fE7HU8ZrxUeSRYmWg6eBxmJ',
+  username: 'pwp',
+  password: 'pwp',
   connectTimeout: 4000, // Set connection timeout
   reconnectPeriod: 1000, // Set the Reconnect Period
 };
@@ -26,7 +26,7 @@ const connectionOptions: mqtt.IClientOptions = {
  * This method setups an mqtt broker, that listens to any incoming events or properties, and updates their values in the database
  */
 function connectMqttClient() {
-  client = mqtt.connect('mqtt://pwp21.medien.ifi.lmu.de:1883', connectionOptions); // Connect to public broker with given options
+  client = mqtt.connect('mqtt://pwp21.medien.ifi.lmu.de', connectionOptions); // Connect to public broker with given options
 
   // On connect, subscribe to the base topic and print a success message
   client.on('connect', () => {

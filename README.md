@@ -2,7 +2,7 @@
 The `master` branch contains the code to start the application locally.
 ## Setup Backend
   - Make sure your Node Version is at least 16.x.x
-  - Get Access to .env file somehow and place it in the pwp-backend root folder
+  - Place the .env file we sent with the project handover email in the pwp-backend root folder
   1) cd pwp-backend
   2) `npm install`
   3) `npm install tsoa -g`

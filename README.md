@@ -1,4 +1,5 @@
 # How to start project locally
+The `master` branch contains the code to start the application locally.
 ## Setup Backend
   - Make sure your Node Version is at least 16.x.x
   - Get Access to .env file somehow and place it in the pwp-backend root folder
@@ -20,7 +21,9 @@
   Open App on http://localhost:3000/
 
 
+
 # How to access deployed application
+The `release` branch contains the version of the application that is deployed on the server. It can be accessed via this address:
 http://pwp21.medien.ifi.lmu.de/
 ## Test user
 - Username: Jakob; Password: 123456789

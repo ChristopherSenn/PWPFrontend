@@ -34,6 +34,25 @@ http://pwp21.medien.ifi.lmu.de:4500/docs/
 
 # To Do Documentation
 
+##Design Decisions
+#CARP Design Decisions
+Before we started with our implementation we planned how to strcture and design our dashbaord. We decided to use the CARP descion principles. 
+CARP contains the following elements:<br>
+
+Contrast <br>
+It was important to us to implement a contrast between different Elements. We used different colors for different elements. Each functionality is designed with different colors beause we did not want to distract the user. Besides that we wanted to keep the User Interface as simple as possible and implement an User Experience that is easy o understand. <br>
+
+Alignment <br>
+Alignment means to create a well strucutred page that looks organized and "clean. Therfore we used the same width and the same height for the same elements. We aligned all elements and created a well structured page.<br>
+
+Repetition  <br>
+We also considered the Rpetition. That means we designed the same things "repetitively". Designing same things differently confuses the user and interrupts the user experience. Also because of the task seperation (everybody worked on different tasks), it is important to use the same scheme for each page. 
+
+Proximity
+Elements that belong together stand together
+
+
+
 ## Outlook
 Due to the project being very time-limited, naturally there are things that can be enhanced or improved. Hardware-wise the switchbot could also be used to turn on a coffee machine for example. Currently, we are limited to two devices, but there are numerous devices that would generate added value for the users if present in our application. <br>
 Having a focus on security we could further improve the process and validation when adding new devices or configuring the existing ones. Additional access right roles regarding hubs and devices might come in handy. The current version of the application only offers the roles "member" and "user". Adding a "guest" role for example would be convenient to accomodate different usage scenarios. Furthermore, preferences per users and different settings per hub could be saved. <br>

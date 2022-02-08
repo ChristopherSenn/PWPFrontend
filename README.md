@@ -46,12 +46,13 @@ Alignment <br>
 Alignment means to create a well strucutred page that looks organized and "clean. Therfore we used the same width and the same height for the same elements. We aligned all elements and created a well structured page.<br>
 
 Repetition  <br>
-We also considered the Rpetition. That means we designed the same things "repetitively". Designing same things differently confuses the user and interrupts the user experience. Also because of the task seperation (everybody worked on different tasks), it is important to use the same scheme for each page. 
+We also considered the Rpetition. That means we designed the same things "repetitively". Designing same things similar confuses the user and interrupts the user experience. Also because of the task seperation (everybody worked on different tasks), it is important to use the same scheme for each page. Therefor, we used the same "bin" icon to remove elements and we used the same "arrow button" to go to the previous page. <br>
 
-Proximity
-Elements that belong together stand together
+Proximity <br>
+Proximity means to place elements that belong together next to each other. Therefore we places the "hubs you own" seperatly to the "hubs you are member of". Besides that, we placed all devices that belong to one hub on a different subpage next to each other. 
 
 
+All in all we wanted to have a simple design that is easy in usage and self-explanatory. To implement this, we used signs and icons for different fuinctionalties (+ icon, info-icon, bin-icon etc).
 
 ## Outlook
 Due to the project being very time-limited, naturally there are things that can be enhanced or improved. Hardware-wise the switchbot could also be used to turn on a coffee machine for example. Currently, we are limited to two devices, but there are numerous devices that would generate added value for the users if present in our application. <br>

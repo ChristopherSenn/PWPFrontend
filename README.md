@@ -35,7 +35,7 @@ http://pwp21.medien.ifi.lmu.de:4500/docs/
 # To Do Documentation
 
 ## Design Decisions
-# CARP Design Decisions
+### CARP Design Decisions
 Before we started with our implementation we planned how to strcture and design our dashbaord. We decided to use the CARP descion principles. 
 CARP contains the following elements:<br>
 

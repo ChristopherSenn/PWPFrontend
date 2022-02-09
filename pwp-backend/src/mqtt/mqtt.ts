@@ -16,8 +16,8 @@ const connectionOptions: mqtt.IClientOptions = {
   clean: true, // Broker doesn't store any info for the client
   key: fs.readFileSync(clientKeyPath, 'utf8'), // Set CA Key
   cert: fs.readFileSync(clientPemPath, 'utf8'), // Set CA Pem File
-  username: 'pwp',
-  password: 'pwp',
+  username: process.env.MQTT_USERNAME,
+  password: process.env.MQTT_PASSWORD,
   connectTimeout: 4000, // Set connection timeout
   reconnectPeriod: 1000, // Set the Reconnect Period
 };

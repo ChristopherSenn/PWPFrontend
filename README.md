@@ -11,11 +11,18 @@ The `master` branch contains the code to start the application locally.
   6) `npm install`
 
 ## Start the server and client (Frontend)
+### Start backend and frontend together
   - go to backend directory (cd pwp-backend)
   - `npm run dev`
+### Start backend only
+  - go to backend directory (cd pwp-backend)
+  - `npm run server`
+### Start frontend only
+  - go to frontend directory (cd pwp-frontend)
+  - `npm run start`
 
 ## Documentation Backend
-  The Endpoint Documentation is available under http://localhost:4500/docs/
+  The Endpoint Documentation is available under http://localhost:4500/docs/ or https://localhost:4500/docs
 
 ## Documentation Frontend
   Open App on http://localhost:3000/
@@ -29,7 +36,7 @@ http://pwp21.medien.ifi.lmu.de/
 - Username: Jakob; Password: 123456789
 - Username: Sebastian; Password: 123456789
 ## Documentation Backend
-http://pwp21.medien.ifi.lmu.de:4500/docs/
+http://pwp21.medien.ifi.lmu.de:4500/docs/ or https://pwp21.medien.ifi.lmu.de:4500/docs/
 
 
 # To Do Documentation

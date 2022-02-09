@@ -94,7 +94,7 @@ export class HubService {
    */
   public async deleteHub(requestBody: HubDeleteParams): Promise<IHub> {
     return new Promise<IHub>((resolve, reject) => {
-      Hub.findOneAndDelete({ _id: requestBody.hubId }, (err, res) => {
+      Hub.findOneAndDelete({ _id: requestBody.hubId }).exec((err, res) => {
         if (err) {
           reject(new StatusError('Something went wrong', 404));
         } else {

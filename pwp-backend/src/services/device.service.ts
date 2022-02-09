@@ -1,7 +1,7 @@
 import { StatusError } from '../models/status.model';
 import { Device, DeviceInput, DeviceDocument, IDevice } from '../models/device.model';
 import { Hub, HubDocument } from '../models/hub.model';
-import { IMqttMessage } from 'src/models/mqtt.model';
+import { IMqttMessage } from '../models/mqtt.model';
 export type DeviceCreateParams = { thingDescription: any; hubIds: Array<string> };
 export type AddOrRemoveDeviceParams = { hubId: string; deviceId: string; userId: string };
 
@@ -76,10 +76,10 @@ export class DeviceService {
   }
 
   // Delete a Device by DeviceId
-  public async deleteDevice(deviceId): Promise<IDevice> {
+  public async deleteDevice(deviceId: string): Promise<IDevice> {
     return new Promise<IDevice>((resolve, reject) => {
       // Find Device with specific DeviceId in Database
-      Device.findOneAndDelete({ deviceId: deviceId }, (err, result) => {
+      Device.findOneAndDelete({ deviceId: deviceId }).exec((err, result) => {
         if (err) {
           reject(new StatusError('Something went wrong', 404));
         } else {
@@ -163,10 +163,10 @@ export class DeviceService {
   }
 
   // Get a Device by specific Id to filter after actions, events, properties etc.
-  public async getDetails(deviceId): Promise<IDevice> {
+  public async getDetails(deviceId: string): Promise<IDevice> {
     return new Promise<IDevice>((resolve, reject) => {
       // Find specific Device by received deviceId in Database
-      Device.findOne({ deviceId: deviceId }, (err, result) => {
+      Device.findOne({ deviceId: deviceId }).exec((err, result) => {
         if (err) {
           reject(new StatusError('Device with deviceId not found', 404));
         } else {
@@ -306,21 +306,25 @@ export class DeviceService {
    */
   public async updateDeviceValue(requestBody: IMqttMessage): Promise<IDevice> {
     const { deviceId, category, topic, message } = requestBody; // Store the properties in body in easier to access variables
+    // Should never happen
+    if (category !== 'properties' && category !== 'events') {
+      return Promise.reject(new StatusError('Internal Server error!', 500));
+    }
 
     return new Promise<IDevice>((resolve, reject) => {
       // Find the correct device
-      Device.findOne({ deviceId: deviceId }, (err, result) => {
+      Device.findOne({ deviceId: deviceId }).exec((err, result) => {
         // If the device is not found or another db error occurrs, reject the Promise
         if (err || result === null) {
           reject(new StatusError('Invalid Device ID', 404));
         } else {
-          const eventPos = result[category].findIndex((c) => c.name === topic); // Find the position of the requested event in the events array
+          const eventPos: number = result[category].findIndex((c) => c.name === topic); // Find the position of the requested event in the events array
           // If the position is -1 the event was not found. In this case, reject the promise
           if (eventPos === -1) {
             reject(new StatusError('Event doesnt exist.', 404));
           } else {
             // If the event is found, update the right value in a local representation
-            const newUpdate = result[category];
+            const newUpdate: IDevice['properties'] | IDevice['events'] = result[category];
             newUpdate[eventPos].dataValue = message;
             // Then store the updated array in the db
             Device.findOneAndUpdate({ deviceId: deviceId }, { [category]: newUpdate }).then((result) => {

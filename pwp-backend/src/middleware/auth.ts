@@ -15,7 +15,8 @@ export function expressAuthentication(request: express.Request, securityName: st
       }
 
       // Verify if the token is valid
-      jwt.verify(token, process.env.JWT_SECRET || '', function (err, decoded) {
+      // (There is no way around the any here I think)
+      jwt.verify(token, process.env.JWT_SECRET || '', (err: any, decoded: any) => {
         // If not reject with an error
         if (err) {
           reject(new StatusError('Verification error!', 401, err.toString));

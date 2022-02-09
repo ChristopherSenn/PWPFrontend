@@ -6,7 +6,6 @@ import morgan from 'morgan';
 // import http from 'http';
 import fs from 'fs';
 import path from 'path';
-import httpolyglot from 'httpolyglot';
 
 import { RegisterRoutes } from './routes';
 
@@ -15,6 +14,8 @@ import * as swaggerUI from 'swagger-ui-express';
 import { connectToDatabase } from './db/databaseConnection';
 import { errorHandler } from './middleware/errorHandler';
 import { connectMqttClient } from './mqtt/mqtt';
+
+const httpolyglot = require('httpolyglot'); // httpolyglot has no @tpyes implementation, hence implement it this way
 
 export const app = express(); // Init express
 

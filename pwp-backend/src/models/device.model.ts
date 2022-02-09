@@ -24,7 +24,6 @@ interface IDevice {
     dataType: string;
     dataValue: string;
   }>;
-
 }
 
 type DeviceDocument = Document & {
@@ -50,7 +49,6 @@ type DeviceDocument = Document & {
     dataType: string;
     dataValue: string;
   }>;
- 
 };
 
 type DeviceInput = {
@@ -144,7 +142,6 @@ const deviceSchema = new Schema(
         },
       },
     ],
-    
   },
   {
     collection: 'devices',

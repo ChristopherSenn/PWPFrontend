@@ -61,6 +61,18 @@ Proximity means to place elements that belong together next to each other. There
 
 All in all we wanted to have a simple design that is easy in usage and self-explanatory. To implement this, we used signs and icons for different fuinctionalties (+ icon, info-icon, bin-icon etc).
 
+## Design Pyramide
+We have oriented ourselves to the design pyramid
+Let’s describe the levels of the pyramid from the bottom to the top. Our  focus was initially on functionality
+Functionality meets the requirements for the proper work of the App. The design has some purpose and includes the key features  and passes basic  accessibility.  
+For example we have improved the registration process, not requiring the same input multiple times, and making the data saved and retained for users to leave and return.Usability must take into account a number of factors that are specific to the audience for which a product is being built. 
+People need to be able to figure out how to use our application, and in the modern context, how to use it without having to unlearn or relearn anything. 
+We have made the design very simple so that the user can understand and use the app himself. If it were too complex to figure out or required too much effort, i think most people would not use it.
+
+## Style Guide:
+He have here our style Guide. We have created our own color palette. Main Palette contains the colors that we used the most for the app and the second palette contains the colors we used for dialog, alerts or for on-press. 
+Colors have been chosen that harmonize but stand in strong contrast to the background. We have used the same font on all pages, mostly the font was  black or white and  the frontend is designed with Material UI. For instance, we worked with icons so we had less text and didn't want to describe each button because we wanted to keep it simple.
+
 ## Outlook
 Due to the project being very time-limited, naturally there are things that can be enhanced or improved. Hardware-wise the switchbot could also be used to turn on a coffee machine for example. Currently, we are limited to two devices, but there are numerous devices that would generate added value for the users if present in our application. <br>
 Having a focus on security we could further improve the process and validation when adding new devices or configuring the existing ones. Additional access right roles regarding hubs and devices might come in handy. The current version of the application only offers the roles "member" and "user". Adding a "guest" role for example would be convenient to accomodate different usage scenarios. Furthermore, preferences per users and different settings per hub could be saved. <br>

@@ -41,6 +41,21 @@ http://pwp21.medien.ifi.lmu.de:4500/docs/ or https://pwp21.medien.ifi.lmu.de:450
 
 # To Do Documentation
 
+## Technologies
+### MERN Stack
+we decided to use a MERN stack. A MERN stack is a Javascript stack that is used for a simpler and easier development of a full-stack application. <br>
+It consists of: <br>
+- MongoDB = document database
+- Express = node.js web framework
+- React = a client-side JavaScript framework
+- Node = the premier JavaScript web server
+
+We also used a MQTT Broker. <br>
+These different technologies work together as follows: <br>
+The Broker provides necessary information for our environment.MongoDB is the database in which the data is stored. The server consisting of express and node.js communicates with this database. This is where the exchange of information between the frontend and the backend takes place, as well as the data processing. <br>
+The data is then displayed with the help of react in the frontend and made available to the user, who has than the possibility to change it through the frontend. <br>
+This information then goes back to the server, where it is processed and, if necessary, passed on to the database when data is deleted or added.
+
 ## Design Decisions
 ### CARP Design Decisions
 Before we started with our implementation we planned how to strcture and design our dashbaord. We decided to use the CARP descion principles. 

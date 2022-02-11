@@ -51,9 +51,10 @@ It consists of: <br>
 - Node = the premier JavaScript web server
 
 We also used a MQTT Broker. <br>
+<br>
 These different technologies work together as follows: <br>
-The Broker provides necessary information for our environment.MongoDB is the database in which the data is stored. The server consisting of express and node.js communicates with this database. This is where the exchange of information between the frontend and the backend takes place, as well as the data processing. <br>
-The data is then displayed with the help of react in the frontend and made available to the user, who has than the possibility to change it through the frontend. <br>
+The Broker provides necessary information for our environment.MongoDB is the database in which the data is stored. The server consisting of express and node.js communicates with this database. This is where the exchange of information between the frontend and the backend takes place, as well as the data processing.
+The data is then displayed with the help of react in the frontend and made available to the user, who has than the possibility to change it through the frontend.
 This information then goes back to the server, where it is processed and, if necessary, passed on to the database when data is deleted or added.
 
 ## Design Decisions

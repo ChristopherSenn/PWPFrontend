@@ -57,6 +57,28 @@ The Broker provides necessary information for our environment.MongoDB is the dat
 The data is then displayed with the help of react in the frontend and made available to the user, who has than the possibility to change it through the frontend.
 This information then goes back to the server, where it is processed and, if necessary, passed on to the database when data is deleted or added.
 
+## Express Backend
+We used Express together with tsoa. The reason for that was, that, for one, we had to use Typescript for the whole application. This made it easier to ensure that all of our Interfaces behave consistent throughout the whole application. Furthermore, tsoa gave us the possibility to autormatically generate a swagger documentation from our source code with minimal additional workload. And third, tsoa made handling errors of any kind and authentication much easier. </br>
+Apart from that, we used the following technologies among other things:
+* **bcryptjs** to encrypt passwords.
+* **dotenv** so that we didn't have to put stuff like the database access into the source code
+* **jsonwebtoken** to make sure that only authorized users can make requests to our backend
+* **cors** for obvious reasosns
+* **eslint and prettier** for better formatted code <br/>
+
+The projects structure was as follows:
+* **src**
+  * **controllers** (The endpoints and additional information for the documentation are defined here)
+  * **db** (Database connection)
+  * **functions** (Location of helper functions of any kind)
+  * **middleware** (Location of all middlewares)
+  * **models** (Location of database and typescript models)
+  * **mqtt** (Mqtt Client and certificates)
+  * **services** (The functionality for the endpoints)
+  * **index.ts** (main file)
+* **.env** (Passwords)
+* **metadata files**
+
 ## Design Decisions
 ### CARP Design Decisions
 Before we started with our implementation we planned how to strcture and design our dashbaord. We decided to use the CARP descion principles. 

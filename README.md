@@ -51,8 +51,8 @@ Frontend (folder) Structure was as follows:
          * **devices Manager - folder**(overview devices of the hub), 
          * **main - folder**( functionality of all pages), 
          * **mqqttListener - folder**( functionality of mqtt) )
-         * **reducer** (reducer functions for hub id, user registration and login, logOut)
-         * **utilis** (functions to show proessbar, messages, to set the token, sort the data of dropdown)
+         * **reducer - folder** (reducer functions for hub id, user registration and login, logOut)
+         * **utilis - folder** (functions to show proessbar, messages, to set the token, sort the data of dropdown)
   
 * **store.js** ( the store is here defined)
 * **index.js** (the main functionality of frontend)

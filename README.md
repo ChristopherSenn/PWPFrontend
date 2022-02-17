@@ -40,6 +40,23 @@ http://pwp21.medien.ifi.lmu.de:4500/docs/ or https://pwp21.medien.ifi.lmu.de:450
 
 
 # To Do Documentation
+## Structure
+
+The structure of our project part consists of 3 main components - The database, where the users, hubs as well as the devices are stored, the backend and the frontend, that is the actual dashboard. 
+
+But how exactly does the communication between these components work?
+There are 3 important parts in our dashboard: the users, the hubs and the devices.
+Let's look at the users and hubs first. The frontend communicates with the backend for user actions, such as a user login or editing a hub, by issuing get and post requests, to which the frontend then receives a response. 
+The backend in turn interacts with the database by creating or requesting appropriate information and sending it to the frontend as a response. 
+
+Both the backend and the frontend are connected to the MQTT broker of the modes and communications group via their own MQTT client. When new devices are added, the MQTT client in the backend receives the corresponding Thing Description of the device, which can then be stored in the database. Since the various devices are only available in specific hubs, only the respective owner or member of a hub can operate the device via the dashboard. To display the devices that a user has access to, the frontend communicates with the backend as described before.
+Through the two MQTT clients in the backend and frontend, the dashboard is also able to receive live status updates of the devices, for example that the mixer is now stirring. Therefore the Mqtt client of the frontend checks the topic under which a message is published. If it matches the device, the updates are displayed in the dashboard. 
+
+Additionally, the frontend communicates with the MQTT broker when an action of a device is selected on the dashboard. The MQTT client then sends a message to the broker under a specific topic that refers to the device and its actions. Of course, only actions specified in the Thing Description of the device can be sent. 
+If this action requires an additional input (e.g. InputType is float), a window opens in the Dashboard in which the corresponding values are to be entered, which are then transmitted.
+
+We have also thought about the security. For this reason, for example, only the owner of a hub can edit the respective hub and add or remove members, as well as delete the hub. There is also an authentication for the communication between frontend and backend. Each user receives a token automatically generated during registration, which must be sent with each request in order to authenticate and receive a response. Authentication is also necessary when connecting to the MQTT broker. In addition, the MQTT client in the backend receives all the information from the broker while the MQTT client in the frontend only receives the information for the hub in which it is a member.
+
 
 ## Technologies
 ### MERN Stack

@@ -39,7 +39,7 @@ http://pwp21.medien.ifi.lmu.de/
 http://pwp21.medien.ifi.lmu.de:4500/docs/ or https://pwp21.medien.ifi.lmu.de:4500/docs/
 
 
-# To Do Documentation
+# Documentation
 ## Structure
 Frontend (folder) Structure was as follows:
 * **public** (html and some picture are defined here)

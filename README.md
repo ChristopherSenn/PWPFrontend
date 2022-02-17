@@ -41,6 +41,17 @@ http://pwp21.medien.ifi.lmu.de:4500/docs/ or https://pwp21.medien.ifi.lmu.de:450
 
 # To Do Documentation
 ## Structure
+Frontend (folder) Structure was as follows:
+* **public** (html and some picture are defined here)
+* **src**
+  * **actions** (Constants, User Actions (registration, logout, login) and Hub actions (get data of the endpoints from hub) 
+  * **components** (has **authentification-folder **( login and register functionality), **devices Features - folder **( devices Functionality), **devices Manager -folder **(overview devices of the hub), **main - folder** ( functionality of all pages), **mqqttListener - folder** ( functionality of mqtt)
+  * **reducer** (reducer functions for hub id, user registration and login, logOut)
+  * **utilits** (functions to show proessbar, messages, to set the token, sort the data of dropdown)
+* **store.js** ( the store is here defined)
+* ** index.js** (the main functionality of frontend)
+* ** app.js** (All pages are here defined
+ 
 
 The structure of our project part consists of 3 main components - The database, where the users, hubs as well as the devices are stored, the backend and the frontend, that is the actual dashboard. 
 

@@ -79,6 +79,11 @@ The projects structure was as follows:
 * **.env** (Passwords)
 * **metadata files**
 
+Interfaces:
+* Various API Endpoints, mainly for the Frotend to access and modify the Database (see http://localhost:4500/docs)
+* MQTT Client, to receive messages from the Hubs (Communications Group). This includes updated events/properties, as well as new Devices and their thing description to add.
+* The Mqtt Client can also Generate sets of usernames and passwords for new Hubs, that can only send/receive messages on certain topics
+
 ## Design Decisions
 ### CARP Design Decisions
 Before we started with our implementation we planned how to strcture and design our dashbaord. We decided to use the CARP descion principles. 

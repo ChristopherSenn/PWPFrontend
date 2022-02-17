@@ -46,7 +46,7 @@ Frontend (folder) Structure was as follows:
 * **src:**
  * **actions** (Constants, User Actions (registration, logout, login) and Hub actions (get data of the endpoints from hub) 
   
- * **components** (contains :
+ * **components:** 
     * **authentification-folder**( login and register functionality),
     * **devices Features - folder**( devices Functionality), 
     * **devices Manager - folder**(overview devices of the hub), 

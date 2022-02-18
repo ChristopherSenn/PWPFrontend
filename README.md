@@ -74,6 +74,8 @@ If this action requires an additional input (e.g. InputType is float), a window 
 
 We have also thought about the security. For this reason, for example, only the owner of a hub can edit the respective hub and add or remove members, as well as delete the hub. There is also an authentication for the communication between frontend and backend. Each user receives a token automatically generated during registration, which must be sent with each request in order to authenticate and receive a response. Authentication is also necessary when connecting to the MQTT broker. In addition, the MQTT client in the backend receives all the information from the broker while the MQTT client in the frontend only receives the information for the hub in which it is a member.
 
+For local network scenarios, a local network mode is available. This mode is designed as standalone application including the same structure than the regular dashboard, except for the hub functionality. Furthermore, the MQTT broker is expected to be run locally (localhost) in this scenario. Besides these aspects, both dashboards are identical.
+
 
 ## Technologies
 ### MERN Stack

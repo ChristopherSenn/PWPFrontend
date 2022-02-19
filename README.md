@@ -22,7 +22,8 @@ The `master` branch contains the code to start the application locally.
   - `npm run start`
 
 ## Documentation Backend
-  The Endpoint Documentation is available under http://localhost:4500/docs/ or https://localhost:4500/docs
+  The Endpoint Documentation is available under http://localhost:4500/docs/ or https://localhost:4500/docs </br>
+  Or live under http://pwp21.medien.ifi.lmu.de:54500/docs/ or https://pwp21.medien.ifi.lmu.de:54500/docs/
 
 ## Documentation Frontend
   Open App on http://localhost:3000/
@@ -35,8 +36,7 @@ http://pwp21.medien.ifi.lmu.de/
 ## Test user
 - Username: Jakob; Password: 123456789
 - Username: Sebastian; Password: 123456789
-## Documentation Backend
-http://pwp21.medien.ifi.lmu.de:4500/docs/ or https://pwp21.medien.ifi.lmu.de:4500/docs/
+
 
 
 # Documentation

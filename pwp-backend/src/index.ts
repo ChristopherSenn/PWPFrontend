@@ -25,7 +25,7 @@ const corsOptions: cors.CorsOptions = {
   origin: allowedOrigins,
 }; */
 
-const port = process.env.PORT || 4500; // Set port
+const port = process.env.PORT || 54500; // Set port
 
 // app.use(cors(corsOptions)); // Use cors settings
 app.use(cors());

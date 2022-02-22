@@ -40,6 +40,9 @@ http://pwp21.medien.ifi.lmu.de/
 
 
 # Documentation
+
+## short “diary” listing our steps during development: https://github.com/ChristopherSenn/PWPFrontend/projects/1
+
 ## Structure
 Frontend (folder) Structure was as follows:
 * **public** (html and some picture are defined here)

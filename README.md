@@ -21,12 +21,20 @@ The `master` branch contains the code to start the application locally.
   - go to frontend directory (cd pwp-frontend)
   - `npm run start`
 
-## Documentation Backend
+## Documentation backend
   The Endpoint Documentation is available under http://localhost:4500/docs/ or https://localhost:4500/docs </br>
   Or live under http://pwp21.medien.ifi.lmu.de:54500/docs/ or https://pwp21.medien.ifi.lmu.de:54500/docs/
 
-## Documentation Frontend
-  Open App on http://localhost:3000/
+## Documentation deployment
+- Connect to the "Münchner Wissenschaftsnetz"/LRZ
+- Login via ssh `ssh pwp21@141.84.8.213 -p 22022`
+- `PWPFrontend` directory on the server is the git repository
+- Switch to `release` branch and pull
+- `cd pwp-backend` and then `npm run build`
+- Switch to `pwp-frontend` and `npm run build` there
+- From the servers home directoy go to `cd /var/www/pwp21/htdocs`
+- Copy the build files with `cp -r ~/PWPFrontend/pwp-frontend/build/* .`
+- Go to `~/PWPFrontend/pwp-backend/build` and start the node process with `nohup node index.js &>log.log &`
 
 
 
@@ -41,31 +49,46 @@ http://pwp21.medien.ifi.lmu.de/
 
 # Documentation
 
-## short “diary” listing our steps during development: https://github.com/ChristopherSenn/PWPFrontend/projects/1
+## Short “diary” listing our steps during development: https://github.com/ChristopherSenn/PWPFrontend/projects/1
 
 ## Structure
-Frontend (folder) Structure was as follows:
-* **public** (html and some picture are defined here)
+The project's frontend (pwp-frontend) is structured as follows:
+* **public** (Contains HTML file and some pictures)
 * **src:**
-  * **actions** (Constants, User Actions (registration, logout, login) and Hub actions (get data of the endpoints from hub) 
+  * **actions** (Constants, User Actions (Registration, logout, login) and hub actions (Get data of the hub's endpoints) 
   * **components:** 
-         * **authentification-folder**( login and register functionality),
-         * **devices Features - folder**( devices Functionality), 
-         * **devices Manager - folder**(overview devices of the hub), 
-         * **main - folder**( functionality of all pages), 
-         * **mqqttListener - folder**( functionality of mqtt) )
-         * **reducer - folder** (reducer functions for hub id, user registration and login, logOut)
-         * **utilis - folder** (functions to show proessbar, messages, to set the token, sort the data of dropdown)
+    - **authentification** (Login and register functionality)
+    - **devicesFeatures** (Devices functionality) 
+    - **devicesManager** (Overview devices of the hub)
+    - **main** (Functionality of the dashboard, adding and editing hubs, the landing page and the security explanation) 
+    - **mqqttListener** (Functionality of mqtt)
+  * **reducer - folder** (Reducer functions for hub ID, user registration and login, log out)
+  * **utilis - folder** (Function to show progessbar, messages, setting the token, sort the the dropdowns alphabetically)
   
-* **store.js** ( the store is here defined)
-* **index.js** (the main functionality of frontend)
-* **app.js** (All pages are here defined)
- 
+* **store.js** (The redux store is defined here)
+* **index.js** (The main JS file with the "App" component)
+* **app.js** (App component containing all the routes and the needed components)
 
-The structure of our project part consists of 3 main components - The database, where the users, hubs as well as the devices are stored, the backend and the frontend, that is the actual dashboard. 
+The project's backend (pwp-backend) is structured as follows:
+* **src**
+  * **controllers** (The endpoints and additional information for the documentation are defined here)
+  * **db** (Database connection)
+  * **functions** (Location of helper functions of any kind)
+  * **middleware** (Location of all middlewares)
+  * **models** (Location of database and typescript models)
+  * **mqtt** (Mqtt Client and certificates)
+  * **services** (The functionality for the endpoints)
+  * **index.ts** (Main file)
+* **.env** (Passwords)
+* **metadata files**
+ 
+## Presentation contents
+The structure of our project consists of three main components: 
+- The database, where the users, hubs and the devices are stored, 
+- the backend and 
+- the frontend, that is the actual dashboard. 
 
 But how exactly does the communication between these components work?
-There are 3 important parts in our dashboard: the users, the hubs and the devices.
 Let's look at the users and hubs first. The frontend communicates with the backend for user actions, such as a user login or editing a hub, by issuing get and post requests, to which the frontend then receives a response. 
 The backend in turn interacts with the database by creating or requesting appropriate information and sending it to the frontend as a response. 
 
@@ -105,19 +128,6 @@ Apart from that, we used the following technologies among other things:
 * **cors** for obvious reasosns
 * **eslint and prettier** for better formatted code <br/>
 
-The projects structure was as follows:
-* **src**
-  * **controllers** (The endpoints and additional information for the documentation are defined here)
-  * **db** (Database connection)
-  * **functions** (Location of helper functions of any kind)
-  * **middleware** (Location of all middlewares)
-  * **models** (Location of database and typescript models)
-  * **mqtt** (Mqtt Client and certificates)
-  * **services** (The functionality for the endpoints)
-  * **index.ts** (main file)
-* **.env** (Passwords)
-* **metadata files**
-
 Interfaces:
 * Various API Endpoints, mainly for the Frotend to access and modify the Database (see http://localhost:4500/docs)
 * MQTT Client, to receive messages from the Hubs (Communications Group). This includes updated events/properties, as well as new Devices and their thing description to add.
@@ -152,7 +162,7 @@ People need to be able to figure out how to use our application, and in the mode
 We have made the design very simple so that the user can understand and use the app himself. If it were too complex to figure out or required too much effort, i think most people would not use it.
 
 ## Style Guide:
-He have here our style Guide. We have created our own color palette. Main Palette contains the colors that we used the most for the app and the second palette contains the colors we used for dialog, alerts or for on-press. 
+We have created our own color palette. Main Palette contains the colors that we used the most for the app and the second palette contains the colors we used for dialog, alerts or for on-press. 
 Colors have been chosen that harmonize but stand in strong contrast to the background. We have used the same font on all pages, mostly the font was  black or white and  the frontend is designed with Material UI. For instance, we worked with icons so we had less text and didn't want to describe each button because we wanted to keep it simple.
 
 ## Outlook

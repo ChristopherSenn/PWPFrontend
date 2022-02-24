@@ -52,7 +52,7 @@ http://pwp21.medien.ifi.lmu.de/
 ## Short “diary” listing our steps during development: https://github.com/ChristopherSenn/PWPFrontend/projects/1
 
 ## Structure
-The project's frontend (pwp-frontend) is structured as follows:
+### Frontend
 * **public** (Contains HTML file and some pictures)
 * **src:**
   * **actions** (Constants, User Actions (Registration, logout, login) and hub actions (Get data of the hub's endpoints) 
@@ -69,7 +69,17 @@ The project's frontend (pwp-frontend) is structured as follows:
 * **index.js** (The main JS file with the "App" component)
 * **app.js** (App component containing all the routes and the needed components)
 
-The project's backend (pwp-backend) is structured as follows:
+
+### Express Backend
+We used Express together with tsoa. The reason for that was, that, for one, we had to use Typescript for the whole application. This made it easier to ensure that all of our Interfaces behave consistent throughout the whole application. Furthermore, tsoa gave us the possibility to autormatically generate a swagger documentation from our source code with minimal additional workload. And third, tsoa made handling errors of any kind and authentication much easier. </br>
+Apart from that, we used the following technologies among other things:
+* **bcryptjs** to encrypt passwords.
+* **dotenv** so that we didn't have to put stuff like the database access into the source code
+* **jsonwebtoken** to make sure that only authorized users can make requests to our backend
+* **cors** for obvious reasosns
+* **eslint and prettier** for better formatted code <br/>
+
+The projects structure was as follows:
 * **src**
   * **controllers** (The endpoints and additional information for the documentation are defined here)
   * **db** (Database connection)
@@ -78,9 +88,15 @@ The project's backend (pwp-backend) is structured as follows:
   * **models** (Location of database and typescript models)
   * **mqtt** (Mqtt Client and certificates)
   * **services** (The functionality for the endpoints)
-  * **index.ts** (Main file)
+  * **index.ts** (main file)
 * **.env** (Passwords)
 * **metadata files**
+
+Interfaces:
+* Various API Endpoints, mainly for the Frotend to access and modify the Database (see http://localhost:4500/docs)
+* MQTT Client, to receive messages from the Hubs (Communications Group). This includes updated events/properties, as well as new Devices and their thing description to add.
+* The Mqtt Client can also Generate sets of usernames and passwords for new Hubs, that can only send/receive messages on certain topics
+
  
 ## Presentation contents
 The structure of our project consists of three main components: 
@@ -118,20 +134,6 @@ These different technologies work together as follows: <br>
 The Broker provides necessary information for our environment.MongoDB is the database in which the data is stored. The server consisting of express and node.js communicates with this database. This is where the exchange of information between the frontend and the backend takes place, as well as the data processing.
 The data is then displayed with the help of react in the frontend and made available to the user, who has than the possibility to change it through the frontend.
 This information then goes back to the server, where it is processed and, if necessary, passed on to the database when data is deleted or added.
-
-## Express Backend
-We used Express together with tsoa. The reason for that was, that, for one, we had to use Typescript for the whole application. This made it easier to ensure that all of our Interfaces behave consistent throughout the whole application. Furthermore, tsoa gave us the possibility to autormatically generate a swagger documentation from our source code with minimal additional workload. And third, tsoa made handling errors of any kind and authentication much easier. </br>
-Apart from that, we used the following technologies among other things:
-* **bcryptjs** to encrypt passwords.
-* **dotenv** so that we didn't have to put stuff like the database access into the source code
-* **jsonwebtoken** to make sure that only authorized users can make requests to our backend
-* **cors** for obvious reasosns
-* **eslint and prettier** for better formatted code <br/>
-
-Interfaces:
-* Various API Endpoints, mainly for the Frotend to access and modify the Database (see http://localhost:4500/docs)
-* MQTT Client, to receive messages from the Hubs (Communications Group). This includes updated events/properties, as well as new Devices and their thing description to add.
-* The Mqtt Client can also Generate sets of usernames and passwords for new Hubs, that can only send/receive messages on certain topics
 
 ## Design Decisions
 ### CARP Design Decisions
